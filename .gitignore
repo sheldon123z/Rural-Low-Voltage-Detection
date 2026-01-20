@@ -1,0 +1,23 @@
+# LaTeX
+*.aux
+*.log
+*.toc
+*.pdf
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data
+data/processed/

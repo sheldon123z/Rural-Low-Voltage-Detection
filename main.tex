@@ -1,0 +1,42 @@
+\documentclass[UTF8]{ctexart}
+
+% --- 宏包加载 ---
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm} % 数学公式
+\usepackage{graphicx}                % 图片处理
+\usepackage{booktabs}               % 高质量表格
+\usepackage{hyperref}               % 超链接
+\usepackage{geometry}               % 页面布局
+\usepackage[style=gb7714-2015, backend=biber]{biblatex} % 参考文献（符合国标）
+
+% --- 页面设置 ---
+\geometry{left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
+\addbibresource{references/references.bib}
+
+% --- 文档信息 ---
+\title{农村低电压检测研究项目}
+\author{作者姓名}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% --- 摘要 ---
+\input{sections/abstract}
+
+\tableofcontents
+\newpage
+
+% --- 正文各章节 ---
+\input{sections/introduction}
+\input{sections/literature_review}
+\input{sections/methodology}
+\input{sections/experimental_setup}
+\input{sections/results_analysis}
+\input{sections/conclusion}
+
+% --- 参考文献 ---
+\printbibliography[heading=bibintoc]
+
+\end{document}
