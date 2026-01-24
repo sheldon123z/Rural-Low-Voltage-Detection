@@ -763,11 +763,26 @@ def generate_all_datasets(output_dir: str, seed: int = 42):
     print("=" * 60)
 
     datasets = {
-        "periodic_load": (PeriodicLoadDataset, {"train_samples": 10000, "test_samples": 3000}),
-        "three_phase": (ThreePhaseDataset, {"train_samples": 10000, "test_samples": 3000}),
-        "multi_scale": (MultiScaleDataset, {"train_samples": 15000, "test_samples": 5000}),
-        "hybrid_period": (HybridPeriodDataset, {"train_samples": 12000, "test_samples": 4000}),
-        "comprehensive": (ComprehensiveDataset, {"train_samples": 20000, "test_samples": 6000}),
+        "periodic_load": (
+            PeriodicLoadDataset,
+            {"train_samples": 10000, "test_samples": 3000},
+        ),
+        "three_phase": (
+            ThreePhaseDataset,
+            {"train_samples": 10000, "test_samples": 3000},
+        ),
+        "multi_scale": (
+            MultiScaleDataset,
+            {"train_samples": 15000, "test_samples": 5000},
+        ),
+        "hybrid_period": (
+            HybridPeriodDataset,
+            {"train_samples": 12000, "test_samples": 4000},
+        ),
+        "comprehensive": (
+            ComprehensiveDataset,
+            {"train_samples": 20000, "test_samples": 6000},
+        ),
     }
 
     results = {}
@@ -834,7 +849,14 @@ if __name__ == "__main__":
         "--dataset",
         type=str,
         default="all",
-        choices=["all", "periodic_load", "three_phase", "multi_scale", "hybrid_period", "comprehensive"],
+        choices=[
+            "all",
+            "periodic_load",
+            "three_phase",
+            "multi_scale",
+            "hybrid_period",
+            "comprehensive",
+        ],
         help="生成指定数据集 (默认: all)",
     )
 
@@ -845,14 +867,31 @@ if __name__ == "__main__":
     else:
         # 生成单个数据集
         dataset_map = {
-            "periodic_load": (PeriodicLoadDataset, {"train_samples": 10000, "test_samples": 3000}),
-            "three_phase": (ThreePhaseDataset, {"train_samples": 10000, "test_samples": 3000}),
-            "multi_scale": (MultiScaleDataset, {"train_samples": 15000, "test_samples": 5000}),
-            "hybrid_period": (HybridPeriodDataset, {"train_samples": 12000, "test_samples": 4000}),
-            "comprehensive": (ComprehensiveDataset, {"train_samples": 20000, "test_samples": 6000}),
+            "periodic_load": (
+                PeriodicLoadDataset,
+                {"train_samples": 10000, "test_samples": 3000},
+            ),
+            "three_phase": (
+                ThreePhaseDataset,
+                {"train_samples": 10000, "test_samples": 3000},
+            ),
+            "multi_scale": (
+                MultiScaleDataset,
+                {"train_samples": 15000, "test_samples": 5000},
+            ),
+            "hybrid_period": (
+                HybridPeriodDataset,
+                {"train_samples": 12000, "test_samples": 4000},
+            ),
+            "comprehensive": (
+                ComprehensiveDataset,
+                {"train_samples": 20000, "test_samples": 6000},
+            ),
         }
 
         GeneratorClass, params = dataset_map[args.dataset]
         generator = GeneratorClass(seed=args.seed)
         train_data, test_data, test_labels = generator.generate(**params)
-        generator.save_dataset(train_data, test_data, test_labels, args.output_dir, args.dataset)
+        generator.save_dataset(
+            train_data, test_data, test_labels, args.output_dir, args.dataset
+        )
