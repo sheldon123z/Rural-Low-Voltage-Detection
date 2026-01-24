@@ -150,3 +150,19 @@ test_TPATimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_tes
 Accuracy: 0.7874, Precision: 0.3937, Recall: 1.0000, F1-score: 0.5650
 
 
+test_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.6173, Precision: 0.5618, Recall: 1.0000, F1-score: 0.7194
+
+
+test_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.8452, Precision: 0.4714, Recall: 1.0000, F1-score: 0.6407
+
+
+test_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.7480, Precision: 0.4848, Recall: 1.0000, F1-score: 0.6530
+
+
+test_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.6484, Precision: 0.5825, Recall: 1.0000, F1-score: 0.7362
+
+
