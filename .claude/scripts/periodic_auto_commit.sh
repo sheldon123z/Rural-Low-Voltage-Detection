@@ -4,8 +4,9 @@
 # 用于 PostToolUse hook
 
 # 配置
-COMMIT_INTERVAL=300  # 最小提交间隔（秒）
-MIN_CHANGES=3        # 最少变更文件数才提交
+COMMIT_INTERVAL=1200  # 最小提交间隔（秒）= 20分钟
+MIN_CHANGES=8         # 最少变更文件数才提交
+MAX_UNPUSHED=5        # 超过此数量未push的commit则自动push
 
 # 获取项目根目录
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
@@ -43,4 +44,13 @@ git commit -m "$COMMIT_MSG" --no-verify 2>/dev/null || exit 0
 echo "$CURRENT_TIME" > "$TRACK_FILE"
 
 echo "🔄 定期提交: $CHANGED_FILES 个文件"
+
+# 检查未push的commit数量并自动push
+REMOTE_BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null) || exit 0
+UNPUSHED_COUNT=$(git rev-list --count @{u}..HEAD 2>/dev/null) || exit 0
+
+if [ "$UNPUSHED_COUNT" -gt "$MAX_UNPUSHED" ]; then
+    git push --no-verify 2>/dev/null && echo "📤 自动推送: $UNPUSHED_COUNT 个提交" || true
+fi
+
 exit 0

@@ -58,4 +58,17 @@ git commit -m "$COMMIT_MSG" -m "$DETAILS" --no-verify 2>/dev/null || {
 
 log "✅ 已提交 $CHANGED_FILES 个文件 ($DETAILS)"
 echo "✅ 已自动提交 $CHANGED_FILES 个文件变更"
+
+# 检查未push的commit数量并自动push（超过5个则push）
+MAX_UNPUSHED=5
+REMOTE_BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null) || exit 0
+UNPUSHED_COUNT=$(git rev-list --count @{u}..HEAD 2>/dev/null) || exit 0
+
+if [ "$UNPUSHED_COUNT" -gt "$MAX_UNPUSHED" ]; then
+    git push --no-verify 2>/dev/null && {
+        log "📤 自动推送: $UNPUSHED_COUNT 个提交"
+        echo "📤 自动推送 $UNPUSHED_COUNT 个提交到远程"
+    } || true
+fi
+
 exit 0
