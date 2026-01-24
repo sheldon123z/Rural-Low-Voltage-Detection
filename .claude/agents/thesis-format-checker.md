@@ -290,3 +290,193 @@
 - 北京林业大学《研究生学位论文写作指南（2023版）》
 - GB/T 7713.1-2006《学位论文编写规则》
 - GB/T 7714-2015《信息与文献 参考文献著录规则》
+
+---
+
+## LaTeX 特定检查（增强模块）
+
+### 8. 交叉引用完整性检查
+
+**图表引用检查：**
+```bash
+# 检查未定义的引用
+grep -n '\\ref{' *.tex | grep -oP '\\ref\{[^}]+\}' > refs.txt
+grep -n '\\label{' *.tex | grep -oP '\\label\{[^}]+\}' > labels.txt
+# 对比两个文件，找出未定义的引用
+```
+
+**检查项：**
+- [ ] 所有 `\ref{fig:xxx}` 必须有对应的 `\label{fig:xxx}`
+- [ ] 所有 `\ref{tab:xxx}` 必须有对应的 `\label{tab:xxx}`
+- [ ] 所有 `\ref{eq:xxx}` 必须有对应的 `\label{eq:xxx}`
+- [ ] 所有 `\ref{sec:xxx}` 必须有对应的 `\label{sec:xxx}`
+- [ ] 检查是否有未被引用的 label（孤立标签）
+
+**编号连续性检查：**
+- [ ] 图表编号是否按章节连续（如图3.1, 图3.2, 图3.3）
+- [ ] 公式编号是否连续
+- [ ] 检查是否有跳号或重复编号
+
+### 9. 参考文献完整性检查
+
+**BibTeX 引用检查：**
+```bash
+# 提取所有 \cite 引用
+grep -oP '\\cite\{[^}]+\}' *.tex | sort | uniq
+# 对比 .bib 文件中的条目
+```
+
+**检查项：**
+- [ ] 所有 `\cite{xxx}` 必须在 .bib 文件中存在
+- [ ] 检查 .bib 中未被引用的文献条目
+- [ ] 检查引用格式是否正确（上标形式：`\cite{}`）
+- [ ] 检查多文献引用格式：`\cite{a,b,c}` 或 `\cite{a}-\cite{c}`
+
+**文献格式检查：**
+- [ ] 期刊文献包含：作者、标题、期刊名、年份、卷期、页码
+- [ ] 图书文献包含：作者、书名、出版地、出版社、年份
+- [ ] 网络资源包含：访问日期、URL
+
+### 10. 代码环境检查
+
+**lstlisting 环境：**
+```latex
+% 推荐设置
+\lstset{
+  language=Python,
+  basicstyle=\small\ttfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  frame=single,
+  breaklines=true,
+  captionpos=b
+}
+```
+
+**检查项：**
+- [ ] 代码块是否设置了正确的语言高亮
+- [ ] 代码字体是否为等宽字体（ttfamily）
+- [ ] 行号是否显示
+- [ ] 代码块是否有标题（caption）
+
+### 11. 算法伪代码检查
+
+**algorithm 环境：**
+```latex
+\begin{algorithm}[H]
+\caption{算法标题}
+\label{alg:name}
+\begin{algorithmic}[1]
+\REQUIRE 输入描述
+\ENSURE 输出描述
+\STATE 步骤1
+\IF{条件}
+  \STATE 步骤2
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+```
+
+**检查项：**
+- [ ] 算法是否有中英文标题
+- [ ] 算法是否有编号和标签
+- [ ] 输入输出是否清晰描述
+- [ ] 步骤编号是否正确
+
+### 12. 图片格式检查
+
+**图片质量要求：**
+| 图片类型 | 推荐格式 | 分辨率要求 |
+|---------|---------|-----------|
+| 照片/截图 | PNG/JPG | ≥300 DPI |
+| 矢量图/流程图 | PDF/EPS | 矢量格式 |
+| 数据图表 | PDF | 矢量格式 |
+
+**检查项：**
+- [ ] 图片格式是否适合类型（矢量图使用 PDF）
+- [ ] 图片分辨率是否足够清晰
+- [ ] 图片文件大小是否合理（避免过大导致编译慢）
+- [ ] 图片路径是否使用相对路径
+
+### 13. 数学公式检查
+
+**公式环境使用：**
+- 行内公式：`$...$` 或 `\(...\)`
+- 独立公式：`equation` 环境（需编号）或 `equation*`（不编号）
+- 多行公式：`align` 或 `aligned` 环境
+
+**检查项：**
+- [ ] 重要公式是否有编号
+- [ ] 公式中的变量是否在正文中解释
+- [ ] 公式编号格式：（章节号-公式序号），如（3-1）
+- [ ] 公式后的标点是否正确（句号、逗号）
+
+### 14. 特殊检查项
+
+**中英文混排：**
+- [ ] 中文使用中文标点（，。；：）
+- [ ] 英文使用英文标点 (, . ; :)
+- [ ] 数字和英文字母与中文之间有空格
+- [ ] 专有名词首字母大写
+
+**常见 LaTeX 问题：**
+- [ ] 检查是否有编译警告（Overfull/Underfull）
+- [ ] 检查是否有未定义的命令
+- [ ] 检查是否有缺失的包（package）
+
+---
+
+## 快速检查脚本
+
+### LaTeX 编译检查
+
+```bash
+#!/bin/bash
+# thesis_check.sh - 论文格式快速检查脚本
+
+cd thesis/
+
+echo "=== 1. 检查交叉引用 ==="
+grep -rn '\\ref{' contents/ | grep -oP '\\ref\{\K[^}]+' | sort | uniq > /tmp/refs.txt
+grep -rn '\\label{' contents/ | grep -oP '\\label\{\K[^}]+' | sort | uniq > /tmp/labels.txt
+echo "未定义的引用:"
+comm -23 /tmp/refs.txt /tmp/labels.txt
+
+echo ""
+echo "=== 2. 检查参考文献引用 ==="
+grep -rn '\\cite{' contents/ | grep -oP '\\cite\{\K[^}]+' | tr ',' '\n' | sort | uniq > /tmp/cites.txt
+grep -oP '@\w+\{\K[^,]+' *.bib | sort | uniq > /tmp/bibs.txt
+echo "未定义的文献引用:"
+comm -23 /tmp/cites.txt /tmp/bibs.txt
+echo "未被引用的文献:"
+comm -13 /tmp/cites.txt /tmp/bibs.txt
+
+echo ""
+echo "=== 3. 检查图表编号 ==="
+grep -rn '\\caption' contents/ | head -20
+
+echo ""
+echo "=== 4. 编译检查 ==="
+xelatex -interaction=nonstopmode bjfuthesis-main.tex 2>&1 | grep -E '(Warning|Error|Overfull|Underfull)' | head -20
+
+echo ""
+echo "=== 检查完成 ==="
+```
+
+---
+
+## 集成检查命令
+
+```bash
+# 完整格式检查
+/thesis-format-check thesis/ --full
+
+# 仅检查交叉引用
+/thesis-format-check thesis/ --refs-only
+
+# 仅检查参考文献
+/thesis-format-check thesis/ --bib-only
+
+# 生成检查报告
+/thesis-format-check thesis/ --report > format_report.md
+```

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Rural Voltage Anomaly Detection with TimesNet
-# Dataset: RuralVoltage (17 features)
+# Dataset: RuralVoltage (16 features)
 # Task: Anomaly Detection
 
 export CUDA_VISIBLE_DEVICES=0
@@ -18,7 +18,6 @@ model_name=TimesNet
 seq_len=100
 
 python -u run.py \
-  --task_name anomaly_detection \
   --is_training 1 \
   --root_path ./dataset/RuralVoltage/ \
   --model_id RuralVoltage_${seq_len} \
@@ -30,8 +29,8 @@ python -u run.py \
   --d_model 64 \
   --d_ff 64 \
   --e_layers 2 \
-  --enc_in 17 \
-  --c_out 17 \
+  --enc_in 16 \
+  --c_out 16 \
   --top_k 3 \
   --num_kernels 6 \
   --batch_size 32 \

@@ -1,0 +1,62 @@
+# pyproject.toml - Python Project Configuration
+# Rural Low Voltage Anomaly Detection Project
+
+[project]
+name = "voltage-anomaly-detection"
+version = "1.0.0"
+description = "Rural power grid voltage anomaly detection using deep learning"
+readme = "README.md"
+requires-python = ">=3.9"
+
+dependencies = [
+    "torch>=1.10.0",
+    "numpy>=1.21.0",
+    "pandas>=1.3.0",
+    "scikit-learn>=0.24.0",
+    "matplotlib>=3.4.0",
+    "seaborn>=0.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=24.0.0",
+    "isort>=5.12.0",
+    "pytest>=7.0.0",
+]
+
+# =============================================================================
+# Black Configuration (Code Formatter)
+# =============================================================================
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+    | \.venv
+    | __pycache__
+    | checkpoints
+    | dataset
+    | test_results
+    | \.ipynb_checkpoints
+)/
+'''
+
+# =============================================================================
+# isort Configuration (Import Sorter)
+# =============================================================================
+[tool.isort]
+profile = "black"
+line_length = 88
+skip_gitignore = true
+skip = ["checkpoints", "dataset", "test_results", ".venv"]
+known_first_party = ["models", "layers", "data_provider", "exp", "utils", "visualization"]
+
+# =============================================================================
+# pytest Configuration
+# =============================================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

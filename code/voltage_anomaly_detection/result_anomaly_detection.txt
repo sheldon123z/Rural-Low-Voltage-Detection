@@ -10,3 +10,11 @@ test_TimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0
 Accuracy: 0.9844, Precision: 0.9844, Recall: 0.9591, F1-score: 0.9716
 
 
+quick_test_TPATimesNet_TPATimesNet_RuralVoltage_anomaly_detection_ftM_sl50_dm32_nh4_el1_df32_test_0  
+Accuracy: 0.8204, Precision: 0.8410, Recall: 0.4545, F1-score: 0.5901
+
+
+quick_test_MTSTimesNet_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl50_dm32_nh4_el1_df32_test_0  
+Accuracy: 0.8179, Precision: 0.8357, Recall: 0.4477, F1-score: 0.5831
+
+

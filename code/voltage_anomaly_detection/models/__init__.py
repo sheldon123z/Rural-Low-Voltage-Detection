@@ -16,6 +16,11 @@ from .TimeMixer import Model as TimeMixer
 from .Reformer import Model as Reformer
 from .VoltageTimesNet import Model as VoltageTimesNet
 
+# Innovative TimesNet variants for Rural Voltage Anomaly Detection
+from .TPATimesNet import Model as TPATimesNet        # Three-Phase Attention TimesNet
+from .MTSTimesNet import Model as MTSTimesNet        # Multi-scale Temporal TimesNet
+from .HybridTimesNet import Model as HybridTimesNet  # Hybrid Period Discovery TimesNet
+
 __all__ = [
     'TimesNet',
     'Transformer',
@@ -33,6 +38,10 @@ __all__ = [
     'TimeMixer',
     'Reformer',
     'VoltageTimesNet',
+    # Innovative models
+    'TPATimesNet',
+    'MTSTimesNet',
+    'HybridTimesNet',
     'model_dict',
     'get_model'
 ]
@@ -55,6 +64,10 @@ model_dict = {
     'TimeMixer': TimeMixer,
     'Reformer': Reformer,
     'VoltageTimesNet': VoltageTimesNet,
+    # Innovative models for rural voltage anomaly detection
+    'TPATimesNet': TPATimesNet,
+    'MTSTimesNet': MTSTimesNet,
+    'HybridTimesNet': HybridTimesNet,
 }
 
 
