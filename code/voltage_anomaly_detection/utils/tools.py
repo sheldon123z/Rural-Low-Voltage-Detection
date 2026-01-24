@@ -3,41 +3,49 @@ Tools for Voltage Anomaly Detection
 Standalone version - independent from main TSLib
 """
 
+import math
 import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import matplotlib.pyplot as plt
-import math
 
-plt.switch_backend('agg')
+plt.switch_backend("agg")
 
 
 def adjust_learning_rate(optimizer, epoch, args):
     """Adjust learning rate based on schedule type."""
-    if args.lradj == 'type1':
+    if args.lradj == "type1":
         lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - 1) // 1))}
-    elif args.lradj == 'type2':
+    elif args.lradj == "type2":
+        lr_adjust = {2: 5e-5, 4: 1e-5, 6: 5e-6, 8: 1e-6, 10: 5e-7, 15: 1e-7, 20: 5e-8}
+    elif args.lradj == "type3":
         lr_adjust = {
-            2: 5e-5, 4: 1e-5, 6: 5e-6, 8: 1e-6,
-            10: 5e-7, 15: 1e-7, 20: 5e-8
+            epoch: (
+                args.learning_rate
+                if epoch < 3
+                else args.learning_rate * (0.9 ** ((epoch - 3) // 1))
+            )
         }
-    elif args.lradj == 'type3':
-        lr_adjust = {epoch: args.learning_rate if epoch < 3 else args.learning_rate * (0.9 ** ((epoch - 3) // 1))}
     elif args.lradj == "cosine":
-        lr_adjust = {epoch: args.learning_rate / 2 * (1 + math.cos(epoch / args.train_epochs * math.pi))}
+        lr_adjust = {
+            epoch: args.learning_rate
+            / 2
+            * (1 + math.cos(epoch / args.train_epochs * math.pi))
+        }
     else:
         return
-        
+
     if epoch in lr_adjust.keys():
         lr = lr_adjust[epoch]
         for param_group in optimizer.param_groups:
-            param_group['lr'] = lr
-        print('Updating learning rate to {}'.format(lr))
+            param_group["lr"] = lr
+        print("Updating learning rate to {}".format(lr))
 
 
 class EarlyStopping:
     """Early stopping mechanism to prevent overfitting."""
-    
+
     def __init__(self, patience=7, verbose=False, delta=0):
         self.patience = patience
         self.verbose = verbose
@@ -54,7 +62,7 @@ class EarlyStopping:
             self.save_checkpoint(val_loss, model, path)
         elif score < self.best_score + self.delta:
             self.counter += 1
-            print(f'EarlyStopping counter: {self.counter} out of {self.patience}')
+            print(f"EarlyStopping counter: {self.counter} out of {self.patience}")
             if self.counter >= self.patience:
                 self.early_stop = True
         else:
@@ -65,14 +73,16 @@ class EarlyStopping:
     def save_checkpoint(self, val_loss, model, path):
         """Save model when validation loss decreases."""
         if self.verbose:
-            print(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
-        torch.save(model.state_dict(), path + '/' + 'checkpoint.pth')
+            print(
+                f"Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ..."
+            )
+        torch.save(model.state_dict(), path + "/" + "checkpoint.pth")
         self.val_loss_min = val_loss
 
 
 class StandardScaler:
     """Standard scaler for data normalization."""
-    
+
     def __init__(self, mean=None, std=None):
         self.mean = mean
         self.std = std
@@ -94,22 +104,22 @@ class StandardScaler:
         return (data * self.std) + self.mean
 
 
-def visual(true, preds=None, name='./pic/test.pdf'):
+def visual(true, preds=None, name="./pic/test.pdf"):
     """Results visualization."""
     plt.figure(figsize=(12, 4))
     if preds is not None:
-        plt.plot(preds, label='Prediction', linewidth=2, alpha=0.8)
-    plt.plot(true, label='GroundTruth', linewidth=2, alpha=0.8)
+        plt.plot(preds, label="Prediction", linewidth=2, alpha=0.8)
+    plt.plot(true, label="GroundTruth", linewidth=2, alpha=0.8)
     plt.legend()
     plt.tight_layout()
-    plt.savefig(name, bbox_inches='tight', dpi=150)
+    plt.savefig(name, bbox_inches="tight", dpi=150)
     plt.close()
 
 
 def adjustment(gt, pred):
     """
     Point adjustment for anomaly detection evaluation.
-    
+
     If any point within an anomaly segment is correctly detected,
     mark all points in that segment as correctly detected.
     This is the standard evaluation protocol for time series anomaly detection.
@@ -146,6 +156,7 @@ def cal_accuracy(y_pred, y_true):
 
 class dotdict(dict):
     """Dot notation access to dictionary attributes."""
+
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__

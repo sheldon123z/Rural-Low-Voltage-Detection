@@ -15,10 +15,11 @@ Key innovations:
 - Integrate voltage quality features (THD, unbalance) into embeddings
 """
 
+import math
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import math
 
 
 class PowerFrequencyEmbedding(nn.Module):
@@ -69,12 +70,16 @@ class PowerFrequencyEmbedding(nn.Module):
             for i in range(0, end_idx - start_idx, 2):
                 phase_shift = i * math.pi / (end_idx - start_idx)
                 if start_idx + i < d_model:
-                    pe[:, start_idx + i] = torch.sin(position.squeeze() * omega + phase_shift)
+                    pe[:, start_idx + i] = torch.sin(
+                        position.squeeze() * omega + phase_shift
+                    )
                 if start_idx + i + 1 < d_model:
-                    pe[:, start_idx + i + 1] = torch.cos(position.squeeze() * omega + phase_shift)
+                    pe[:, start_idx + i + 1] = torch.cos(
+                        position.squeeze() * omega + phase_shift
+                    )
 
         pe = pe.unsqueeze(0)
-        self.register_buffer('pe', pe)
+        self.register_buffer("pe", pe)
 
     def forward(self, x):
         """
@@ -84,7 +89,7 @@ class PowerFrequencyEmbedding(nn.Module):
         Returns:
             Power frequency positional encoding [B, T, d_model]
         """
-        return self.pe[:, :x.size(1)]
+        return self.pe[:, : x.size(1)]
 
 
 class DailyLoadEmbedding(nn.Module):
@@ -114,20 +119,24 @@ class DailyLoadEmbedding(nn.Module):
         # Pre-compute daily cycle embeddings
         # Use multiple frequencies to capture different daily patterns
         daily_periods = [
-            samples_per_day,          # Full day cycle
-            samples_per_day // 2,     # Half-day (AM/PM)
-            samples_per_day // 3,     # 8-hour cycles
-            samples_per_day // 4,     # 6-hour cycles
-            samples_per_day // 6,     # 4-hour cycles
+            samples_per_day,  # Full day cycle
+            samples_per_day // 2,  # Half-day (AM/PM)
+            samples_per_day // 3,  # 8-hour cycles
+            samples_per_day // 4,  # 6-hour cycles
+            samples_per_day // 6,  # 4-hour cycles
         ]
 
-        self.period_embeddings = nn.ModuleList([
-            nn.Embedding(max(period, 1), d_model // len(daily_periods))
-            for period in daily_periods
-        ])
+        self.period_embeddings = nn.ModuleList(
+            [
+                nn.Embedding(max(period, 1), d_model // len(daily_periods))
+                for period in daily_periods
+            ]
+        )
 
         # Projection to combine period embeddings
-        self.projection = nn.Linear(d_model // len(daily_periods) * len(daily_periods), d_model)
+        self.projection = nn.Linear(
+            d_model // len(daily_periods) * len(daily_periods), d_model
+        )
 
     def forward(self, x, time_indices=None):
         """
@@ -178,8 +187,8 @@ class ThreePhaseEmbedding(nn.Module):
         self.num_phases = num_phases
 
         # Phase angle embeddings (0, 120, 240 degrees)
-        phase_angles = torch.tensor([0, 2*math.pi/3, 4*math.pi/3])
-        self.register_buffer('phase_angles', phase_angles)
+        phase_angles = torch.tensor([0, 2 * math.pi / 3, 4 * math.pi / 3])
+        self.register_buffer("phase_angles", phase_angles)
 
         # Learnable phase embedding
         self.phase_embed = nn.Embedding(num_phases, d_model)
@@ -222,7 +231,9 @@ class ThreePhaseEmbedding(nn.Module):
             neg_emb = self.neg_seq_embed(v_acb)  # [B, T, d_model]
 
             # Combine with phase embeddings
-            combined = pos_emb + 0.1 * neg_emb + phase_emb.mean(0).unsqueeze(0).unsqueeze(0)
+            combined = (
+                pos_emb + 0.1 * neg_emb + phase_emb.mean(0).unsqueeze(0).unsqueeze(0)
+            )
         else:
             combined = phase_emb[:voltage_channels].mean(0).unsqueeze(0).unsqueeze(0)
             combined = combined.expand(B, T, -1)
@@ -294,7 +305,9 @@ class VoltageQualityEmbedding(nn.Module):
             # Calculate simple unbalance from voltage
             if voltage.size(-1) >= 3:
                 v_mean = voltage[:, :, :3].mean(dim=-1, keepdim=True)
-                v_max_dev = (voltage[:, :, :3] - v_mean).abs().max(dim=-1, keepdim=True)[0]
+                v_max_dev = (
+                    (voltage[:, :, :3] - v_mean).abs().max(dim=-1, keepdim=True)[0]
+                )
                 unb = v_max_dev / (v_mean + 1e-8) * 100
                 unb_emb = self.unbalance_proj(unb)
             else:
@@ -324,9 +337,19 @@ class VoltageDataEmbedding(nn.Module):
     5. Voltage quality embedding
     """
 
-    def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1,
-                 use_power_freq=True, use_daily=True, use_three_phase=True,
-                 use_quality=True, sample_rate=1.0):
+    def __init__(
+        self,
+        c_in,
+        d_model,
+        embed_type="fixed",
+        freq="h",
+        dropout=0.1,
+        use_power_freq=True,
+        use_daily=True,
+        use_three_phase=True,
+        use_quality=True,
+        sample_rate=1.0,
+    ):
         """
         Args:
             c_in: Number of input channels
@@ -351,19 +374,29 @@ class VoltageDataEmbedding(nn.Module):
         # Token embedding (1D convolution)
         padding = 1
         self.token_conv = nn.Conv1d(
-            in_channels=c_in, out_channels=d_model,
-            kernel_size=3, padding=padding, padding_mode='circular', bias=False
+            in_channels=c_in,
+            out_channels=d_model,
+            kernel_size=3,
+            padding=padding,
+            padding_mode="circular",
+            bias=False,
         )
-        nn.init.kaiming_normal_(self.token_conv.weight, mode='fan_in', nonlinearity='leaky_relu')
+        nn.init.kaiming_normal_(
+            self.token_conv.weight, mode="fan_in", nonlinearity="leaky_relu"
+        )
 
         # Optional embeddings
         if use_power_freq:
-            self.power_freq_embedding = PowerFrequencyEmbedding(d_model, sample_rate=sample_rate)
+            self.power_freq_embedding = PowerFrequencyEmbedding(
+                d_model, sample_rate=sample_rate
+            )
 
         if use_daily:
             # Samples per day depends on sampling rate
             samples_per_day = int(86400 * sample_rate)
-            self.daily_embedding = DailyLoadEmbedding(d_model, samples_per_day=samples_per_day)
+            self.daily_embedding = DailyLoadEmbedding(
+                d_model, samples_per_day=samples_per_day
+            )
 
         if use_three_phase:
             self.three_phase_embedding = ThreePhaseEmbedding(d_model)
@@ -373,7 +406,9 @@ class VoltageDataEmbedding(nn.Module):
 
         # Combination weights
         num_embeddings = 1 + use_power_freq + use_daily + use_three_phase + use_quality
-        self.combination_weights = nn.Parameter(torch.ones(num_embeddings) / num_embeddings)
+        self.combination_weights = nn.Parameter(
+            torch.ones(num_embeddings) / num_embeddings
+        )
 
         self.dropout = nn.Dropout(p=dropout)
 
@@ -418,7 +453,7 @@ class VoltageDataEmbedding(nn.Module):
         # Quality embedding
         if self.use_quality:
             # Extract voltage channels (assume first 3)
-            voltage = x[:, :, :min(3, x.size(-1))]
+            voltage = x[:, :, : min(3, x.size(-1))]
             qual_emb = self.quality_embedding(voltage)
             embeddings.append(qual_emb)
             weights.append(self.combination_weights[idx])

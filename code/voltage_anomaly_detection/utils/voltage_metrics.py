@@ -13,8 +13,14 @@ with Association Discrepancy" (ICLR 2022)
 
 import numpy as np
 from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score,
-    confusion_matrix, classification_report, roc_auc_score, average_precision_score
+    accuracy_score,
+    average_precision_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
 )
 
 
@@ -121,12 +127,12 @@ def segment_f1(pred, gt, overlap_threshold=0.5):
 
     if len(gt_segments) == 0:
         if len(pred_segments) == 0:
-            return {'precision': 1.0, 'recall': 1.0, 'f1': 1.0}
+            return {"precision": 1.0, "recall": 1.0, "f1": 1.0}
         else:
-            return {'precision': 0.0, 'recall': 1.0, 'f1': 0.0}
+            return {"precision": 0.0, "recall": 1.0, "f1": 0.0}
 
     if len(pred_segments) == 0:
-        return {'precision': 1.0, 'recall': 0.0, 'f1': 0.0}
+        return {"precision": 1.0, "recall": 0.0, "f1": 0.0}
 
     # Match predicted segments to ground truth segments
     matched_gt = set()
@@ -155,9 +161,11 @@ def segment_f1(pred, gt, overlap_threshold=0.5):
 
     precision = tp / len(pred_segments) if len(pred_segments) > 0 else 0
     recall = len(matched_gt) / len(gt_segments) if len(gt_segments) > 0 else 0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
+    f1 = (
+        2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
+    )
 
-    return {'precision': precision, 'recall': recall, 'f1': f1}
+    return {"precision": precision, "recall": recall, "f1": f1}
 
 
 def voltage_anomaly_metrics(pred_scores, gt_labels, threshold=None, anomaly_ratio=0.01):
@@ -215,43 +223,40 @@ def voltage_anomaly_metrics(pred_scores, gt_labels, threshold=None, anomaly_rati
     # Build result dictionary
     results = {
         # Point-wise metrics
-        'accuracy': accuracy,
-        'precision': precision,
-        'recall': recall,
-        'f1': f1,
-
+        "accuracy": accuracy,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
         # Point-adjusted metrics
-        'adj_accuracy': adj_accuracy,
-        'adj_precision': adj_precision,
-        'adj_recall': adj_recall,
-        'adj_f1': adj_f1,
-
+        "adj_accuracy": adj_accuracy,
+        "adj_precision": adj_precision,
+        "adj_recall": adj_recall,
+        "adj_f1": adj_f1,
         # Segment-level metrics
-        'seg_precision': seg_metrics['precision'],
-        'seg_recall': seg_metrics['recall'],
-        'seg_f1': seg_metrics['f1'],
-
+        "seg_precision": seg_metrics["precision"],
+        "seg_recall": seg_metrics["recall"],
+        "seg_f1": seg_metrics["f1"],
         # Detection statistics
-        'threshold': threshold,
-        'tp': int(tp),
-        'fp': int(fp),
-        'tn': int(tn),
-        'fn': int(fn),
-        'total_anomalies': int(np.sum(gt_labels)),
-        'detected_anomalies': int(np.sum(pred_binary)),
+        "threshold": threshold,
+        "tp": int(tp),
+        "fp": int(fp),
+        "tn": int(tn),
+        "fn": int(fn),
+        "total_anomalies": int(np.sum(gt_labels)),
+        "detected_anomalies": int(np.sum(pred_binary)),
     }
 
     # ROC-AUC (requires positive and negative samples)
     if len(np.unique(gt_labels)) > 1:
         try:
-            results['roc_auc'] = roc_auc_score(gt_labels, pred_scores)
-            results['pr_auc'] = average_precision_score(gt_labels, pred_scores)
+            results["roc_auc"] = roc_auc_score(gt_labels, pred_scores)
+            results["pr_auc"] = average_precision_score(gt_labels, pred_scores)
         except ValueError:
-            results['roc_auc'] = 0.0
-            results['pr_auc'] = 0.0
+            results["roc_auc"] = 0.0
+            results["pr_auc"] = 0.0
     else:
-        results['roc_auc'] = 0.0
-        results['pr_auc'] = 0.0
+        results["roc_auc"] = 0.0
+        results["pr_auc"] = 0.0
 
     return results
 
@@ -269,11 +274,11 @@ def voltage_quality_analysis(voltage_data, thresholds=None):
     """
     if thresholds is None:
         thresholds = {
-            'nominal': 220.0,
-            'lower_limit': 198.0,  # -10%
-            'upper_limit': 242.0,  # +10%
-            'severe_lower': 176.0,  # -20%
-            'severe_upper': 264.0,  # +20%
+            "nominal": 220.0,
+            "lower_limit": 198.0,  # -10%
+            "upper_limit": 242.0,  # +10%
+            "severe_lower": 176.0,  # -20%
+            "severe_upper": 264.0,  # +20%
         }
 
     voltage_data = np.array(voltage_data)
@@ -287,13 +292,15 @@ def voltage_quality_analysis(voltage_data, thresholds=None):
     max_voltage = np.max(voltage_data, axis=0)
 
     # Calculate deviation from nominal
-    deviation_percent = (mean_voltage - thresholds['nominal']) / thresholds['nominal'] * 100
+    deviation_percent = (
+        (mean_voltage - thresholds["nominal"]) / thresholds["nominal"] * 100
+    )
 
     # Count violations
-    undervoltage_count = np.sum(voltage_data < thresholds['lower_limit'], axis=0)
-    overvoltage_count = np.sum(voltage_data > thresholds['upper_limit'], axis=0)
-    severe_under_count = np.sum(voltage_data < thresholds['severe_lower'], axis=0)
-    severe_over_count = np.sum(voltage_data > thresholds['severe_upper'], axis=0)
+    undervoltage_count = np.sum(voltage_data < thresholds["lower_limit"], axis=0)
+    overvoltage_count = np.sum(voltage_data > thresholds["upper_limit"], axis=0)
+    severe_under_count = np.sum(voltage_data < thresholds["severe_lower"], axis=0)
+    severe_over_count = np.sum(voltage_data > thresholds["severe_upper"], axis=0)
 
     # Calculate unbalance factor (if 3-phase)
     if voltage_data.shape[1] >= 3:
@@ -306,16 +313,16 @@ def voltage_quality_analysis(voltage_data, thresholds=None):
         mean_unbalance = 0.0
 
     return {
-        'mean_voltage': mean_voltage.tolist(),
-        'std_voltage': std_voltage.tolist(),
-        'min_voltage': min_voltage.tolist(),
-        'max_voltage': max_voltage.tolist(),
-        'deviation_percent': deviation_percent.tolist(),
-        'undervoltage_count': undervoltage_count.tolist(),
-        'overvoltage_count': overvoltage_count.tolist(),
-        'severe_undervoltage_count': severe_under_count.tolist(),
-        'severe_overvoltage_count': severe_over_count.tolist(),
-        'mean_unbalance_factor': mean_unbalance,
+        "mean_voltage": mean_voltage.tolist(),
+        "std_voltage": std_voltage.tolist(),
+        "min_voltage": min_voltage.tolist(),
+        "max_voltage": max_voltage.tolist(),
+        "deviation_percent": deviation_percent.tolist(),
+        "undervoltage_count": undervoltage_count.tolist(),
+        "overvoltage_count": overvoltage_count.tolist(),
+        "severe_undervoltage_count": severe_under_count.tolist(),
+        "severe_overvoltage_count": severe_over_count.tolist(),
+        "mean_unbalance_factor": mean_unbalance,
     }
 
 
@@ -348,14 +355,16 @@ def print_voltage_report(metrics, name="Voltage Anomaly Detection"):
     print(f"  Recall:    {metrics['seg_recall']:.4f}")
     print(f"  F1 Score:  {metrics['seg_f1']:.4f}")
 
-    if 'roc_auc' in metrics:
+    if "roc_auc" in metrics:
         print("\n[AUC Metrics]")
         print(f"  ROC-AUC:   {metrics['roc_auc']:.4f}")
         print(f"  PR-AUC:    {metrics['pr_auc']:.4f}")
 
     print("\n[Detection Statistics]")
     print(f"  Threshold: {metrics['threshold']:.4f}")
-    print(f"  TP: {metrics['tp']}, FP: {metrics['fp']}, TN: {metrics['tn']}, FN: {metrics['fn']}")
+    print(
+        f"  TP: {metrics['tp']}, FP: {metrics['fp']}, TN: {metrics['tn']}, FN: {metrics['fn']}"
+    )
     print(f"  Total Anomalies: {metrics['total_anomalies']}")
     print(f"  Detected Anomalies: {metrics['detected_anomalies']}")
 

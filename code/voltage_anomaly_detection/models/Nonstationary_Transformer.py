@@ -8,25 +8,28 @@ Standalone version - independent from main TSLib
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer
-from layers.SelfAttention_Family import DSAttention, AttentionLayer
+
 from layers.Embed import DataEmbedding
+from layers.SelfAttention_Family import AttentionLayer, DSAttention
+from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer
 
 
 class Projector(nn.Module):
     """MLP to learn the De-stationary factors."""
 
-    def __init__(self, enc_in, seq_len, hidden_dims, hidden_layers, output_dim, kernel_size=3):
+    def __init__(
+        self, enc_in, seq_len, hidden_dims, hidden_layers, output_dim, kernel_size=3
+    ):
         super(Projector, self).__init__()
 
-        padding = 1 if torch.__version__ >= '1.5.0' else 2
+        padding = 1 if torch.__version__ >= "1.5.0" else 2
         self.series_conv = nn.Conv1d(
-            in_channels=seq_len, 
-            out_channels=1, 
-            kernel_size=kernel_size, 
+            in_channels=seq_len,
+            out_channels=1,
+            kernel_size=kernel_size,
             padding=padding,
-            padding_mode='circular', 
-            bias=False
+            padding_mode="circular",
+            bias=False,
         )
 
         layers = [nn.Linear(2 * enc_in, hidden_dims[0]), nn.ReLU()]
@@ -63,7 +66,11 @@ class Model(nn.Module):
 
         # Embedding
         self.enc_embedding = DataEmbedding(
-            configs.enc_in, configs.d_model, configs.embed, configs.freq, configs.dropout
+            configs.enc_in,
+            configs.d_model,
+            configs.embed,
+            configs.freq,
+            configs.dropout,
         )
 
         # Encoder
@@ -71,36 +78,59 @@ class Model(nn.Module):
             [
                 EncoderLayer(
                     AttentionLayer(
-                        DSAttention(False, configs.factor, attention_dropout=configs.dropout,
-                                    output_attention=False), 
-                        configs.d_model, configs.n_heads
+                        DSAttention(
+                            False,
+                            configs.factor,
+                            attention_dropout=configs.dropout,
+                            output_attention=False,
+                        ),
+                        configs.d_model,
+                        configs.n_heads,
                     ),
                     configs.d_model,
                     configs.d_ff,
                     dropout=configs.dropout,
-                    activation=configs.activation
-                ) for l in range(configs.e_layers)
+                    activation=configs.activation,
+                )
+                for l in range(configs.e_layers)
             ],
-            norm_layer=torch.nn.LayerNorm(configs.d_model)
+            norm_layer=torch.nn.LayerNorm(configs.d_model),
         )
 
         # Decoder
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             self.dec_embedding = DataEmbedding(
-                configs.dec_in, configs.d_model, configs.embed, configs.freq, configs.dropout
+                configs.dec_in,
+                configs.d_model,
+                configs.embed,
+                configs.freq,
+                configs.dropout,
             )
             self.decoder = Decoder(
                 [
                     DecoderLayer(
                         AttentionLayer(
-                            DSAttention(True, configs.factor, attention_dropout=configs.dropout,
-                                        output_attention=False),
-                            configs.d_model, configs.n_heads
+                            DSAttention(
+                                True,
+                                configs.factor,
+                                attention_dropout=configs.dropout,
+                                output_attention=False,
+                            ),
+                            configs.d_model,
+                            configs.n_heads,
                         ),
                         AttentionLayer(
-                            DSAttention(False, configs.factor, attention_dropout=configs.dropout,
-                                        output_attention=False),
-                            configs.d_model, configs.n_heads
+                            DSAttention(
+                                False,
+                                configs.factor,
+                                attention_dropout=configs.dropout,
+                                output_attention=False,
+                            ),
+                            configs.d_model,
+                            configs.n_heads,
                         ),
                         configs.d_model,
                         configs.d_ff,
@@ -110,31 +140,33 @@ class Model(nn.Module):
                     for l in range(configs.d_layers)
                 ],
                 norm_layer=torch.nn.LayerNorm(configs.d_model),
-                projection=nn.Linear(configs.d_model, configs.c_out, bias=True)
+                projection=nn.Linear(configs.d_model, configs.c_out, bias=True),
             )
 
-        if self.task_name == 'imputation':
+        if self.task_name == "imputation":
             self.projection = nn.Linear(configs.d_model, configs.c_out, bias=True)
-        if self.task_name == 'anomaly_detection':
+        if self.task_name == "anomaly_detection":
             self.projection = nn.Linear(configs.d_model, configs.c_out, bias=True)
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             self.act = F.gelu
             self.dropout = nn.Dropout(configs.dropout)
-            self.projection = nn.Linear(configs.d_model * configs.seq_len, configs.num_class)
+            self.projection = nn.Linear(
+                configs.d_model * configs.seq_len, configs.num_class
+            )
 
         self.tau_learner = Projector(
-            enc_in=configs.enc_in, 
-            seq_len=configs.seq_len, 
+            enc_in=configs.enc_in,
+            seq_len=configs.seq_len,
             hidden_dims=configs.p_hidden_dims,
-            hidden_layers=configs.p_hidden_layers, 
-            output_dim=1
+            hidden_layers=configs.p_hidden_layers,
+            output_dim=1,
         )
         self.delta_learner = Projector(
-            enc_in=configs.enc_in, 
+            enc_in=configs.enc_in,
             seq_len=configs.seq_len,
-            hidden_dims=configs.p_hidden_dims, 
+            hidden_dims=configs.p_hidden_dims,
             hidden_layers=configs.p_hidden_layers,
-            output_dim=configs.seq_len
+            output_dim=configs.seq_len,
         )
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
@@ -143,7 +175,9 @@ class Model(nn.Module):
         # Normalization
         mean_enc = x_enc.mean(1, keepdim=True).detach()
         x_enc = x_enc - mean_enc
-        std_enc = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5).detach()
+        std_enc = torch.sqrt(
+            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5
+        ).detach()
         x_enc = x_enc / std_enc
 
         # B x S x E, B x 1 x E -> B x 1, positive scalar
@@ -155,16 +189,25 @@ class Model(nn.Module):
         # B x S x E, B x 1 x E -> B x S
         delta = self.delta_learner(x_raw, mean_enc)
 
-        x_dec_new = torch.cat(
-            [x_enc[:, -self.label_len:, :], torch.zeros_like(x_dec[:, -self.pred_len:, :])],
-            dim=1
-        ).to(x_enc.device).clone()
+        x_dec_new = (
+            torch.cat(
+                [
+                    x_enc[:, -self.label_len :, :],
+                    torch.zeros_like(x_dec[:, -self.pred_len :, :]),
+                ],
+                dim=1,
+            )
+            .to(x_enc.device)
+            .clone()
+        )
 
         enc_out = self.enc_embedding(x_enc, x_mark_enc)
         enc_out, attns = self.encoder(enc_out, attn_mask=None, tau=tau, delta=delta)
 
         dec_out = self.dec_embedding(x_dec_new, x_mark_dec)
-        dec_out = self.decoder(dec_out, enc_out, x_mask=None, cross_mask=None, tau=tau, delta=delta)
+        dec_out = self.decoder(
+            dec_out, enc_out, x_mask=None, cross_mask=None, tau=tau, delta=delta
+        )
         dec_out = dec_out * std_enc + mean_enc
         return dec_out
 
@@ -176,7 +219,9 @@ class Model(nn.Module):
         mean_enc = mean_enc.unsqueeze(1).detach()
         x_enc = x_enc - mean_enc
         x_enc = x_enc.masked_fill(mask == 0, 0)
-        std_enc = torch.sqrt(torch.sum(x_enc * x_enc, dim=1) / torch.sum(mask == 1, dim=1) + 1e-5)
+        std_enc = torch.sqrt(
+            torch.sum(x_enc * x_enc, dim=1) / torch.sum(mask == 1, dim=1) + 1e-5
+        )
         std_enc = std_enc.unsqueeze(1).detach()
         x_enc /= std_enc
 
@@ -199,7 +244,9 @@ class Model(nn.Module):
         # Normalization
         mean_enc = x_enc.mean(1, keepdim=True).detach()
         x_enc = x_enc - mean_enc
-        std_enc = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5).detach()
+        std_enc = torch.sqrt(
+            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5
+        ).detach()
         x_enc = x_enc / std_enc
 
         tau = self.tau_learner(x_raw, std_enc)
@@ -244,16 +291,19 @@ class Model(nn.Module):
         return output
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
-            return dec_out[:, -self.pred_len:, :]
-        if self.task_name == 'imputation':
+            return dec_out[:, -self.pred_len :, :]
+        if self.task_name == "imputation":
             dec_out = self.imputation(x_enc, x_mark_enc, x_dec, x_mark_dec, mask)
             return dec_out
-        if self.task_name == 'anomaly_detection':
+        if self.task_name == "anomaly_detection":
             dec_out = self.anomaly_detection(x_enc)
             return dec_out
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             dec_out = self.classification(x_enc, x_mark_enc)
             return dec_out
         return None

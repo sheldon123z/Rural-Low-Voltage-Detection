@@ -7,9 +7,16 @@ Paper: Attention Is All You Need (NeurIPS 2017)
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer, ConvLayer
-from layers.SelfAttention_Family import FullAttention, AttentionLayer
+
 from layers.Embed import DataEmbedding
+from layers.SelfAttention_Family import AttentionLayer, FullAttention
+from layers.Transformer_EncDec import (
+    ConvLayer,
+    Decoder,
+    DecoderLayer,
+    Encoder,
+    EncoderLayer,
+)
 
 
 class Model(nn.Module):
@@ -21,41 +28,74 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.task_name = configs.task_name
         self.pred_len = configs.pred_len
-        
+
         # Embedding
-        self.enc_embedding = DataEmbedding(configs.enc_in, configs.d_model, configs.embed, configs.freq,
-                                           configs.dropout)
+        self.enc_embedding = DataEmbedding(
+            configs.enc_in,
+            configs.d_model,
+            configs.embed,
+            configs.freq,
+            configs.dropout,
+        )
         # Encoder
         self.encoder = Encoder(
             [
                 EncoderLayer(
                     AttentionLayer(
-                        FullAttention(False, configs.factor, attention_dropout=configs.dropout,
-                                      output_attention=False), configs.d_model, configs.n_heads),
+                        FullAttention(
+                            False,
+                            configs.factor,
+                            attention_dropout=configs.dropout,
+                            output_attention=False,
+                        ),
+                        configs.d_model,
+                        configs.n_heads,
+                    ),
                     configs.d_model,
                     configs.d_ff,
                     dropout=configs.dropout,
-                    activation=configs.activation
-                ) for l in range(configs.e_layers)
+                    activation=configs.activation,
+                )
+                for l in range(configs.e_layers)
             ],
-            norm_layer=torch.nn.LayerNorm(configs.d_model)
+            norm_layer=torch.nn.LayerNorm(configs.d_model),
         )
-        
+
         # Decoder for forecasting
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
-            self.dec_embedding = DataEmbedding(configs.dec_in, configs.d_model, configs.embed, configs.freq,
-                                               configs.dropout)
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
+            self.dec_embedding = DataEmbedding(
+                configs.dec_in,
+                configs.d_model,
+                configs.embed,
+                configs.freq,
+                configs.dropout,
+            )
             self.decoder = Decoder(
                 [
                     DecoderLayer(
                         AttentionLayer(
-                            FullAttention(True, configs.factor, attention_dropout=configs.dropout,
-                                          output_attention=False),
-                            configs.d_model, configs.n_heads),
+                            FullAttention(
+                                True,
+                                configs.factor,
+                                attention_dropout=configs.dropout,
+                                output_attention=False,
+                            ),
+                            configs.d_model,
+                            configs.n_heads,
+                        ),
                         AttentionLayer(
-                            FullAttention(False, configs.factor, attention_dropout=configs.dropout,
-                                          output_attention=False),
-                            configs.d_model, configs.n_heads),
+                            FullAttention(
+                                False,
+                                configs.factor,
+                                attention_dropout=configs.dropout,
+                                output_attention=False,
+                            ),
+                            configs.d_model,
+                            configs.n_heads,
+                        ),
                         configs.d_model,
                         configs.d_ff,
                         dropout=configs.dropout,
@@ -64,16 +104,18 @@ class Model(nn.Module):
                     for l in range(configs.d_layers)
                 ],
                 norm_layer=torch.nn.LayerNorm(configs.d_model),
-                projection=nn.Linear(configs.d_model, configs.c_out, bias=True)
+                projection=nn.Linear(configs.d_model, configs.c_out, bias=True),
             )
-        if self.task_name == 'imputation':
+        if self.task_name == "imputation":
             self.projection = nn.Linear(configs.d_model, configs.c_out, bias=True)
-        if self.task_name == 'anomaly_detection':
+        if self.task_name == "anomaly_detection":
             self.projection = nn.Linear(configs.d_model, configs.c_out, bias=True)
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             self.act = F.gelu
             self.dropout = nn.Dropout(configs.dropout)
-            self.projection = nn.Linear(configs.d_model * configs.seq_len, configs.num_class)
+            self.projection = nn.Linear(
+                configs.d_model * configs.seq_len, configs.num_class
+            )
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
         enc_out = self.enc_embedding(x_enc, x_mark_enc)
@@ -107,16 +149,19 @@ class Model(nn.Module):
         return output
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
-            return dec_out[:, -self.pred_len:, :]
-        if self.task_name == 'imputation':
+            return dec_out[:, -self.pred_len :, :]
+        if self.task_name == "imputation":
             dec_out = self.imputation(x_enc, x_mark_enc, x_dec, x_mark_dec, mask)
             return dec_out
-        if self.task_name == 'anomaly_detection':
+        if self.task_name == "anomaly_detection":
             dec_out = self.anomaly_detection(x_enc)
             return dec_out
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             dec_out = self.classification(x_enc, x_mark_enc)
             return dec_out
         return None

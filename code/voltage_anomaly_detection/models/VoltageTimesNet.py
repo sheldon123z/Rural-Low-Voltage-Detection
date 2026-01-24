@@ -10,21 +10,21 @@ Key innovations:
 Paper reference: Adapted from TimesNet (ICLR 2023)
 """
 
+import numpy as np
 import torch
+import torch.fft
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.fft
-import numpy as np
-from layers.Embed import DataEmbedding
-from layers.Conv_Blocks import Inception_Block_V1
 
+from layers.Conv_Blocks import Inception_Block_V1
+from layers.Embed import DataEmbedding
 
 # Power grid preset periods (in samples, assuming 1-second sampling rate)
 VOLTAGE_PRESET_PERIODS = {
-    '1min': 60,      # 1 minute cycle for short-term fluctuations
-    '5min': 300,     # 5 minute cycle for transient events
-    '15min': 900,    # 15 minute cycle for load variations
-    '1h': 3600,      # 1 hour cycle for hourly load pattern
+    "1min": 60,  # 1 minute cycle for short-term fluctuations
+    "5min": 300,  # 5 minute cycle for transient events
+    "15min": 900,  # 15 minute cycle for load variations
+    "1h": 3600,  # 1 hour cycle for hourly load pattern
 }
 
 
@@ -104,7 +104,7 @@ def FFT_for_Period_Voltage(x, k=2, preset_periods=None, preset_weight=0.3):
         period_list = np.array(fft_periods[:k])
 
     # Calculate period weights based on FFT amplitudes
-    period_weight = abs(xf).mean(-1)[:, top_list[:len(period_list)]]
+    period_weight = abs(xf).mean(-1)[:, top_list[: len(period_list)]]
 
     return period_list, period_weight
 
@@ -131,24 +131,29 @@ class VoltageTimesBlock(nn.Module):
             self.preset_periods = [
                 max(2, configs.seq_len // 20),  # ~5% of sequence
                 max(2, configs.seq_len // 10),  # ~10% of sequence
-                max(2, configs.seq_len // 4),   # ~25% of sequence
+                max(2, configs.seq_len // 4),  # ~25% of sequence
             ]
         else:
             self.preset_periods = preset_periods
 
         # 2D convolution for period-based feature extraction
         self.conv = nn.Sequential(
-            Inception_Block_V1(configs.d_model, configs.d_ff,
-                             num_kernels=configs.num_kernels),
+            Inception_Block_V1(
+                configs.d_model, configs.d_ff, num_kernels=configs.num_kernels
+            ),
             nn.GELU(),
-            Inception_Block_V1(configs.d_ff, configs.d_model,
-                             num_kernels=configs.num_kernels)
+            Inception_Block_V1(
+                configs.d_ff, configs.d_model, num_kernels=configs.num_kernels
+            ),
         )
 
         # Optional: Additional 1D conv for temporal smoothing
         self.temporal_conv = nn.Conv1d(
-            configs.d_model, configs.d_model,
-            kernel_size=3, padding=1, groups=configs.d_model
+            configs.d_model,
+            configs.d_model,
+            kernel_size=3,
+            padding=1,
+            groups=configs.d_model,
         )
 
     def forward(self, x):
@@ -156,9 +161,7 @@ class VoltageTimesBlock(nn.Module):
 
         # Enhanced period discovery with preset periods
         period_list, period_weight = FFT_for_Period_Voltage(
-            x, self.k,
-            preset_periods=self.preset_periods,
-            preset_weight=0.3
+            x, self.k, preset_periods=self.preset_periods, preset_weight=0.3
         )
 
         res = []
@@ -174,8 +177,7 @@ class VoltageTimesBlock(nn.Module):
             if total_len % period != 0:
                 length = ((total_len // period) + 1) * period
                 padding = torch.zeros(
-                    [x.shape[0], length - total_len, x.shape[2]],
-                    device=x.device
+                    [x.shape[0], length - total_len, x.shape[2]], device=x.device
                 )
                 out = torch.cat([x, padding], dim=1)
             else:
@@ -226,36 +228,44 @@ class Model(nn.Module):
         self.configs = configs
         self.task_name = configs.task_name
         self.seq_len = configs.seq_len
-        self.label_len = getattr(configs, 'label_len', 0)
-        self.pred_len = getattr(configs, 'pred_len', 0)
+        self.label_len = getattr(configs, "label_len", 0)
+        self.pred_len = getattr(configs, "pred_len", 0)
 
         # Calculate preset periods based on sequence length
         self.preset_periods = self._calculate_preset_periods(configs.seq_len)
 
         # Encoder layers with VoltageTimesBlock
-        self.model = nn.ModuleList([
-            VoltageTimesBlock(configs, self.preset_periods)
-            for _ in range(configs.e_layers)
-        ])
+        self.model = nn.ModuleList(
+            [
+                VoltageTimesBlock(configs, self.preset_periods)
+                for _ in range(configs.e_layers)
+            ]
+        )
 
         # Data embedding
         self.enc_embedding = DataEmbedding(
-            configs.enc_in, configs.d_model,
-            configs.embed, configs.freq, configs.dropout
+            configs.enc_in,
+            configs.d_model,
+            configs.embed,
+            configs.freq,
+            configs.dropout,
         )
 
         self.layer = configs.e_layers
         self.layer_norm = nn.LayerNorm(configs.d_model)
 
         # Task-specific heads
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             self.predict_linear = nn.Linear(self.seq_len, self.pred_len + self.seq_len)
             self.projection = nn.Linear(configs.d_model, configs.c_out, bias=True)
 
-        if self.task_name == 'imputation' or self.task_name == 'anomaly_detection':
+        if self.task_name == "imputation" or self.task_name == "anomaly_detection":
             self.projection = nn.Linear(configs.d_model, configs.c_out, bias=True)
 
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             self.act = F.gelu
             self.dropout = nn.Dropout(configs.dropout)
             self.projection = nn.Linear(
@@ -295,9 +305,7 @@ class Model(nn.Module):
         # Normalization
         means = x_enc.mean(1, keepdim=True).detach()
         x_enc = x_enc - means
-        stdev = torch.sqrt(
-            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5
-        )
+        stdev = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
         x_enc = x_enc / stdev
 
         # Embedding
@@ -312,8 +320,12 @@ class Model(nn.Module):
         dec_out = self.projection(enc_out)
 
         # De-normalization
-        dec_out = dec_out * stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len + self.seq_len, 1)
-        dec_out = dec_out + means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len + self.seq_len, 1)
+        dec_out = dec_out * stdev[:, 0, :].unsqueeze(1).repeat(
+            1, self.pred_len + self.seq_len, 1
+        )
+        dec_out = dec_out + means[:, 0, :].unsqueeze(1).repeat(
+            1, self.pred_len + self.seq_len, 1
+        )
 
         return dec_out
 
@@ -341,8 +353,12 @@ class Model(nn.Module):
         dec_out = self.projection(enc_out)
 
         # De-normalization
-        dec_out = dec_out * stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len + self.seq_len, 1)
-        dec_out = dec_out + means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len + self.seq_len, 1)
+        dec_out = dec_out * stdev[:, 0, :].unsqueeze(1).repeat(
+            1, self.pred_len + self.seq_len, 1
+        )
+        dec_out = dec_out + means[:, 0, :].unsqueeze(1).repeat(
+            1, self.pred_len + self.seq_len, 1
+        )
 
         return dec_out
 
@@ -356,9 +372,7 @@ class Model(nn.Module):
         # Normalization
         means = x_enc.mean(1, keepdim=True).detach()
         x_enc = x_enc - means
-        stdev = torch.sqrt(
-            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5
-        )
+        stdev = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
         x_enc = x_enc / stdev
 
         # Embedding (no temporal marks for anomaly detection)
@@ -372,8 +386,12 @@ class Model(nn.Module):
         dec_out = self.projection(enc_out)
 
         # De-normalization
-        dec_out = dec_out * stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len + self.seq_len, 1)
-        dec_out = dec_out + means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len + self.seq_len, 1)
+        dec_out = dec_out * stdev[:, 0, :].unsqueeze(1).repeat(
+            1, self.pred_len + self.seq_len, 1
+        )
+        dec_out = dec_out + means[:, 0, :].unsqueeze(1).repeat(
+            1, self.pred_len + self.seq_len, 1
+        )
 
         return dec_out
 
@@ -397,16 +415,19 @@ class Model(nn.Module):
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
         """Forward pass routing to task-specific methods."""
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
-            return dec_out[:, -self.pred_len:, :]
-        if self.task_name == 'imputation':
+            return dec_out[:, -self.pred_len :, :]
+        if self.task_name == "imputation":
             dec_out = self.imputation(x_enc, x_mark_enc, x_dec, x_mark_dec, mask)
             return dec_out
-        if self.task_name == 'anomaly_detection':
+        if self.task_name == "anomaly_detection":
             dec_out = self.anomaly_detection(x_enc)
             return dec_out
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             dec_out = self.classification(x_enc, x_mark_enc)
             return dec_out
         return None

@@ -15,11 +15,12 @@ Key concepts:
 - Symmetrical components help diagnose fault types
 """
 
+import math
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import math
-import numpy as np
 
 
 class InterPhaseAttention(nn.Module):
@@ -54,17 +55,17 @@ class InterPhaseAttention(nn.Module):
         self.W_v = nn.Linear(d_model, d_model)
 
         # Phase-specific transformations
-        self.phase_transforms = nn.ModuleList([
-            nn.Linear(d_model, d_model) for _ in range(num_phases)
-        ])
+        self.phase_transforms = nn.ModuleList(
+            [nn.Linear(d_model, d_model) for _ in range(num_phases)]
+        )
 
         # Output projection
         self.W_o = nn.Linear(d_model, d_model)
 
         # Phase relationship encoding (learnable)
         # Initialize with 120° phase shifts
-        phase_angles = torch.tensor([0, 2*math.pi/3, 4*math.pi/3])
-        self.register_buffer('phase_angles', phase_angles)
+        phase_angles = torch.tensor([0, 2 * math.pi / 3, 4 * math.pi / 3])
+        self.register_buffer("phase_angles", phase_angles)
         self.phase_bias = nn.Parameter(torch.zeros(num_phases, num_phases))
 
         self.dropout = nn.Dropout(dropout)
@@ -152,22 +153,40 @@ class SymmetricalComponentAttention(nn.Module):
 
         # Transformation matrix (real and imaginary parts)
         # [1, 1, 1; 1, a², a; 1, a, a²] for positive, negative, zero
-        self.register_buffer('fortescue_real', torch.tensor([
-            [1, 1, 1],
-            [1, a_real**2 - a_imag**2, a_real],
-            [1, a_real, a_real**2 - a_imag**2]
-        ]) / 3.0)
+        self.register_buffer(
+            "fortescue_real",
+            torch.tensor(
+                [
+                    [1, 1, 1],
+                    [1, a_real**2 - a_imag**2, a_real],
+                    [1, a_real, a_real**2 - a_imag**2],
+                ]
+            )
+            / 3.0,
+        )
 
-        self.register_buffer('fortescue_imag', torch.tensor([
-            [0, 0, 0],
-            [0, 2*a_real*a_imag, a_imag],
-            [0, a_imag, 2*a_real*a_imag]
-        ]) / 3.0)
+        self.register_buffer(
+            "fortescue_imag",
+            torch.tensor(
+                [
+                    [0, 0, 0],
+                    [0, 2 * a_real * a_imag, a_imag],
+                    [0, a_imag, 2 * a_real * a_imag],
+                ]
+            )
+            / 3.0,
+        )
 
         # Sequence-specific attention
-        self.pos_seq_attn = nn.MultiheadAttention(d_model, num_heads=4, dropout=dropout, batch_first=True)
-        self.neg_seq_attn = nn.MultiheadAttention(d_model, num_heads=4, dropout=dropout, batch_first=True)
-        self.zero_seq_attn = nn.MultiheadAttention(d_model, num_heads=4, dropout=dropout, batch_first=True)
+        self.pos_seq_attn = nn.MultiheadAttention(
+            d_model, num_heads=4, dropout=dropout, batch_first=True
+        )
+        self.neg_seq_attn = nn.MultiheadAttention(
+            d_model, num_heads=4, dropout=dropout, batch_first=True
+        )
+        self.zero_seq_attn = nn.MultiheadAttention(
+            d_model, num_heads=4, dropout=dropout, batch_first=True
+        )
 
         # Sequence weighting (learnable importance of each sequence)
         self.sequence_weights = nn.Parameter(torch.tensor([1.0, 0.5, 0.3]))
@@ -219,11 +238,9 @@ class SymmetricalComponentAttention(nn.Module):
 
         # Weighted combination based on sequence importance
         weights = F.softmax(self.sequence_weights, dim=0)
-        combined = torch.cat([
-            weights[0] * pos_out,
-            weights[1] * neg_out,
-            weights[2] * zero_out
-        ], dim=-1)
+        combined = torch.cat(
+            [weights[0] * pos_out, weights[1] * neg_out, weights[2] * zero_out], dim=-1
+        )
 
         # Project back to d_model
         output = self.output_proj(combined)
@@ -265,16 +282,24 @@ class TransientAttention(nn.Module):
         self.scales = scales
 
         # Multi-scale convolutions for different transient durations
-        self.scale_convs = nn.ModuleList([
-            nn.Conv1d(d_model, d_model, kernel_size=s, padding=s//2, groups=d_model)
-            for s in scales
-        ])
+        self.scale_convs = nn.ModuleList(
+            [
+                nn.Conv1d(
+                    d_model, d_model, kernel_size=s, padding=s // 2, groups=d_model
+                )
+                for s in scales
+            ]
+        )
 
         # Scale-specific attention
-        self.scale_attentions = nn.ModuleList([
-            nn.MultiheadAttention(d_model, num_heads=n_heads, dropout=dropout, batch_first=True)
-            for _ in scales
-        ])
+        self.scale_attentions = nn.ModuleList(
+            [
+                nn.MultiheadAttention(
+                    d_model, num_heads=n_heads, dropout=dropout, batch_first=True
+                )
+                for _ in scales
+            ]
+        )
 
         # Scale importance weights
         self.scale_weights = nn.Parameter(torch.ones(len(scales)) / len(scales))
@@ -311,7 +336,9 @@ class TransientAttention(nn.Module):
 
         # Weighted combination of scales
         weights = F.softmax(self.scale_weights, dim=0)
-        combined = torch.cat([w * out for w, out in zip(weights, scale_outputs)], dim=-1)
+        combined = torch.cat(
+            [w * out for w, out in zip(weights, scale_outputs)], dim=-1
+        )
 
         # Project to output dimension
         output = self.output_proj(combined)
@@ -356,7 +383,7 @@ class VoltageChannelAttention(nn.Module):
         self.fc = nn.Sequential(
             nn.Linear(num_channels, reduced_channels, bias=False),
             nn.ReLU(inplace=True),
-            nn.Linear(reduced_channels, num_channels, bias=False)
+            nn.Linear(reduced_channels, num_channels, bias=False),
         )
 
         # Feature group weighting (voltage, current, power, quality)
@@ -401,8 +428,16 @@ class VoltageAttentionBlock(nn.Module):
     This provides comprehensive attention for power grid signals.
     """
 
-    def __init__(self, d_model, num_channels, n_heads=4, dropout=0.1,
-                 use_inter_phase=True, use_transient=True, use_channel=True):
+    def __init__(
+        self,
+        d_model,
+        num_channels,
+        n_heads=4,
+        dropout=0.1,
+        use_inter_phase=True,
+        use_transient=True,
+        use_channel=True,
+    ):
         """
         Args:
             d_model: Model dimension
@@ -457,7 +492,9 @@ class VoltageAttentionBlock(nn.Module):
             channel_weights = self.channel_attn(x_raw)
             # Broadcast channel weights to embedded dimension
             # This is a simplified application; in practice, might need adaptation
-            output = output * channel_weights.mean(dim=-1, keepdim=True).expand_as(output)
+            output = output * channel_weights.mean(dim=-1, keepdim=True).expand_as(
+                output
+            )
 
         # Final projection with residual
         output = self.output_proj(output)

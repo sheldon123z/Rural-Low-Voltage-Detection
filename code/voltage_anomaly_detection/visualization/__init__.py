@@ -18,40 +18,40 @@ Usage:
 """
 
 from .thesis_plots import (
-    ThesisPlotter,
     THESIS_CONFIG,
-    setup_thesis_style,
-    plot_voltage_timeseries,
-    plot_model_comparison,
-    plot_confusion_matrix,
-    plot_roc_pr_curves,
-    plot_reconstruction_error,
-    plot_tsne_pca,
-    plot_training_curves,
-    plot_correlation_heatmap,
-    plot_fft_spectrum,
+    ThesisPlotter,
     plot_anomaly_distribution,
+    plot_confusion_matrix,
+    plot_correlation_heatmap,
     plot_detection_results,
+    plot_fft_spectrum,
+    plot_model_comparison,
+    plot_reconstruction_error,
+    plot_roc_pr_curves,
+    plot_training_curves,
+    plot_tsne_pca,
     plot_voltage_radar,
+    plot_voltage_timeseries,
+    setup_thesis_style,
 )
 
 __all__ = [
-    'ThesisPlotter',
-    'THESIS_CONFIG',
-    'setup_thesis_style',
-    'plot_voltage_timeseries',
-    'plot_model_comparison',
-    'plot_confusion_matrix',
-    'plot_roc_pr_curves',
-    'plot_reconstruction_error',
-    'plot_tsne_pca',
-    'plot_training_curves',
-    'plot_correlation_heatmap',
-    'plot_fft_spectrum',
-    'plot_anomaly_distribution',
-    'plot_detection_results',
-    'plot_voltage_radar',
+    "ThesisPlotter",
+    "THESIS_CONFIG",
+    "setup_thesis_style",
+    "plot_voltage_timeseries",
+    "plot_model_comparison",
+    "plot_confusion_matrix",
+    "plot_roc_pr_curves",
+    "plot_reconstruction_error",
+    "plot_tsne_pca",
+    "plot_training_curves",
+    "plot_correlation_heatmap",
+    "plot_fft_spectrum",
+    "plot_anomaly_distribution",
+    "plot_detection_results",
+    "plot_voltage_radar",
 ]
 
-__version__ = '1.0.0'
-__author__ = 'Rural Voltage Detection Project'
+__version__ = "1.0.0"
+__author__ = "Rural Voltage Detection Project"
