@@ -16,12 +16,9 @@ import torch.fft
 import torch.nn as nn
 import torch.nn.functional as F
 
-<<<<<<< HEAD
-=======
 from layers.Conv_Blocks import Inception_Block_V1
 from layers.Embed import DataEmbedding
 
->>>>>>> origin/copilot/optimize-ci-cd-workflow
 # Power grid preset periods (in samples, assuming 1-second sampling rate)
 VOLTAGE_PRESET_PERIODS = {
     "1min": 60,  # 1 minute cycle for short-term fluctuations

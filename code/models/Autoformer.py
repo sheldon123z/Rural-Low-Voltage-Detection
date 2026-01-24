@@ -10,15 +10,6 @@ import torch.nn.functional as F
 
 from layers.AutoCorrelation import AutoCorrelation, AutoCorrelationLayer
 from layers.Autoformer_EncDec import (
-<<<<<<< HEAD
-    Encoder,
-    Decoder,
-    EncoderLayer,
-    DecoderLayer,
-    my_Layernorm,
-    series_decomp,
-)
-=======
     Decoder,
     DecoderLayer,
     Encoder,
@@ -27,7 +18,6 @@ from layers.Autoformer_EncDec import (
     series_decomp,
 )
 from layers.Embed import DataEmbedding, DataEmbedding_wo_pos
->>>>>>> origin/copilot/optimize-ci-cd-workflow
 
 
 class Model(nn.Module):

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-农村低压配电网电压异常检测研究生毕业论文项目。核心代码位于 `code/voltage_anomaly_detection/`，基于清华大学 Time-Series-Library 框架构建，支持 15 种深度学习模型进行时序异常检测。
+农村低压配电网电压异常检测研究生毕业论文项目。核心代码位于 `code/`，基于清华大学 Time-Series-Library 框架构建，支持 19 种深度学习模型进行时序异常检测。
 
 ## 常用命令
 
@@ -12,12 +12,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 conda create -n tslib python=3.11
 conda activate tslib
-pip install -r code/voltage_anomaly_detection/requirements.txt
+pip install -r code/requirements.txt
 ```
 
 ### 训练模型
 ```bash
-cd code/voltage_anomaly_detection
+cd code
 
 # 使用 TimesNet 在 PSM 数据集训练
 python run.py --is_training 1 --model TimesNet --data PSM \
@@ -26,7 +26,7 @@ python run.py --is_training 1 --model TimesNet --data PSM \
 
 # 使用定制 VoltageTimesNet 在农村电压数据集训练
 python run.py --is_training 1 --model VoltageTimesNet --data RuralVoltage \
-  --root_path ./dataset/RuralVoltage/ --enc_in 17 --c_out 17 \
+  --root_path ./dataset/RuralVoltage/ --enc_in 16 --c_out 16 \
   --seq_len 100 --d_model 64 --d_ff 128 --top_k 5
 
 # 仅测试（加载已有检查点）
@@ -36,15 +36,19 @@ python run.py --is_training 0 --model TimesNet --data PSM \
 
 ### 生成样本数据
 ```bash
-cd code/voltage_anomaly_detection/dataset/RuralVoltage
+cd code/dataset/RuralVoltage
 python generate_sample_data.py --train_samples 10000 --test_samples 2000 --anomaly_ratio 0.1
 ```
 
 ### 使用训练脚本
 ```bash
-cd code/voltage_anomaly_detection
-bash scripts/train_psm.sh                    # PSM 数据集
-bash scripts/RuralVoltage/VoltageTimesNet.sh # 农村电压数据集
+cd code
+
+# PSM 数据集多模型对比实验
+bash scripts/PSM/run_comparison.sh
+
+# 农村电压数据集
+bash scripts/RuralVoltage/VoltageTimesNet.sh
 ```
 
 ## 代码架构
@@ -54,11 +58,15 @@ bash scripts/RuralVoltage/VoltageTimesNet.sh # 农村电压数据集
 
 ### 模块结构
 ```
-code/voltage_anomaly_detection/
+code/
+├── run.py                      # 主入口脚本
 ├── exp/exp_anomaly_detection.py    # 实验类：train() 和 test() 方法
-├── models/                         # 15 个模型实现
+├── models/                         # 19 个模型实现
 │   ├── TimesNet.py                 # 核心模型：FFT + 2D卷积周期建模
 │   ├── VoltageTimesNet.py          # 定制模型：预设电网周期 + TimesNet
+│   ├── TPATimesNet.py              # 三相注意力 TimesNet
+│   ├── MTSTimesNet.py              # 多尺度时序 TimesNet
+│   ├── HybridTimesNet.py           # 混合周期发现 TimesNet
 │   └── DLinear.py                  # 轻量级：序列分解 + 线性层
 ├── data_provider/
 │   ├── data_factory.py             # 数据工厂：data_provider(args, flag)
@@ -67,9 +75,23 @@ code/voltage_anomaly_detection/
 │   ├── Embed.py                    # TokenEmbedding, PositionalEmbedding
 │   ├── SelfAttention_Family.py     # FullAttention, ProbAttention
 │   └── Conv_Blocks.py              # Inception 2D 卷积块
-└── utils/
-    ├── tools.py                    # EarlyStopping, StandardScaler
-    └── voltage_metrics.py          # 电压异常检测指标
+├── utils/
+│   ├── tools.py                    # EarlyStopping, StandardScaler
+│   └── voltage_metrics.py          # 电压异常检测指标
+├── scripts/                        # 训练脚本（按数据集分类）
+│   ├── PSM/                        # PSM 数据集脚本
+│   │   ├── config.sh               # 公共配置
+│   │   └── run_comparison.sh       # 多模型对比实验
+│   ├── MSL/                        # MSL 数据集脚本
+│   ├── SMAP/                       # SMAP 数据集脚本
+│   ├── SMD/                        # SMD 数据集脚本
+│   ├── SWAT/                       # SWAT 数据集脚本
+│   ├── RuralVoltage/               # 农村电压数据集脚本
+│   └── common/                     # 公共分析脚本
+├── dataset/                        # 数据集
+├── checkpoints/                    # 模型检查点
+├── results/                        # 实验结果
+└── test_results/                   # 测试结果
 ```
 
 ### 异常检测原理
@@ -85,6 +107,19 @@ pred = (test_energy > threshold).astype(int)
 2. `exp.train()` 执行训练循环，MSE 重构损失，早停机制
 3. `exp.test()` 在训练集计算阈值，在测试集判定异常并评估
 
+## 支持的模型 (19 个)
+
+### 基线模型 (15 个)
+- TimesNet, Transformer, DLinear, PatchTST, iTransformer
+- Autoformer, Informer, FiLM, LightTS, SegRNN
+- KANAD, Nonstationary_Transformer, MICN, TimeMixer, Reformer
+
+### 创新模型 (4 个)
+- VoltageTimesNet - 预设电网周期 + FFT 混合
+- TPATimesNet - 三相注意力 TimesNet
+- MTSTimesNet - 多尺度时序 TimesNet
+- HybridTimesNet - 混合周期发现 TimesNet
+
 ## 关键参数
 
 | 参数 | 默认值 | 说明 |
@@ -93,13 +128,19 @@ pred = (test_energy > threshold).astype(int)
 | `--d_model` | 64 | 模型隐藏维度 |
 | `--e_layers` | 2 | 编码器层数 |
 | `--top_k` | 5 | TimesNet 的 top-k 周期数 |
-| `--enc_in` | 25 | 输入特征数（PSM=25, RuralVoltage=17） |
+| `--enc_in` | 25 | 输入特征数（PSM=25, RuralVoltage=16） |
 | `--anomaly_ratio` | 1.0 | 预期异常比例(%) |
 
 ## 数据集
 
-- **PSM/MSL/SMAP/SMD/SWAT**: 标准异常检测数据集（符号链接到 Time-Series-Library）
-- **RuralVoltage**: 自定义农村电压数据集，17 维特征（Va/Vb/Vc 三相电压、电流、功率、谐波失真率、不平衡因子等）
+| 数据集 | 特征数 | 训练集 | 测试集 |
+|--------|--------|--------|--------|
+| PSM | 25 | 132,481 | 87,841 |
+| MSL | 55 | 58,317 | 73,729 |
+| SMAP | 25 | 135,183 | 427,617 |
+| SMD | 38 | 708,405 | 708,420 |
+| SWAT | 51 | 495,000 | 449,919 |
+| RuralVoltage | 16 | 10,000 | 2,000 |
 
 数据格式：`train.csv`, `test.csv`, `test_label.csv`（0: 正常, 1+: 异常类型）
 
@@ -171,7 +212,7 @@ xelatex bjfuthesis-main.tex
 xelatex bjfuthesis-main.tex
 ```
 
-### RuralVoltage 数据集 17 维特征
+### RuralVoltage 数据集 16 维特征
 | 特征类别 | 特征名称 | 说明 |
 |---------|---------|------|
 | 三相电压 | Va, Vb, Vc | 200-240V 范围 |
@@ -198,8 +239,8 @@ xelatex bjfuthesis-main.tex
 
 ### 时间戳分组
 - 所有实验结果**必须**按时间戳分组保存
-- 目录格式：`results/<实验名称>/<YYYYMMDD_HHMMSS>/`
-- 示例：`results/psm_comparison/20260124_170000/`
+- 目录格式：`results/PSM_comparison_YYYYMMDD_HHMMSS/`
+- 示例：`results/PSM_comparison_20260125_120000/`
 
 ### 中文规范
 - 图表标题、坐标轴标签、图例**必须**使用中文
@@ -216,11 +257,12 @@ xelatex bjfuthesis-main.tex
 
 ### 分析脚本使用
 ```bash
+cd code
 # 默认按时间戳分组
-python scripts/analyze_comparison_results.py --result_dir ./results/psm_comparison
+python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparison_XXXXXX
 
 # 不使用时间戳分组（覆盖模式）
-python scripts/analyze_comparison_results.py --result_dir ./results/psm_comparison --no_timestamp
+python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparison_XXXXXX --no_timestamp
 ```
 
 ## Commit 规范

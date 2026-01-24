@@ -7,18 +7,7 @@ Paper: Attention Is All You Need (NeurIPS 2017)
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-<<<<<<< HEAD
-from layers.Transformer_EncDec import (
-    Decoder,
-    DecoderLayer,
-    Encoder,
-    EncoderLayer,
-    ConvLayer,
-)
-from layers.SelfAttention_Family import FullAttention, AttentionLayer
-=======
 
->>>>>>> origin/copilot/optimize-ci-cd-workflow
 from layers.Embed import DataEmbedding
 from layers.SelfAttention_Family import AttentionLayer, FullAttention
 from layers.Transformer_EncDec import (

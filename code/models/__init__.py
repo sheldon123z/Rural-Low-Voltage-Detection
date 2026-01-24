@@ -18,13 +18,8 @@ from .TimesNet import Model as TimesNet
 
 # Innovative TimesNet variants for Rural Voltage Anomaly Detection
 from .TPATimesNet import Model as TPATimesNet  # Three-Phase Attention TimesNet
-<<<<<<< HEAD
-from .MTSTimesNet import Model as MTSTimesNet  # Multi-scale Temporal TimesNet
-from .HybridTimesNet import Model as HybridTimesNet  # Hybrid Period Discovery TimesNet
-=======
 from .Transformer import Model as Transformer
 from .VoltageTimesNet import Model as VoltageTimesNet
->>>>>>> origin/copilot/optimize-ci-cd-workflow
 
 __all__ = [
     "TimesNet",
