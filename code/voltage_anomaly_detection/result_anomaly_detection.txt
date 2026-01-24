@@ -18,3 +18,19 @@ quick_test_MTSTimesNet_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl50_dm32_
 Accuracy: 0.8179, Precision: 0.8357, Recall: 0.4477, F1-score: 0.5831
 
 
+PSM_TimesNet_TimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_PSM_Comparison_0  
+Accuracy: 0.9855, Precision: 0.9848, Recall: 0.9625, F1-score: 0.9735
+
+
+PSM_VoltageTimesNet_VoltageTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_PSM_Comparison_0  
+Accuracy: 0.9853, Precision: 0.9840, Recall: 0.9625, F1-score: 0.9731
+
+
+PSM_TPATimesNet_TPATimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_PSM_Comparison_0  
+Accuracy: 0.9850, Precision: 0.9844, Recall: 0.9612, F1-score: 0.9727
+
+
+PSM_MTSTimesNet_MTSTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_PSM_Comparison_0  
+Accuracy: 0.9797, Precision: 0.9756, Recall: 0.9506, F1-score: 0.9629
+
+

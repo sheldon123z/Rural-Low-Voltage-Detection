@@ -52,35 +52,61 @@ class Model(nn.Module):
 
         # Patching and embedding
         self.patch_embedding = PatchEmbedding(
-            configs.d_model, patch_len, stride, padding, configs.dropout)
+            configs.d_model, patch_len, stride, padding, configs.dropout
+        )
 
         # Encoder
         self.encoder = Encoder(
             [
                 EncoderLayer(
                     AttentionLayer(
-                        FullAttention(False, configs.factor, attention_dropout=configs.dropout,
-                                      output_attention=False), configs.d_model, configs.n_heads),
+                        FullAttention(
+                            False,
+                            configs.factor,
+                            attention_dropout=configs.dropout,
+                            output_attention=False,
+                        ),
+                        configs.d_model,
+                        configs.n_heads,
+                    ),
                     configs.d_model,
                     configs.d_ff,
                     dropout=configs.dropout,
-                    activation=configs.activation
-                ) for l in range(configs.e_layers)
+                    activation=configs.activation,
+                )
+                for l in range(configs.e_layers)
             ],
-            norm_layer=nn.Sequential(Transpose(1, 2), nn.BatchNorm1d(configs.d_model), Transpose(1, 2))
+            norm_layer=nn.Sequential(
+                Transpose(1, 2), nn.BatchNorm1d(configs.d_model), Transpose(1, 2)
+            ),
         )
 
         # Prediction Head
         self.head_nf = configs.d_model * int((configs.seq_len - patch_len) / stride + 2)
-        
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
-            self.head = FlattenHead(configs.enc_in, self.head_nf, configs.pred_len, head_dropout=configs.dropout)
-        elif self.task_name == 'imputation' or self.task_name == 'anomaly_detection':
-            self.head = FlattenHead(configs.enc_in, self.head_nf, configs.seq_len, head_dropout=configs.dropout)
-        elif self.task_name == 'classification':
+
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
+            self.head = FlattenHead(
+                configs.enc_in,
+                self.head_nf,
+                configs.pred_len,
+                head_dropout=configs.dropout,
+            )
+        elif self.task_name == "imputation" or self.task_name == "anomaly_detection":
+            self.head = FlattenHead(
+                configs.enc_in,
+                self.head_nf,
+                configs.seq_len,
+                head_dropout=configs.dropout,
+            )
+        elif self.task_name == "classification":
             self.flatten = nn.Flatten(start_dim=-2)
             self.dropout = nn.Dropout(configs.dropout)
-            self.projection = nn.Linear(self.head_nf * configs.enc_in, configs.num_class)
+            self.projection = nn.Linear(
+                self.head_nf * configs.enc_in, configs.num_class
+            )
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
         means = x_enc.mean(1, keepdim=True).detach()
@@ -91,7 +117,9 @@ class Model(nn.Module):
         x_enc = x_enc.permute(0, 2, 1)
         enc_out, n_vars = self.patch_embedding(x_enc)
         enc_out, attns = self.encoder(enc_out)
-        enc_out = torch.reshape(enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1]))
+        enc_out = torch.reshape(
+            enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1])
+        )
         enc_out = enc_out.permute(0, 1, 3, 2)
 
         dec_out = self.head(enc_out)
@@ -106,14 +134,18 @@ class Model(nn.Module):
         means = means.unsqueeze(1).detach()
         x_enc = x_enc - means
         x_enc = x_enc.masked_fill(mask == 0, 0)
-        stdev = torch.sqrt(torch.sum(x_enc * x_enc, dim=1) / torch.sum(mask == 1, dim=1) + 1e-5)
+        stdev = torch.sqrt(
+            torch.sum(x_enc * x_enc, dim=1) / torch.sum(mask == 1, dim=1) + 1e-5
+        )
         stdev = stdev.unsqueeze(1).detach()
         x_enc /= stdev
 
         x_enc = x_enc.permute(0, 2, 1)
         enc_out, n_vars = self.patch_embedding(x_enc)
         enc_out, attns = self.encoder(enc_out)
-        enc_out = torch.reshape(enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1]))
+        enc_out = torch.reshape(
+            enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1])
+        )
         enc_out = enc_out.permute(0, 1, 3, 2)
 
         dec_out = self.head(enc_out)
@@ -132,7 +164,9 @@ class Model(nn.Module):
         x_enc = x_enc.permute(0, 2, 1)
         enc_out, n_vars = self.patch_embedding(x_enc)
         enc_out, attns = self.encoder(enc_out)
-        enc_out = torch.reshape(enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1]))
+        enc_out = torch.reshape(
+            enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1])
+        )
         enc_out = enc_out.permute(0, 1, 3, 2)
 
         dec_out = self.head(enc_out)
@@ -151,7 +185,9 @@ class Model(nn.Module):
         x_enc = x_enc.permute(0, 2, 1)
         enc_out, n_vars = self.patch_embedding(x_enc)
         enc_out, attns = self.encoder(enc_out)
-        enc_out = torch.reshape(enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1]))
+        enc_out = torch.reshape(
+            enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1])
+        )
         enc_out = enc_out.permute(0, 1, 3, 2)
 
         output = self.flatten(enc_out)
@@ -161,16 +197,19 @@ class Model(nn.Module):
         return output
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
-            return dec_out[:, -self.pred_len:, :]
-        if self.task_name == 'imputation':
+            return dec_out[:, -self.pred_len :, :]
+        if self.task_name == "imputation":
             dec_out = self.imputation(x_enc, x_mark_enc, x_dec, x_mark_dec, mask)
             return dec_out
-        if self.task_name == 'anomaly_detection':
+        if self.task_name == "anomaly_detection":
             dec_out = self.anomaly_detection(x_enc)
             return dec_out
-        if self.task_name == 'classification':
+        if self.task_name == "classification":
             dec_out = self.classification(x_enc, x_mark_enc)
             return dec_out
         return None

@@ -194,6 +194,35 @@ xelatex bjfuthesis-main.tex
 2. 在 `models/__init__.py` 的 `model_dict` 中注册
 3. 确保 `forward` 返回与输入维度相同的重构输出
 
+## 实验结果规范
+
+### 时间戳分组
+- 所有实验结果**必须**按时间戳分组保存
+- 目录格式：`results/<实验名称>/<YYYYMMDD_HHMMSS>/`
+- 示例：`results/psm_comparison/20260124_170000/`
+
+### 中文规范
+- 图表标题、坐标轴标签、图例**必须**使用中文
+- 报告和 JSON 文件中的字段名**必须**使用中文
+- 代码注释和文档使用中文
+
+### 结果文件命名
+- 训练曲线对比.png/pdf
+- 性能指标对比.png/pdf
+- 雷达图对比.png/pdf
+- F1分数对比.png/pdf
+- 实验分析报告.md
+- 实验结果.json
+
+### 分析脚本使用
+```bash
+# 默认按时间戳分组
+python scripts/analyze_comparison_results.py --result_dir ./results/psm_comparison
+
+# 不使用时间戳分组（覆盖模式）
+python scripts/analyze_comparison_results.py --result_dir ./results/psm_comparison --no_timestamp
+```
+
 ## Commit 规范
 
 使用中文，格式：`类型: 描述`

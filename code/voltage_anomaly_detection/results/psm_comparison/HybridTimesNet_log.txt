@@ -1,0 +1,85 @@
+Traceback (most recent call last):
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/run.py", line 198, in <module>
+    main()
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/run.py", line 184, in main
+    exp.train(setting)
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/exp/exp_anomaly_detection.py", line 146, in train
+    outputs = self.model(batch_x, None, None, None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/miniconda3/envs/tslib/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/miniconda3/envs/tslib/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/models/HybridTimesNet.py", line 361, in forward
+    dec_out = self.anomaly_detection(x_enc)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/models/HybridTimesNet.py", line 299, in anomaly_detection
+    enc_out = self._process_hybrid(enc_out)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/models/HybridTimesNet.py", line 289, in _process_hybrid
+    x = block(x)
+        ^^^^^^^^
+  File "/home/zhengxiaodong/miniconda3/envs/tslib/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/miniconda3/envs/tslib/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/models/HybridTimesNet.py", line 213, in forward
+    preset_out, preset_conf = self.preset_block(x)
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/miniconda3/envs/tslib/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/miniconda3/envs/tslib/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/voltage_anomaly_detection/models/HybridTimesNet.py", line 76, in forward
+    out = out.reshape(B, length // period, period, N).permute(0, 3, 1, 2).contiguous()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: shape '[128, 10, 10, 100]' is invalid for input of size 1638400
+
+ERROR conda.cli.main_run:execute(49): `conda run python -u run.py --is_training 1 --model HybridTimesNet --model_id PSM_HybridTimesNet --data PSM --root_path ./dataset/PSM/ --features M --seq_len 100 --pred_len 0 --d_model 64 --d_ff 64 --e_layers 2 --enc_in 25 --c_out 25 --top_k 3 --batch_size 128 --train_epochs 10 --patience 3 --learning_rate 0.0001 --anomaly_ratio 1 --des PSM_Comparison` failed. (See above for error)
+Args in experiment:
+[1mBasic Config[0m
+  Task Name:          anomaly_detection   Is Training:        1                   
+  Model ID:           PSM_HybridTimesNet  Model:              HybridTimesNet      
+
+[1mData Loader[0m
+  Data:               PSM                 Root Path:          ./dataset/PSM/      
+  Features:           M                   Checkpoints:        ./checkpoints/      
+
+[1mAnomaly Detection Task[0m
+  Seq Len:            100                 Anomaly Ratio:      1.0                 
+
+[1mModel Parameters[0m
+  Top k:              3                   Num Kernels:        6                   
+  Enc In:             25                  C Out:              25                  
+  d model:            64                  d FF:               64                  
+  n heads:            8                   e layers:           2                   
+  Dropout:            0.1                 Embed:              timeF               
+
+[1mRun Parameters[0m
+  Num Workers:        10                  Itr:                1                   
+  Train Epochs:       10                  Batch Size:         128                 
+  Patience:           3                   Learning Rate:      0.0001              
+  Lradj:              type1               Use Amp:            0                   
+
+[1mGPU[0m
+  Use GPU:            1                   GPU:                0                   
+  Use Multi GPU:      0                   Devices:            0,1,2,3             
+
+Use GPU: cuda:0
+>>>>>>>>>> Training: PSM_HybridTimesNet_HybridTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_PSM_Comparison_0 <<<<<<<<<<<<
+test: (87841, 25)
+train: (132481, 25)
+train 132382
+test: (87841, 25)
+train: (132481, 25)
+val 26398
+test: (87841, 25)
+train: (132481, 25)
+test 87742
+

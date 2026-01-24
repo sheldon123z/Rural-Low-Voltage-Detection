@@ -24,7 +24,7 @@ def rearrange_batch_to_bd(x):
 
 class KANADModel(nn.Module):
     """Kolmogorov-Arnold Network for Anomaly Detection core module."""
-    
+
     def __init__(self, window: int, order: int, *args, **kwargs) -> None:
         super().__init__()
         self.order = order
@@ -86,8 +86,8 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.task_name = configs.task_name
         self.seq_len = configs.seq_len
-        self.label_len = getattr(configs, 'label_len', 0)
-        self.pred_len = getattr(configs, 'pred_len', configs.seq_len)
+        self.label_len = getattr(configs, "label_len", 0)
+        self.pred_len = getattr(configs, "pred_len", configs.seq_len)
         self.order = configs.d_model
 
         # Encoder
@@ -102,7 +102,10 @@ class Model(nn.Module):
         return dec_out
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
-        if self.task_name == "long_term_forecast" or self.task_name == "short_term_forecast":
+        if (
+            self.task_name == "long_term_forecast"
+            or self.task_name == "short_term_forecast"
+        ):
             raise NotImplementedError("Task forecasting for KANAD is not supported")
         if self.task_name == "imputation":
             raise NotImplementedError("Task imputation for KANAD is not supported")
