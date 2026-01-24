@@ -8,9 +8,10 @@ Standalone version - independent from main TSLib
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers.Transformer_EncDec import Encoder, EncoderLayer
-from layers.SelfAttention_Family import ReformerLayer
+
 from layers.Embed import DataEmbedding
+from layers.SelfAttention_Family import ReformerLayer
+from layers.Transformer_EncDec import Encoder, EncoderLayer
 
 
 class Model(nn.Module):

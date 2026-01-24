@@ -7,11 +7,12 @@ Link: https://openreview.net/pdf?id=ju_Uqw384Oq
 """
 
 import torch
+import torch.fft
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.fft
-from layers.Embed import DataEmbedding
+
 from layers.Conv_Blocks import Inception_Block_V1
+from layers.Embed import DataEmbedding
 
 
 def FFT_for_Period(x, k=2):

@@ -10,14 +10,18 @@ Key innovations:
 Paper reference: Adapted from TimesNet (ICLR 2023)
 """
 
+import numpy as np
 import torch
+import torch.fft
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.fft
-import numpy as np
-from layers.Embed import DataEmbedding
-from layers.Conv_Blocks import Inception_Block_V1
 
+<<<<<<< HEAD
+=======
+from layers.Conv_Blocks import Inception_Block_V1
+from layers.Embed import DataEmbedding
+
+>>>>>>> origin/copilot/optimize-ci-cd-workflow
 # Power grid preset periods (in samples, assuming 1-second sampling rate)
 VOLTAGE_PRESET_PERIODS = {
     "1min": 60,  # 1 minute cycle for short-term fluctuations

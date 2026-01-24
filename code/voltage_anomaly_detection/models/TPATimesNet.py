@@ -17,16 +17,17 @@ Key Components:
 Author: Voltage Anomaly Detection Research
 """
 
+import math
+from typing import List, Optional, Tuple
+
+import numpy as np
 import torch
+import torch.fft
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.fft
-import math
-import numpy as np
-from typing import Optional, Tuple, List
 
-from layers.Embed import DataEmbedding
 from layers.Conv_Blocks import Inception_Block_V1
+from layers.Embed import DataEmbedding
 
 
 def FFT_for_Period(x, k=2):

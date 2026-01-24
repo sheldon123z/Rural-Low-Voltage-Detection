@@ -8,8 +8,9 @@ Standalone version - independent from main TSLib
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers.Embed import DataEmbedding
+
 from layers.Autoformer_EncDec import series_decomp, series_decomp_multi
+from layers.Embed import DataEmbedding
 
 
 class MIC(nn.Module):

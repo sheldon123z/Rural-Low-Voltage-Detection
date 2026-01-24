@@ -1,5 +1,6 @@
 # 农村低压配电网电压异常检测研究
 
+<<<<<<< HEAD
 基于深度学习的农村低压配电网电压异常检测研究。本项目采用 TimesNet 及其变体模型，实现对电压异常的精准检测。
 
 ## 项目亮点
@@ -8,6 +9,14 @@
 - **15 种深度学习模型**：全面的模型对比基准
 - **完整实验框架**：基于清华 Time-Series-Library 构建
 - **农村电压数据集**：17 维特征，5 种异常类型
+=======
+[![CI](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/workflows/CI/badge.svg)](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/actions/workflows/ci.yml)
+[![Code Quality](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/workflows/Code%20Quality/badge.svg)](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/actions/workflows/code-quality.yml)
+[![Testing](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/workflows/Testing/badge.svg)](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/actions/workflows/testing.yml)
+[![Security](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/workflows/Security/badge.svg)](https://github.com/sheldon123z/Rural-Low-Voltage-Detection/actions/workflows/security.yml)
+
+基于 LSTM 和混合模型的农村低压配电网异常检测与预测研究。
+>>>>>>> origin/copilot/optimize-ci-cd-workflow
 
 ## 项目结构
 
@@ -50,6 +59,7 @@ conda activate tslib
 pip install -r code/voltage_anomaly_detection/requirements.txt
 ```
 
+<<<<<<< HEAD
 ### 训练模型
 
 ```bash
@@ -136,3 +146,16 @@ python scripts/analyze_comparison_results.py --result_dir ./results/psm_comparis
 ## 许可证
 
 本项目仅供学术研究使用。
+=======
+详细使用说明请参考 `CLAUDE.md` 和 `code/voltage_anomaly_detection/README.md`。
+
+## CI/CD 工作流
+
+本项目配置了完整的 CI/CD 流程，包括：
+- ✅ 代码质量检查（Black、isort、flake8）
+- ✅ 自动化测试（模型测试、单元测试）
+- ✅ 安全扫描（依赖漏洞检测）
+- ✅ 文档验证（Markdown、链接检查）
+
+详细说明请查看 [CI/CD 工作流文档](.github/CI_CD_GUIDE.md)。
+>>>>>>> origin/copilot/optimize-ci-cd-workflow

@@ -1,25 +1,30 @@
 # Models module for Voltage Anomaly Detection
-from .TimesNet import Model as TimesNet
-from .Transformer import Model as Transformer
-from .DLinear import Model as DLinear
-from .PatchTST import Model as PatchTST
-from .iTransformer import Model as iTransformer
 from .Autoformer import Model as Autoformer
-from .Informer import Model as Informer
+from .DLinear import Model as DLinear
 from .FiLM import Model as FiLM
-from .LightTS import Model as LightTS
-from .SegRNN import Model as SegRNN
+from .HybridTimesNet import Model as HybridTimesNet  # Hybrid Period Discovery TimesNet
+from .Informer import Model as Informer
+from .iTransformer import Model as iTransformer
 from .KANAD import Model as KANAD
-from .Nonstationary_Transformer import Model as Nonstationary_Transformer
+from .LightTS import Model as LightTS
 from .MICN import Model as MICN
-from .TimeMixer import Model as TimeMixer
+from .MTSTimesNet import Model as MTSTimesNet  # Multi-scale Temporal TimesNet
+from .Nonstationary_Transformer import Model as Nonstationary_Transformer
+from .PatchTST import Model as PatchTST
 from .Reformer import Model as Reformer
-from .VoltageTimesNet import Model as VoltageTimesNet
+from .SegRNN import Model as SegRNN
+from .TimeMixer import Model as TimeMixer
+from .TimesNet import Model as TimesNet
 
 # Innovative TimesNet variants for Rural Voltage Anomaly Detection
 from .TPATimesNet import Model as TPATimesNet  # Three-Phase Attention TimesNet
+<<<<<<< HEAD
 from .MTSTimesNet import Model as MTSTimesNet  # Multi-scale Temporal TimesNet
 from .HybridTimesNet import Model as HybridTimesNet  # Hybrid Period Discovery TimesNet
+=======
+from .Transformer import Model as Transformer
+from .VoltageTimesNet import Model as VoltageTimesNet
+>>>>>>> origin/copilot/optimize-ci-cd-workflow
 
 __all__ = [
     "TimesNet",

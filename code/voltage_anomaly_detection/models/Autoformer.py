@@ -7,9 +7,10 @@ Paper link: https://openreview.net/pdf?id=I55UqU-M11y
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers.Embed import DataEmbedding, DataEmbedding_wo_pos
+
 from layers.AutoCorrelation import AutoCorrelation, AutoCorrelationLayer
 from layers.Autoformer_EncDec import (
+<<<<<<< HEAD
     Encoder,
     Decoder,
     EncoderLayer,
@@ -17,6 +18,16 @@ from layers.Autoformer_EncDec import (
     my_Layernorm,
     series_decomp,
 )
+=======
+    Decoder,
+    DecoderLayer,
+    Encoder,
+    EncoderLayer,
+    my_Layernorm,
+    series_decomp,
+)
+from layers.Embed import DataEmbedding, DataEmbedding_wo_pos
+>>>>>>> origin/copilot/optimize-ci-cd-workflow
 
 
 class Model(nn.Module):

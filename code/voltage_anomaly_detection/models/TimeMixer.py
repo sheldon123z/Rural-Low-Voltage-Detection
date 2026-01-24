@@ -7,6 +7,7 @@ Standalone version - independent from main TSLib
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from layers.Autoformer_EncDec import series_decomp
 from layers.Embed import DataEmbedding_wo_pos
 from layers.StandardNorm import Normalize

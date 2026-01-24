@@ -7,10 +7,10 @@ Note: This model is self-contained and doesn't depend on external layers.
 Requires scipy for signal processing.
 """
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 from scipy import signal
 from scipy import special as ss
 
