@@ -1,0 +1,43 @@
+{
+  "生成时间": "2026-01-24 17:30:30",
+  "随机种子": 42,
+  "数据集信息": {
+    "periodic_load": {
+      "train_samples": 10000,
+      "test_samples": 3000,
+      "anomaly_ratio": 0.15,
+      "anomaly_types": 2
+    },
+    "three_phase": {
+      "train_samples": 10000,
+      "test_samples": 3000,
+      "anomaly_ratio": 0.23333333333333334,
+      "anomaly_types": 8
+    },
+    "multi_scale": {
+      "train_samples": 15000,
+      "test_samples": 5000,
+      "anomaly_ratio": 0.474,
+      "anomaly_types": 10
+    },
+    "hybrid_period": {
+      "train_samples": 12000,
+      "test_samples": 4000,
+      "anomaly_ratio": 0.60175,
+      "anomaly_types": 4
+    },
+    "comprehensive": {
+      "train_samples": 20000,
+      "test_samples": 6000,
+      "anomaly_ratio": 0.48783333333333334,
+      "anomaly_types": 6
+    }
+  },
+  "目标模型对应关系": {
+    "periodic_load": "VoltageTimesNet (预设周期融合)",
+    "three_phase": "TPATimesNet (三相注意力)",
+    "multi_scale": "MTSTimesNet (多尺度时序)",
+    "hybrid_period": "HybridTimesNet (混合周期发现)",
+    "comprehensive": "所有模型 (综合评估)"
+  }
+}
