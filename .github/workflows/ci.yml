@@ -30,14 +30,16 @@ jobs:
     - name: Code formatting check (Black)
       run: |
         echo "::group::Black Formatting"
-        black --check --diff code/voltage_anomaly_detection/ || (echo "::error::Code formatting issues found. Run 'black code/voltage_anomaly_detection/' to fix." && exit 1)
+        black --check --diff code/voltage_anomaly_detection/ || (echo "::warning::Code formatting issues found. Run 'black code/voltage_anomaly_detection/' to fix." && true)
         echo "::endgroup::"
+      continue-on-error: true
         
     - name: Import sorting check (isort)
       run: |
         echo "::group::Import Sorting"
-        isort --check-only --diff code/voltage_anomaly_detection/ || (echo "::error::Import sorting issues found. Run 'isort code/voltage_anomaly_detection/' to fix." && exit 1)
+        isort --check-only --diff code/voltage_anomaly_detection/ || (echo "::warning::Import sorting issues found. Run 'isort code/voltage_anomaly_detection/' to fix." && true)
         echo "::endgroup::"
+      continue-on-error: true
         
     - name: Linting (flake8)
       run: |

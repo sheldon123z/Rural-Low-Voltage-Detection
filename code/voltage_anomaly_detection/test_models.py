@@ -2,12 +2,15 @@
 """
 Test script to verify all models can be imported and instantiated.
 """
+import os
 import sys
 import torch
 from argparse import Namespace
 
-# Add the voltage_anomaly_detection folder to path
-sys.path.insert(0, '/home/zhengxiaodong/exps/Time-Series-Library/voltage_anomaly_detection')
+# Add the voltage_anomaly_detection folder to path (if needed)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
 
 def create_test_config(model_name):
     """Create a basic config for testing model instantiation."""
