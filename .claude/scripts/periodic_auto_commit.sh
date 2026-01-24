@@ -50,6 +50,8 @@ REMOTE_BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null
 UNPUSHED_COUNT=$(git rev-list --count @{u}..HEAD 2>/dev/null) || exit 0
 
 if [ "$UNPUSHED_COUNT" -gt "$MAX_UNPUSHED" ]; then
+    # 先推送LFS对象（如果有）
+    git lfs push --all origin 2>/dev/null || true
     git push --no-verify 2>/dev/null && echo "📤 自动推送: $UNPUSHED_COUNT 个提交" || true
 fi
 
