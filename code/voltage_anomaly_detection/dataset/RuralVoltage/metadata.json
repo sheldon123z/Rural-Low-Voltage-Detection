@@ -1,0 +1,52 @@
+{
+    "dataset_name": "RuralVoltage",
+    "description": "Rural Power Grid Voltage Anomaly Detection Dataset",
+    "version": "1.0.0",
+    "sampling_rate_hz": 1.0,
+    "nominal_voltage_v": 220.0,
+    "nominal_frequency_hz": 50.0,
+    "features": {
+        "voltage": {
+            "Va": {"description": "Phase A voltage (V)", "nominal": 220.0, "unit": "V"},
+            "Vb": {"description": "Phase B voltage (V)", "nominal": 220.0, "unit": "V"},
+            "Vc": {"description": "Phase C voltage (V)", "nominal": 220.0, "unit": "V"}
+        },
+        "current": {
+            "Ia": {"description": "Phase A current (A)", "unit": "A"},
+            "Ib": {"description": "Phase B current (A)", "unit": "A"},
+            "Ic": {"description": "Phase C current (A)", "unit": "A"}
+        },
+        "power": {
+            "P": {"description": "Active power (kW)", "unit": "kW"},
+            "Q": {"description": "Reactive power (kVar)", "unit": "kVar"},
+            "S": {"description": "Apparent power (kVA)", "unit": "kVA"},
+            "PF": {"description": "Power factor", "range": [-1, 1]}
+        },
+        "quality": {
+            "THD_Va": {"description": "Total harmonic distortion of Va (%)", "unit": "%", "limit": 5.0},
+            "THD_Vb": {"description": "Total harmonic distortion of Vb (%)", "unit": "%", "limit": 5.0},
+            "THD_Vc": {"description": "Total harmonic distortion of Vc (%)", "unit": "%", "limit": 5.0},
+            "Freq": {"description": "System frequency (Hz)", "nominal": 50.0, "unit": "Hz"},
+            "V_unbalance": {"description": "Voltage unbalance factor (%)", "unit": "%", "limit": 4.0},
+            "I_unbalance": {"description": "Current unbalance factor (%)", "unit": "%"}
+        }
+    },
+    "labels": {
+        "0": {"name": "Normal", "description": "Normal operation"},
+        "1": {"name": "Undervoltage", "description": "Low voltage (V < 198V, -10%)"},
+        "2": {"name": "Overvoltage", "description": "Over voltage (V > 242V, +10%)"},
+        "3": {"name": "Voltage_Sag", "description": "Voltage sag/dip event"},
+        "4": {"name": "Harmonic", "description": "Harmonic distortion (THD > 5%)"},
+        "5": {"name": "Unbalance", "description": "Three-phase unbalance (> 4%)"}
+    },
+    "standards": {
+        "voltage_deviation": "GB/T 12325-2008",
+        "harmonic_limits": "GB/T 14549-1993",
+        "unbalance_limits": "GB/T 15543-2008"
+    },
+    "file_format": {
+        "train.csv": "Training data (mainly normal samples)",
+        "test.csv": "Test data (contains anomalies)",
+        "test_label.csv": "Test labels"
+    }
+}

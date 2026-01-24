@@ -21,3 +21,32 @@ venv/
 
 # Data
 data/processed/
+
+# Model checkpoints and training outputs
+**/checkpoints/
+**/test_results/
+**/*.pth
+**/*.pt
+**/*.ckpt
+**/*.h5
+**/*.keras
+
+# Large temporary files
+*.npy
+*.pkl
+!**/dataset/**/*.npy
+!**/dataset/**/*.pkl
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

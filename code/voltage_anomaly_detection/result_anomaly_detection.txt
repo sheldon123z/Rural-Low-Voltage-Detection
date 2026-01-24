@@ -1,0 +1,12 @@
+test_TimesNet_PSM_anomaly_detection_ftM_sl100_dm32_nh8_el1_df32_QuickTest_0  
+Accuracy: 0.9769, Precision: 0.9850, Recall: 0.9308, F1-score: 0.9571
+
+
+test_DLinear_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9806, Precision: 0.9862, Recall: 0.9434, F1-score: 0.9643
+
+
+test_TimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9844, Precision: 0.9844, Recall: 0.9591, F1-score: 0.9716
+
+
