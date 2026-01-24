@@ -2,45 +2,51 @@
 # -*- coding: utf-8 -*-
 """
 TimesNet 变体模型对比结果分析与可视化
-解析训练日志，生成对比图表和分析报告
+
+使用 MATLAB 风格的科研绑图配置
 结果按时间戳分组保存
 """
 
 import os
+import sys
 import re
 import json
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
+import matplotlib as mpl
 from datetime import datetime
 
-# 设置中文字体 (优先使用系统可用的中文字体)
-matplotlib.rcParams["font.sans-serif"] = [
-    "WenQuanYi Micro Hei",
-    "Noto Sans CJK SC",
-    "Noto Sans CJK JP",
-    "SimHei",
-    "DejaVu Sans",
-]
-matplotlib.rcParams["axes.unicode_minus"] = False
+# 添加项目路径
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# 学术论文风格设置
-plt.style.use("seaborn-v0_8-whitegrid")
-plt.rcParams.update(
-    {
-        "font.size": 12,
-        "axes.labelsize": 14,
-        "axes.titlesize": 16,
-        "xtick.labelsize": 12,
-        "ytick.labelsize": 12,
-        "legend.fontsize": 11,
-        "figure.figsize": (10, 6),
-        "figure.dpi": 150,
-        "savefig.dpi": 300,
-        "savefig.bbox": "tight",
-    }
-)
+# 导入自定义绑图样式
+try:
+    from utils.plot_style import (
+        apply_matlab_style,
+        MATLAB_COLORS_MODERN as COLORS,
+        MARKERS,
+        LINE_STYLES,
+        save_figure,
+        set_axis_style,
+    )
+
+    apply_matlab_style()
+except ImportError:
+    print("警告: 无法导入自定义绑图样式，使用默认配置")
+    # 备用配置
+    COLORS = ["#0072BD", "#D95319", "#EDB120", "#7E2F8E", "#77AC30", "#4DBEEE"]
+    MARKERS = ["o", "s", "^", "D", "v", "<"]
+    LINE_STYLES = ["-", "--", "-.", ":"]
+
+    # 设置中文字体
+    mpl.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "DejaVu Sans"]
+    mpl.rcParams["axes.unicode_minus"] = False
+    mpl.rcParams["font.size"] = 12
+    mpl.rcParams["axes.linewidth"] = 1.5
+    mpl.rcParams["grid.linestyle"] = "--"
+    mpl.rcParams["grid.alpha"] = 0.7
+    mpl.rcParams["savefig.dpi"] = 300
 
 
 def get_timestamp_dir(base_dir):
@@ -97,185 +103,235 @@ def parse_log_file(log_path):
 
 
 def plot_training_curves(all_results, output_dir):
-    """绘制训练曲线对比图"""
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-
-    colors = plt.cm.tab10(np.linspace(0, 1, len(all_results)))
+    """绘制训练曲线对比图 - MATLAB 风格"""
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
 
     for idx, (model_name, results) in enumerate(all_results.items()):
         if results["train_loss"]:
             epochs = range(1, len(results["train_loss"]) + 1)
+            color = COLORS[idx % len(COLORS)]
+            marker = MARKERS[idx % len(MARKERS)]
+
+            # 训练损失
             axes[0].plot(
                 epochs,
                 results["train_loss"],
-                "-o",
+                linestyle="-",
+                marker=marker,
+                markevery=2,
                 label=model_name,
-                color=colors[idx],
-                markersize=4,
+                color=color,
+                linewidth=2,
+                markersize=6,
+                markeredgecolor="white",
+                markeredgewidth=1,
             )
+            # 验证损失
             axes[1].plot(
                 epochs,
                 results["vali_loss"],
-                "-s",
+                linestyle="-",
+                marker=marker,
+                markevery=2,
                 label=model_name,
-                color=colors[idx],
-                markersize=4,
+                color=color,
+                linewidth=2,
+                markersize=6,
+                markeredgecolor="white",
+                markeredgewidth=1,
             )
+            # 测试损失
             axes[2].plot(
                 epochs,
                 results["test_loss"],
-                "-^",
+                linestyle="-",
+                marker=marker,
+                markevery=2,
                 label=model_name,
-                color=colors[idx],
-                markersize=4,
+                color=color,
+                linewidth=2,
+                markersize=6,
+                markeredgecolor="white",
+                markeredgewidth=1,
             )
 
-    axes[0].set_xlabel("训练轮次")
-    axes[0].set_ylabel("损失值")
-    axes[0].set_title("训练损失")
-    axes[0].legend(loc="upper right")
+    titles = ["训练损失", "验证损失", "测试损失"]
+    for i, ax in enumerate(axes):
+        ax.set_xlabel("训练轮次", fontweight="normal")
+        ax.set_ylabel("损失值", fontweight="normal")
+        ax.set_title(titles[i], fontweight="bold")
+        ax.legend(loc="upper right", frameon=True, edgecolor="black", fancybox=False)
+        ax.grid(True, linestyle="--", alpha=0.7)
+        ax.set_xlim(left=0.5)
 
-    axes[1].set_xlabel("训练轮次")
-    axes[1].set_ylabel("损失值")
-    axes[1].set_title("验证损失")
-    axes[1].legend(loc="upper right")
-
-    axes[2].set_xlabel("训练轮次")
-    axes[2].set_ylabel("损失值")
-    axes[2].set_title("测试损失")
-    axes[2].legend(loc="upper right")
+        # MATLAB 风格边框
+        for spine in ax.spines.values():
+            spine.set_linewidth(1.5)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "训练曲线对比.png"))
-    plt.savefig(os.path.join(output_dir, "训练曲线对比.pdf"))
+    plt.savefig(os.path.join(output_dir, "训练曲线对比.png"), dpi=300, facecolor="white")
+    plt.savefig(os.path.join(output_dir, "训练曲线对比.pdf"), facecolor="white")
     plt.close()
+
     print("已保存: 训练曲线对比.png/pdf")
 
 
 def plot_metrics_comparison(all_results, output_dir):
-    """绘制性能指标对比柱状图"""
+    """绘制性能指标对比图 - MATLAB 风格"""
+    metrics = ["准确率", "精确率", "召回率", "F1分数"]
+    metric_keys = ["accuracy", "precision", "recall", "f1"]
+
     models = list(all_results.keys())
-    metrics = ["accuracy", "precision", "recall", "f1"]
-    metric_labels = ["准确率", "精确率", "召回率", "F1分数"]
+    n_models = len(models)
+    n_metrics = len(metrics)
 
     # 准备数据
-    data = {m: [] for m in metrics}
-    valid_models = []
+    data = np.zeros((n_models, n_metrics))
+    for i, model in enumerate(models):
+        for j, key in enumerate(metric_keys):
+            val = all_results[model].get(key)
+            data[i, j] = val if val is not None else 0
 
-    for model in models:
-        results = all_results[model]
-        if results["accuracy"] is not None:
-            valid_models.append(model)
-            for m in metrics:
-                data[m].append(results[m])
+    # 绑制分组柱状图
+    fig, ax = plt.subplots(figsize=(10, 6))
 
-    if not valid_models:
-        print("警告: 没有有效的指标数据")
-        return
+    x = np.arange(n_metrics)
+    width = 0.18
+    offsets = np.linspace(-(n_models - 1) / 2, (n_models - 1) / 2, n_models) * width
 
-    # 绘制分组柱状图
-    x = np.arange(len(valid_models))
-    width = 0.2
+    for i, model in enumerate(models):
+        bars = ax.bar(
+            x + offsets[i],
+            data[i],
+            width * 0.9,
+            label=model,
+            color=COLORS[i % len(COLORS)],
+            edgecolor="black",
+            linewidth=1.2,
+        )
+        # 添加数值标签
+        for bar, val in zip(bars, data[i]):
+            if val > 0:
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    bar.get_height() + 0.01,
+                    f"{val:.3f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=9,
+                    fontweight="normal",
+                )
 
-    fig, ax = plt.subplots(figsize=(12, 6))
-    colors = ["#2ecc71", "#3498db", "#e74c3c", "#9b59b6"]
-
-    for i, (metric, label) in enumerate(zip(metrics, metric_labels)):
-        offset = (i - 1.5) * width
-        bars = ax.bar(x + offset, data[metric], width, label=label, color=colors[i])
-        # 在柱状图上标注数值
-        for bar, val in zip(bars, data[metric]):
-            ax.annotate(
-                f"{val:.3f}",
-                xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                xytext=(0, 3),
-                textcoords="offset points",
-                ha="center",
-                va="bottom",
-                fontsize=8,
-                rotation=45,
-            )
-
-    ax.set_xlabel("模型")
-    ax.set_ylabel("分数")
-    ax.set_title("TimesNet 变体模型在 PSM 数据集上的性能对比")
+    ax.set_ylabel("指标值", fontweight="normal")
+    ax.set_title("模型性能指标对比", fontweight="bold")
     ax.set_xticks(x)
-    ax.set_xticklabels(valid_models, rotation=15, ha="right")
-    ax.legend(loc="lower right")
-    ax.set_ylim(0, 1.1)
-    ax.grid(axis="y", alpha=0.3)
+    ax.set_xticklabels(metrics)
+    ax.set_ylim(0, 1.15)
+    ax.legend(loc="upper right", frameon=True, edgecolor="black", fancybox=False)
+    ax.grid(True, axis="y", linestyle="--", alpha=0.7)
+
+    # MATLAB 风格边框
+    for spine in ax.spines.values():
+        spine.set_linewidth(1.5)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "性能指标对比.png"))
-    plt.savefig(os.path.join(output_dir, "性能指标对比.pdf"))
+    plt.savefig(os.path.join(output_dir, "性能指标对比.png"), dpi=300, facecolor="white")
+    plt.savefig(os.path.join(output_dir, "性能指标对比.pdf"), facecolor="white")
     plt.close()
+
     print("已保存: 性能指标对比.png/pdf")
 
 
 def plot_radar_chart(all_results, output_dir):
-    """绘制雷达图对比各模型综合性能"""
-    models = []
-    metrics = ["accuracy", "precision", "recall", "f1"]
-    metric_labels = ["准确率", "精确率", "召回率", "F1分数"]
+    """绘制雷达图对比 - MATLAB 风格"""
+    metrics = ["准确率", "精确率", "召回率", "F1分数"]
+    metric_keys = ["accuracy", "precision", "recall", "f1"]
 
-    data = []
-    for model, results in all_results.items():
-        if results["accuracy"] is not None:
-            models.append(model)
-            data.append([results[m] for m in metrics])
+    models = list(all_results.keys())
+    n_metrics = len(metrics)
 
-    if not models:
-        return
-
-    # 雷达图设置
-    angles = np.linspace(0, 2 * np.pi, len(metrics), endpoint=False).tolist()
+    # 准备数据
+    angles = np.linspace(0, 2 * np.pi, n_metrics, endpoint=False).tolist()
     angles += angles[:1]  # 闭合
 
-    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-    colors = plt.cm.Set2(np.linspace(0, 1, len(models)))
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(projection="polar"))
 
-    for idx, (model, values) in enumerate(zip(models, data)):
-        values = values + values[:1]  # 闭合
-        ax.plot(angles, values, "o-", linewidth=2, label=model, color=colors[idx])
-        ax.fill(angles, values, alpha=0.15, color=colors[idx])
+    for idx, model in enumerate(models):
+        values = []
+        for key in metric_keys:
+            val = all_results[model].get(key)
+            values.append(val if val is not None else 0)
+        values += values[:1]  # 闭合
+
+        color = COLORS[idx % len(COLORS)]
+        ax.plot(
+            angles,
+            values,
+            linestyle="-",
+            marker=MARKERS[idx % len(MARKERS)],
+            linewidth=2,
+            markersize=8,
+            label=model,
+            color=color,
+            markeredgecolor="white",
+            markeredgewidth=1,
+        )
+        ax.fill(angles, values, alpha=0.15, color=color)
 
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(metric_labels)
+    ax.set_xticklabels(metrics, fontsize=12)
     ax.set_ylim(0, 1)
-    ax.set_title("多维度性能综合对比", pad=20)
-    ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.0))
+    ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.set_yticklabels(["0.2", "0.4", "0.6", "0.8", "1.0"], fontsize=10)
+    ax.set_title("模型性能雷达图对比", fontweight="bold", y=1.08)
+
+    # 网格样式
+    ax.grid(True, linestyle="--", alpha=0.7)
+
+    # 图例
+    ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.0), frameon=True, edgecolor="black")
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "雷达图对比.png"))
-    plt.savefig(os.path.join(output_dir, "雷达图对比.pdf"))
+    plt.savefig(os.path.join(output_dir, "雷达图对比.png"), dpi=300, facecolor="white")
+    plt.savefig(os.path.join(output_dir, "雷达图对比.pdf"), facecolor="white")
     plt.close()
+
     print("已保存: 雷达图对比.png/pdf")
 
 
 def plot_f1_bar_chart(all_results, output_dir):
-    """绘制 F1-Score 单独对比图（用于论文）"""
-    models = []
+    """绘制 F1 分数排名柱状图 - MATLAB 风格"""
+    # 提取 F1 分数并排序
     f1_scores = []
-
     for model, results in all_results.items():
-        if results["f1"] is not None:
-            models.append(model)
-            f1_scores.append(results["f1"])
+        f1 = results.get("f1")
+        if f1 is not None:
+            f1_scores.append((model, f1))
 
-    if not models:
+    f1_scores.sort(key=lambda x: x[1], reverse=True)
+
+    if not f1_scores:
+        print("警告: 没有有效的 F1 分数数据")
         return
 
-    # 排序
-    sorted_pairs = sorted(zip(f1_scores, models), reverse=True)
-    f1_scores, models = zip(*sorted_pairs)
+    models, scores = zip(*f1_scores)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    colors = plt.cm.Blues(np.linspace(0.4, 0.9, len(models)))[::-1]
 
-    bars = ax.barh(models, f1_scores, color=colors, edgecolor="navy", linewidth=1.2)
+    # 使用渐变色
+    colors = [COLORS[i % len(COLORS)] for i in range(len(models))]
 
-    # 标注数值
-    for bar, score in zip(bars, f1_scores):
+    bars = ax.barh(
+        range(len(models)),
+        scores,
+        color=colors,
+        edgecolor="black",
+        linewidth=1.5,
+        height=0.6,
+    )
+
+    # 添加数值标签
+    for i, (bar, score) in enumerate(zip(bars, scores)):
         ax.text(
             score + 0.005,
             bar.get_y() + bar.get_height() / 2,
@@ -285,145 +341,179 @@ def plot_f1_bar_chart(all_results, output_dir):
             fontweight="bold",
         )
 
-    ax.set_xlabel("F1 分数")
-    ax.set_title("TimesNet 变体模型 F1 分数对比 (PSM 数据集)")
-    ax.set_xlim(0, max(f1_scores) * 1.15)
-    ax.grid(axis="x", alpha=0.3)
+    ax.set_yticks(range(len(models)))
+    ax.set_yticklabels(models, fontsize=12)
+    ax.set_xlabel("F1 分数", fontweight="normal")
+    ax.set_title("模型 F1 分数排名", fontweight="bold")
+    ax.set_xlim(0, max(scores) * 1.12)
+    ax.grid(True, axis="x", linestyle="--", alpha=0.7)
 
-    # 高亮最佳模型
-    best_idx = 0
-    bars[best_idx].set_color("#e74c3c")
-    bars[best_idx].set_edgecolor("darkred")
+    # MATLAB 风格边框
+    for spine in ax.spines.values():
+        spine.set_linewidth(1.5)
+
+    # 添加最佳模型标注
+    ax.axvline(x=scores[0], color="#D95319", linestyle="--", linewidth=1.5, alpha=0.8)
+    ax.text(
+        scores[0] - 0.01,
+        len(models) - 0.5,
+        f"最佳: {scores[0]:.4f}",
+        ha="right",
+        fontsize=10,
+        color="#D95319",
+        fontweight="bold",
+    )
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "F1分数对比.png"))
-    plt.savefig(os.path.join(output_dir, "F1分数对比.pdf"))
+    plt.savefig(os.path.join(output_dir, "F1分数对比.png"), dpi=300, facecolor="white")
+    plt.savefig(os.path.join(output_dir, "F1分数对比.pdf"), facecolor="white")
     plt.close()
+
     print("已保存: F1分数对比.png/pdf")
 
 
 def generate_report(all_results, output_dir, timestamp):
-    """生成 Markdown 分析报告"""
+    """生成分析报告"""
     report = []
-    report.append("# TimesNet 变体模型 PSM 数据集对比实验报告\n")
-    report.append(f"**实验时间戳**: {timestamp}")
-    report.append(f"**生成时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    report.append("# TimesNet 变体模型 PSM 数据集对比实验报告\n\n")
+    report.append(f"**实验时间戳**: {timestamp}\n")
+    report.append(f"**生成时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
 
-    report.append("\n## 1. 实验配置\n")
-    report.append("| 参数 | 值 |")
-    report.append("|------|-----|")
-    report.append("| 数据集 | PSM (服务器机器数据集) |")
-    report.append("| 序列长度 | 100 |")
-    report.append("| 隐藏维度 | 64 |")
-    report.append("| 编码器层数 | 2 |")
-    report.append("| Top-K 周期数 | 3 |")
-    report.append("| 批次大小 | 128 |")
-    report.append("| 训练轮数 | 10 |")
-    report.append("| 学习率 | 0.0001 |")
-    report.append("| 异常比例 | 1% |")
+    # 实验配置
+    report.append("## 1. 实验配置\n\n")
+    report.append("| 参数 | 值 |\n")
+    report.append("|------|-----|\n")
+    report.append("| 数据集 | PSM (服务器机器数据集) |\n")
+    report.append("| 序列长度 | 100 |\n")
+    report.append("| 隐藏维度 | 64 |\n")
+    report.append("| 编码器层数 | 2 |\n")
+    report.append("| Top-K 周期数 | 3 |\n")
+    report.append("| 批次大小 | 128 |\n")
+    report.append("| 训练轮数 | 10 |\n")
+    report.append("| 学习率 | 0.0001 |\n")
+    report.append("| 异常比例 | 1% |\n\n")
 
-    report.append("\n## 2. 模型性能对比\n")
-    report.append("| 模型 | 准确率 | 精确率 | 召回率 | F1分数 | 训练时间(秒) |")
-    report.append("|------|--------|--------|--------|--------|-------------|")
+    # 性能对比
+    report.append("## 2. 模型性能对比\n\n")
+    report.append("| 模型 | 准确率 | 精确率 | 召回率 | F1分数 | 训练时间(秒) |\n")
+    report.append("|------|--------|--------|--------|--------|-------------|\n")
 
     best_f1 = 0
     best_model = ""
 
     for model, results in all_results.items():
-        if results["accuracy"] is not None:
-            acc = f"{results['accuracy']:.4f}"
-            prec = f"{results['precision']:.4f}"
-            rec = f"{results['recall']:.4f}"
-            f1 = f"{results['f1']:.4f}"
-            time_str = (
-                f"{results['training_time']:.1f}" if results["training_time"] else "N/A"
-            )
+        acc = results.get("accuracy", 0)
+        prec = results.get("precision", 0)
+        rec = results.get("recall", 0)
+        f1 = results.get("f1", 0)
+        time_cost = results.get("training_time", 0)
 
-            if results["f1"] > best_f1:
-                best_f1 = results["f1"]
-                best_model = model
+        if f1 and f1 > best_f1:
+            best_f1 = f1
+            best_model = model
 
-            report.append(f"| {model} | {acc} | {prec} | {rec} | {f1} | {time_str} |")
-        else:
-            report.append(f"| {model} | N/A | N/A | N/A | N/A | N/A |")
-
-    report.append(f"\n**最佳模型**: {best_model} (F1分数: {best_f1:.4f})")
-
-    report.append("\n## 3. 模型特点分析\n")
-    report.append(
-        """
-### 3.1 TimesNet (基础模型)
-- **核心机制**: FFT 自动发现周期 + 2D卷积时序建模
-- **优点**: 通用性强，无需先验知识
-- **适用场景**: 通用时序异常检测
-
-### 3.2 VoltageTimesNet (电压优化版)
-- **创新点**: 预设电网周期 (60/300/900/3600 采样点) + FFT 混合
-- **优点**: 融合领域知识，对电压信号更敏感
-- **适用场景**: 电力系统电压监测
-
-### 3.3 TPATimesNet (三相注意力版)
-- **创新点**: 三相交叉注意力机制，建模 Va/Vb/Vc 相位关系
-- **优点**: 捕获三相不平衡异常
-- **适用场景**: 三相电力系统异常检测
-
-### 3.4 MTSTimesNet (多尺度版)
-- **创新点**: 短期/中期/长期三路并行 + 自适应融合
-- **优点**: 同时捕获瞬态事件和长期趋势
-- **适用场景**: 复杂多尺度异常模式
-
-### 3.5 HybridTimesNet (混合发现版)
-- **创新点**: 置信度融合预设周期与 FFT 发现周期
-- **优点**: 鲁棒性强，可解释性好
-- **适用场景**: 需要可靠周期检测的场景
-"""
-    )
-
-    report.append("\n## 4. 结论\n")
-    if best_model:
         report.append(
-            f"在 PSM 数据集上的对比实验中，**{best_model}** 取得了最佳 F1 分数 ({best_f1:.4f})。"
+            f"| {model} | {acc:.4f if acc else 'N/A'} | "
+            f"{prec:.4f if prec else 'N/A'} | {rec:.4f if rec else 'N/A'} | "
+            f"{f1:.4f if f1 else 'N/A'} | {time_cost:.1f if time_cost else 'N/A'} |\n"
         )
-        report.append("\n各模型的表现差异反映了不同设计理念的优劣：")
-        report.append("- 基础 TimesNet 提供了可靠的基准性能")
-        report.append("- 变体模型通过引入领域知识或多尺度机制进一步提升检测能力")
 
-    report.append("\n## 5. 可视化结果\n")
-    report.append("- `训练曲线对比.png/pdf`: 训练曲线对比图")
-    report.append("- `性能指标对比.png/pdf`: 性能指标柱状图")
-    report.append("- `雷达图对比.png/pdf`: 雷达图综合对比")
-    report.append("- `F1分数对比.png/pdf`: F1 分数排名图")
+    report.append(f"\n**最佳模型**: {best_model} (F1分数: {best_f1:.4f})\n\n")
+
+    # 模型特点分析
+    report.append("## 3. 模型特点分析\n\n")
+
+    model_descriptions = {
+        "TimesNet": (
+            "基础模型",
+            "FFT 自动发现周期 + 2D卷积时序建模",
+            "通用性强，无需先验知识",
+            "通用时序异常检测",
+        ),
+        "VoltageTimesNet": (
+            "电压优化版",
+            "预设电网周期 (60/300/900/3600 采样点) + FFT 混合",
+            "融合领域知识，对电压信号更敏感",
+            "电力系统电压监测",
+        ),
+        "TPATimesNet": (
+            "三相注意力版",
+            "三相交叉注意力机制，建模 Va/Vb/Vc 相位关系",
+            "捕获三相不平衡异常",
+            "三相电力系统异常检测",
+        ),
+        "MTSTimesNet": (
+            "多尺度版",
+            "短期/中期/长期三路并行 + 自适应融合",
+            "同时捕获瞬态事件和长期趋势",
+            "复杂多尺度异常模式",
+        ),
+        "HybridTimesNet": (
+            "混合发现版",
+            "置信度融合预设周期与 FFT 发现周期",
+            "鲁棒性强，可解释性好",
+            "需要可靠周期检测的场景",
+        ),
+    }
+
+    for model in all_results.keys():
+        desc = model_descriptions.get(
+            model, ("未知", "未知", "未知", "未知")
+        )
+        report.append(f"\n### 3.{list(all_results.keys()).index(model)+1} {model} ({desc[0]})\n")
+        report.append(f"- **核心机制**: {desc[1]}\n")
+        report.append(f"- **优点**: {desc[2]}\n")
+        report.append(f"- **适用场景**: {desc[3]}\n")
+
+    # 结论
+    report.append("\n## 4. 结论\n\n")
+    report.append(
+        f"在 PSM 数据集上的对比实验中，**{best_model}** 取得了最佳 F1 分数 ({best_f1:.4f})。\n\n"
+    )
+    report.append("各模型的表现差异反映了不同设计理念的优劣：\n")
+    report.append("- 基础 TimesNet 提供了可靠的基准性能\n")
+    report.append("- 变体模型通过引入领域知识或多尺度机制进一步提升检测能力\n\n")
+
+    # 可视化结果
+    report.append("## 5. 可视化结果\n\n")
+    report.append("- `训练曲线对比.png/pdf`: 训练曲线对比图\n")
+    report.append("- `性能指标对比.png/pdf`: 性能指标柱状图\n")
+    report.append("- `雷达图对比.png/pdf`: 雷达图综合对比\n")
+    report.append("- `F1分数对比.png/pdf`: F1 分数排名图\n")
 
     # 保存报告
     report_path = os.path.join(output_dir, "实验分析报告.md")
     with open(report_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(report))
+        f.writelines(report)
+
     print("已保存: 实验分析报告.md")
 
-    # 同时保存 JSON 格式结果
-    json_results = {
+    # 保存 JSON 格式结果
+    json_data = {
         "实验时间戳": timestamp,
         "生成时间": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "模型结果": {},
     }
+
     for model, results in all_results.items():
-        json_results["模型结果"][model] = {
-            "准确率": results["accuracy"],
-            "精确率": results["precision"],
-            "召回率": results["recall"],
-            "F1分数": results["f1"],
-            "训练时间": results["training_time"],
-            "训练轮次": len(results["train_loss"]),
+        json_data["模型结果"][model] = {
+            "准确率": results.get("accuracy"),
+            "精确率": results.get("precision"),
+            "召回率": results.get("recall"),
+            "F1分数": results.get("f1"),
+            "训练时间": results.get("training_time"),
+            "训练轮次": len(results.get("train_loss", [])),
         }
 
     json_path = os.path.join(output_dir, "实验结果.json")
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(json_results, f, indent=2, ensure_ascii=False)
+        json.dump(json_data, f, ensure_ascii=False, indent=2)
+
     print("已保存: 实验结果.json")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="分析 TimesNet 变体模型对比结果")
+    parser = argparse.ArgumentParser(description="分析 TimesNet 变体模型对比实验结果")
     parser.add_argument(
         "--result_dir",
         type=str,
@@ -433,13 +523,7 @@ def main():
     parser.add_argument(
         "--models",
         nargs="+",
-        default=[
-            "TimesNet",
-            "VoltageTimesNet",
-            "TPATimesNet",
-            "MTSTimesNet",
-            "HybridTimesNet",
-        ],
+        default=["TimesNet", "VoltageTimesNet", "TPATimesNet", "MTSTimesNet", "HybridTimesNet"],
         help="要分析的模型列表",
     )
     parser.add_argument(
@@ -447,45 +531,61 @@ def main():
         action="store_true",
         help="不使用时间戳子目录",
     )
+
     args = parser.parse_args()
 
-    print("=" * 50)
-    print("TimesNet 变体模型对比结果分析")
-    print("=" * 50)
-
-    # 创建带时间戳的结果目录
+    # 创建输出目录
     if args.no_timestamp:
         output_dir = args.result_dir
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = "无时间戳"
         os.makedirs(output_dir, exist_ok=True)
     else:
         output_dir, timestamp = get_timestamp_dir(args.result_dir)
 
+    print("\n" + "=" * 50)
+    print("TimesNet 变体模型对比结果分析")
+    print("=" * 50)
     print(f"实验时间戳: {timestamp}")
-    print(f"结果保存目录: {output_dir}")
+    print(f"结果保存目录: {output_dir}\n")
 
-    # 解析所有模型的日志
+    # 收集所有模型结果
     all_results = {}
     for model in args.models:
-        # 优先查找当前目录，然后查找父目录
-        log_path = os.path.join(args.result_dir, f"{model}_log.txt")
+        log_path = os.path.join(args.result_dir, f"{model}_PSM.log")
         if not os.path.exists(log_path):
-            log_path = os.path.join(os.path.dirname(args.result_dir), f"{model}_log.txt")
+            # 尝试其他可能的日志名称
+            alt_paths = [
+                os.path.join(args.result_dir, f"{model}.log"),
+                os.path.join(args.result_dir, f"train_{model}.log"),
+            ]
+            for alt_path in alt_paths:
+                if os.path.exists(alt_path):
+                    log_path = alt_path
+                    break
 
-        print(f"\n解析模型: {model}")
         results = parse_log_file(log_path)
-        all_results[model] = results
 
-        if results["f1"] is not None:
+        # 打印解析结果
+        print(f"解析模型: {model}")
+        if results["f1"]:
             print(f"  准确率: {results['accuracy']:.4f}")
             print(f"  精确率: {results['precision']:.4f}")
             print(f"  召回率: {results['recall']:.4f}")
             print(f"  F1分数: {results['f1']:.4f}")
         else:
-            print("  (无有效结果)")
+            print("  无有效结果")
+        print()
+
+        all_results[model] = results
+
+    # 检查是否有有效数据
+    has_valid_data = any(r.get("f1") for r in all_results.values())
+    if not has_valid_data:
+        print("警告: 没有找到有效的实验结果")
+        return
 
     # 生成可视化
-    print("\n" + "=" * 50)
+    print("=" * 50)
     print("生成可视化图表...")
     print("=" * 50)
 
@@ -498,6 +598,7 @@ def main():
     print("\n" + "=" * 50)
     print("生成分析报告...")
     print("=" * 50)
+
     generate_report(all_results, output_dir, timestamp)
 
     print(f"\n分析完成！所有结果已保存到: {output_dir}")

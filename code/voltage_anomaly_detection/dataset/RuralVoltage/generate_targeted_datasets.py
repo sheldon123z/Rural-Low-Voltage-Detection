@@ -206,8 +206,9 @@ class RuralVoltageDatasetGenerator:
         test_df = pd.DataFrame(test_data, columns=columns)
         test_df.to_csv(os.path.join(dataset_dir, "test.csv"), index=False)
 
-        # 保存标签
-        label_df = pd.DataFrame(test_labels, columns=["label"])
+        # 保存标签 (转换为二分类: 0=正常, 1=异常)
+        binary_labels = (test_labels > 0).astype(int)
+        label_df = pd.DataFrame(binary_labels, columns=["label"])
         label_df.to_csv(os.path.join(dataset_dir, "test_label.csv"), index=False)
 
         print(f"数据集 {dataset_name} 已保存到 {dataset_dir}")

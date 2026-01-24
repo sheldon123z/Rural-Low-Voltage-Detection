@@ -4,43 +4,40 @@
 针对性数据集实验结果分析
 
 分析各模型在针对性数据集上的表现，验证模型设计假设
+
+绘图风格: MATLAB 科研绘图风格
+- 白色背景 + 黑色粗边框
+- 灰色虚线网格
+- 高对比度配色
+- 中文字体支持
 """
 
 import os
+import sys
 import re
 import json
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
+import matplotlib as mpl
 
 from datetime import datetime
 
-# 设置中文字体
-matplotlib.rcParams["font.sans-serif"] = [
-    "WenQuanYi Micro Hei",
-    "Noto Sans CJK SC",
-    "SimHei",
-    "DejaVu Sans",
-]
-matplotlib.rcParams["axes.unicode_minus"] = False
+# 添加项目根目录到路径
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# 学术论文风格
-plt.style.use("seaborn-v0_8-whitegrid")
-plt.rcParams.update(
-    {
-        "font.size": 12,
-        "axes.labelsize": 14,
-        "axes.titlesize": 16,
-        "xtick.labelsize": 11,
-        "ytick.labelsize": 11,
-        "legend.fontsize": 10,
-        "figure.figsize": (12, 8),
-        "figure.dpi": 150,
-        "savefig.dpi": 300,
-        "savefig.bbox": "tight",
-    }
+# 导入 MATLAB 风格配置
+from utils.plot_style import (
+    apply_matlab_style,
+    COLORS,
+    MARKERS,
+    set_axis_style,
+    save_figure,
+    get_color,
 )
+
+# 应用 MATLAB 科研绘图风格
+apply_matlab_style()
 
 # 数据集-模型对应关系
 DATASET_MODEL_MAP = {
@@ -79,6 +76,15 @@ MODEL_NAMES_CN = {
     "TPATimesNet": "TPATimesNet (三相注意力)",
     "MTSTimesNet": "MTSTimesNet (多尺度)",
     "HybridTimesNet": "HybridTimesNet (混合发现)",
+}
+
+# MATLAB 风格模型配色 (使用导入的 COLORS)
+MODEL_COLORS = {
+    "TimesNet": COLORS[0],        # 蓝色
+    "VoltageTimesNet": COLORS[1],  # 橙色
+    "TPATimesNet": COLORS[4],      # 绿色
+    "MTSTimesNet": COLORS[3],      # 紫色
+    "HybridTimesNet": COLORS[6],   # 深红
 }
 
 
@@ -139,7 +145,7 @@ def get_timestamp_dir(base_dir):
 
 
 def plot_heatmap(all_results, output_dir):
-    """绘制 F1 分数热力图"""
+    """绘制 F1 分数热力图 (MATLAB 风格)"""
     datasets = list(DATASET_MODEL_MAP.keys())
     models = MODELS
 
@@ -150,9 +156,10 @@ def plot_heatmap(all_results, output_dir):
             f1 = all_results[dataset][model].get("f1")
             data[i, j] = f1 if f1 is not None else 0
 
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(12, 8))
 
-    im = ax.imshow(data, cmap="YlOrRd", aspect="auto", vmin=0.5, vmax=1.0)
+    # 使用 MATLAB 风格的配色方案
+    im = ax.imshow(data, cmap="YlOrRd", aspect="auto", vmin=0.3, vmax=1.0)
 
     # 设置标签
     dataset_labels = [DATASET_MODEL_MAP[d]["name"] for d in datasets]
@@ -160,51 +167,53 @@ def plot_heatmap(all_results, output_dir):
 
     ax.set_xticks(np.arange(len(models)))
     ax.set_yticks(np.arange(len(datasets)))
-    ax.set_xticklabels(model_labels, rotation=45, ha="right")
-    ax.set_yticklabels(dataset_labels)
+    ax.set_xticklabels(model_labels, rotation=45, ha="right", fontsize=11)
+    ax.set_yticklabels(dataset_labels, fontsize=11)
 
     # 添加数值标注
     for i in range(len(datasets)):
         for j in range(len(models)):
             value = data[i, j]
-            color = "white" if value > 0.75 else "black"
+            color = "white" if value > 0.65 else "black"
 
             # 标记目标模型
             target = DATASET_MODEL_MAP[datasets[i]]["target_model"]
             if target == models[j]:
                 text = f"{value:.3f}\n★"
+                fontweight = "bold"
             else:
                 text = f"{value:.3f}"
+                fontweight = "normal"
 
-            ax.text(j, i, text, ha="center", va="center", color=color, fontsize=10)
+            ax.text(j, i, text, ha="center", va="center", color=color,
+                   fontsize=11, fontweight=fontweight)
 
-    ax.set_title("模型-数据集 F1 分数热力图\n(★ 表示预期优势模型)", fontsize=14)
+    ax.set_title("模型-数据集 F1 分数热力图\n(★ 表示预期优势模型)",
+                fontsize=16, fontweight="bold", pad=15)
+
+    # MATLAB 风格边框
+    for spine in ax.spines.values():
+        spine.set_linewidth(1.5)
+        spine.set_color("black")
 
     # 添加颜色条
-    cbar = ax.figure.colorbar(im, ax=ax)
-    cbar.ax.set_ylabel("F1 分数", rotation=-90, va="bottom")
+    cbar = fig.colorbar(im, ax=ax, shrink=0.8)
+    cbar.ax.set_ylabel("F1 分数", rotation=-90, va="bottom", fontsize=12)
+    cbar.outline.set_linewidth(1.5)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "F1热力图.png"))
-    plt.savefig(os.path.join(output_dir, "F1热力图.pdf"))
+    save_figure(fig, os.path.join(output_dir, "F1热力图"))
     plt.close()
 
     print("已保存: F1热力图.png/pdf")
 
 
 def plot_advantage_analysis(all_results, output_dir):
-    """绘制模型优势分析图"""
+    """绘制模型优势分析图 (MATLAB 风格)"""
     datasets = list(DATASET_MODEL_MAP.keys())
 
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+    fig, axes = plt.subplots(2, 3, figsize=(16, 10))
     axes = axes.flatten()
-
-    colors = {
-        "TimesNet": "#1f77b4",
-        "VoltageTimesNet": "#ff7f0e",
-        "TPATimesNet": "#2ca02c",
-        "MTSTimesNet": "#d62728",
-    }
 
     for idx, dataset in enumerate(datasets):
         ax = axes[idx]
@@ -219,14 +228,15 @@ def plot_advantage_analysis(all_results, output_dir):
             f1_scores.append(f1 if f1 else 0)
             model_names.append(model.replace("TimesNet", "\nTimesNet"))
 
-            # 高亮目标模型
+            # 高亮目标模型，使用 MATLAB 配色
             if info["target_model"] == model:
-                bar_colors.append(colors[model])
+                bar_colors.append(MODEL_COLORS[model])
             else:
-                bar_colors.append("#cccccc")
+                bar_colors.append("#B0B0B0")  # 浅灰色
 
         bars = ax.bar(
-            model_names, f1_scores, color=bar_colors, edgecolor="black", linewidth=1
+            model_names, f1_scores, color=bar_colors,
+            edgecolor="black", linewidth=1.5, width=0.7
         )
 
         # 添加数值标注
@@ -234,37 +244,48 @@ def plot_advantage_analysis(all_results, output_dir):
             if score > 0:
                 ax.text(
                     bar.get_x() + bar.get_width() / 2,
-                    bar.get_height() + 0.01,
+                    bar.get_height() + 0.02,
                     f"{score:.3f}",
                     ha="center",
-                    fontsize=9,
+                    fontsize=10,
+                    fontweight="bold",
                 )
 
-        ax.set_title(f"{info['name']}数据集\n{info['description']}", fontsize=12)
-        ax.set_ylabel("F1 分数")
-        ax.set_ylim(0, 1.1)
+        ax.set_title(f"{info['name']}数据集\n{info['description']}",
+                    fontsize=13, fontweight="bold")
+        ax.set_ylabel("F1 分数", fontsize=11)
+        ax.set_ylim(0, 1.15)
 
-        # 标注目标模型
+        # MATLAB 风格: 粗边框
+        for spine in ax.spines.values():
+            spine.set_linewidth(1.5)
+
+        # 网格线
+        ax.yaxis.grid(True, linestyle="--", alpha=0.7, color="#CCCCCC")
+        ax.set_axisbelow(True)
+
+        # 标注目标阈值线
         if info["target_model"]:
-            ax.axhline(y=0.9, color="red", linestyle="--", alpha=0.3, label="目标阈值")
+            ax.axhline(y=0.8, color=COLORS[6], linestyle="--",
+                      linewidth=1.5, alpha=0.6, label="目标阈值 0.8")
 
     # 隐藏多余的子图
     if len(datasets) < 6:
         axes[-1].axis("off")
 
     plt.suptitle(
-        "各数据集上的模型性能对比\n(彩色柱表示该数据集的目标优势模型)", fontsize=14
+        "各数据集上的模型性能对比\n(彩色柱表示该数据集的目标优势模型)",
+        fontsize=16, fontweight="bold", y=1.02
     )
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "模型优势分析.png"))
-    plt.savefig(os.path.join(output_dir, "模型优势分析.pdf"))
+    save_figure(fig, os.path.join(output_dir, "模型优势分析"))
     plt.close()
 
     print("已保存: 模型优势分析.png/pdf")
 
 
 def plot_radar_comparison(all_results, output_dir):
-    """绘制综合评估雷达图"""
+    """绘制综合评估雷达图 (MATLAB 风格)"""
     # 使用综合数据集的结果
     comp_results = all_results.get("comprehensive", {})
 
@@ -280,8 +301,6 @@ def plot_radar_comparison(all_results, output_dir):
     angles = np.linspace(0, 2 * np.pi, len(metrics), endpoint=False).tolist()
     angles += angles[:1]  # 闭合
 
-    colors = plt.cm.tab10(np.linspace(0, 1, len(MODELS)))
-
     for idx, model in enumerate(MODELS):
         values = []
         for key in metric_keys:
@@ -289,28 +308,131 @@ def plot_radar_comparison(all_results, output_dir):
             values.append(v if v else 0)
         values += values[:1]  # 闭合
 
+        # 使用 MATLAB 风格配色和标记
+        color = MODEL_COLORS[model]
+        marker = MARKERS[idx]
+
         ax.plot(
             angles,
             values,
-            "o-",
-            linewidth=2,
+            marker=marker,
+            linestyle="-",
+            linewidth=2.5,
+            markersize=10,
+            markeredgewidth=1.5,
+            markeredgecolor="black",
             label=MODEL_NAMES_CN.get(model, model),
-            color=colors[idx],
+            color=color,
         )
-        ax.fill(angles, values, alpha=0.15, color=colors[idx])
+        ax.fill(angles, values, alpha=0.15, color=color)
 
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(metrics, fontsize=12)
-    ax.set_ylim(0, 1)
-    ax.set_title("综合数据集上的多维度性能对比", fontsize=14, y=1.08)
-    ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.0))
+    ax.set_xticklabels(metrics, fontsize=13, fontweight="bold")
+    ax.set_ylim(0, 1.05)
+
+    # 设置雷达图网格
+    ax.set_rticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.set_yticklabels(["0.2", "0.4", "0.6", "0.8", "1.0"], fontsize=10)
+    ax.grid(True, linestyle="--", alpha=0.7, color="#666666")
+
+    ax.set_title("综合数据集上的多维度性能对比",
+                fontsize=16, fontweight="bold", y=1.08)
+
+    # MATLAB 风格图例
+    legend = ax.legend(
+        loc="upper right",
+        bbox_to_anchor=(1.35, 1.0),
+        fontsize=11,
+        frameon=True,
+        edgecolor="black",
+        fancybox=False,
+    )
+    legend.get_frame().set_linewidth(1.5)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "综合雷达图.png"))
-    plt.savefig(os.path.join(output_dir, "综合雷达图.pdf"))
+    save_figure(fig, os.path.join(output_dir, "综合雷达图"))
     plt.close()
 
     print("已保存: 综合雷达图.png/pdf")
+
+
+def plot_metrics_comparison(all_results, output_dir):
+    """绘制各数据集上的多指标对比图 (MATLAB 风格)"""
+    datasets = [d for d in DATASET_MODEL_MAP.keys() if d != "hybrid_period"]
+    metrics = ["accuracy", "precision", "recall", "f1"]
+    metric_names = ["准确率", "精确率", "召回率", "F1分数"]
+
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    axes = axes.flatten()
+
+    bar_width = 0.18
+    x = np.arange(len(datasets))
+
+    for ax_idx, (metric, metric_name) in enumerate(zip(metrics, metric_names)):
+        ax = axes[ax_idx]
+
+        for model_idx, model in enumerate(MODELS):
+            values = []
+            for dataset in datasets:
+                v = all_results[dataset][model].get(metric, 0)
+                values.append(v if v else 0)
+
+            offset = (model_idx - len(MODELS)/2 + 0.5) * bar_width
+            bars = ax.bar(
+                x + offset, values,
+                bar_width * 0.9,
+                label=model if ax_idx == 0 else "",
+                color=MODEL_COLORS[model],
+                edgecolor="black",
+                linewidth=1.2,
+            )
+
+            # 添加数值标注 (仅对非零值)
+            for bar, val in zip(bars, values):
+                if val > 0.1:
+                    ax.text(
+                        bar.get_x() + bar.get_width()/2,
+                        bar.get_height() + 0.02,
+                        f"{val:.2f}",
+                        ha="center",
+                        fontsize=8,
+                        rotation=90,
+                    )
+
+        ax.set_title(metric_name, fontsize=14, fontweight="bold")
+        ax.set_ylabel("分数", fontsize=11)
+        ax.set_ylim(0, 1.2)
+
+        dataset_labels = [DATASET_MODEL_MAP[d]["name"] for d in datasets]
+        ax.set_xticks(x)
+        ax.set_xticklabels(dataset_labels, fontsize=10)
+
+        # MATLAB 风格
+        for spine in ax.spines.values():
+            spine.set_linewidth(1.5)
+        ax.yaxis.grid(True, linestyle="--", alpha=0.7, color="#CCCCCC")
+        ax.set_axisbelow(True)
+
+    # 添加共享图例
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles, labels,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.02),
+        ncol=len(MODELS),
+        fontsize=11,
+        frameon=True,
+        edgecolor="black",
+        fancybox=False,
+    )
+
+    plt.suptitle("各数据集上的多指标性能对比",
+                fontsize=16, fontweight="bold", y=0.98)
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    save_figure(fig, os.path.join(output_dir, "多指标对比"))
+    plt.close()
+
+    print("已保存: 多指标对比.png/pdf")
 
 
 def generate_report(all_results, output_dir, timestamp):
@@ -485,6 +607,7 @@ def main():
 
     plot_heatmap(all_results, output_dir)
     plot_advantage_analysis(all_results, output_dir)
+    plot_metrics_comparison(all_results, output_dir)
     plot_radar_comparison(all_results, output_dir)
 
     # 生成报告
