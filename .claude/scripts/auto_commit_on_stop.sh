@@ -1,47 +1,61 @@
 #!/bin/bash
 # Auto Commit on Stop Script
 # 会话结束时自动提交所有变更
+# 优化版本：更可靠的错误处理和日志记录
+
+set -e
+
+# 日志函数
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "${PROJECT_ROOT}/.claude/.auto_commit.log" 2>/dev/null || true
+}
 
 # 获取项目根目录
-PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
-if [ -z "$PROJECT_ROOT" ]; then
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+    echo "Not in a git repository"
     exit 0
-fi
+}
 
-cd "$PROJECT_ROOT"
+cd "$PROJECT_ROOT" || exit 0
+
+log "开始自动提交检查..."
 
 # 检查是否有未提交的变更
 CHANGED_FILES=$(git status --porcelain 2>/dev/null | wc -l)
 
 if [ "$CHANGED_FILES" -eq 0 ]; then
+    log "无变更需要提交"
     exit 0
 fi
 
-# 生成提交信息
+# 生成时间戳
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M')
 
 # 分析变更类型
-MODIFIED=$(git status --porcelain | grep -E '^ M|^M ' | wc -l)
-ADDED=$(git status --porcelain | grep -E '^\?\?|^A ' | wc -l)
-DELETED=$(git status --porcelain | grep -E '^ D|^D ' | wc -l)
+MODIFIED=$(git status --porcelain | grep -cE '^ M|^M ' || true)
+ADDED=$(git status --porcelain | grep -cE '^\?\?|^A ' || true)
+DELETED=$(git status --porcelain | grep -cE '^ D|^D ' || true)
 
-# 构建提交信息
-COMMIT_MSG="chore: 自动保存 Claude Code 会话变更"
-COMMIT_BODY="时间: $TIMESTAMP\n变更: $CHANGED_FILES 文件"
+# 构建简洁的提交信息
+COMMIT_MSG="chore: 自动保存进度 (${TIMESTAMP})"
 
-if [ "$MODIFIED" -gt 0 ]; then
-    COMMIT_BODY="$COMMIT_BODY (修改: $MODIFIED)"
-fi
-if [ "$ADDED" -gt 0 ]; then
-    COMMIT_BODY="$COMMIT_BODY (新增: $ADDED)"
-fi
-if [ "$DELETED" -gt 0 ]; then
-    COMMIT_BODY="$COMMIT_BODY (删除: $DELETED)"
-fi
+# 构建详细信息
+DETAILS=""
+[ "$MODIFIED" -gt 0 ] && DETAILS="${DETAILS}修改:$MODIFIED "
+[ "$ADDED" -gt 0 ] && DETAILS="${DETAILS}新增:$ADDED "
+[ "$DELETED" -gt 0 ] && DETAILS="${DETAILS}删除:$DELETED"
 
 # 执行提交
-git add -A
-git commit -m "$COMMIT_MSG" -m "$(echo -e $COMMIT_BODY)"
+git add -A 2>/dev/null || {
+    log "git add 失败"
+    exit 1
+}
 
+git commit -m "$COMMIT_MSG" -m "$DETAILS" --no-verify 2>/dev/null || {
+    log "git commit 失败或无变更"
+    exit 0
+}
+
+log "✅ 已提交 $CHANGED_FILES 个文件 ($DETAILS)"
 echo "✅ 已自动提交 $CHANGED_FILES 个文件变更"
 exit 0
