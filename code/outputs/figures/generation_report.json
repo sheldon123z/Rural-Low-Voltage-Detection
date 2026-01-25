@@ -1,0 +1,57 @@
+{
+  "generation_time": "2026-01-25 17:11:39",
+  "output_directory": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/outputs/figures",
+  "total_plots": 8,
+  "successful": 8,
+  "failed": 0,
+  "results": [
+    {
+      "plot": "f1_ranking",
+      "name": "F1 分数排名图",
+      "filename": "f1_score_ranking.png",
+      "status": "success"
+    },
+    {
+      "plot": "metrics_bar",
+      "name": "性能指标柱状图",
+      "filename": "metrics_comparison.png",
+      "status": "success"
+    },
+    {
+      "plot": "radar",
+      "name": "雷达图",
+      "filename": "radar_chart.png",
+      "status": "success"
+    },
+    {
+      "plot": "heatmap",
+      "name": "性能热力图",
+      "filename": "performance_heatmap.png",
+      "status": "success"
+    },
+    {
+      "plot": "roc",
+      "name": "ROC 曲线",
+      "filename": "roc_curve.png",
+      "status": "success"
+    },
+    {
+      "plot": "pr",
+      "name": "PR 曲线",
+      "filename": "pr_curve.png",
+      "status": "success"
+    },
+    {
+      "plot": "confusion",
+      "name": "混淆矩阵",
+      "filename": "confusion_matrix.png",
+      "status": "success"
+    },
+    {
+      "plot": "training",
+      "name": "训练曲线",
+      "filename": "training_curve.png",
+      "status": "success"
+    }
+  ]
+}
