@@ -215,6 +215,9 @@ class Model(nn.Module):
         self.label_len = getattr(configs, "label_len", 0)
         self.pred_len = getattr(configs, "pred_len", 0)
 
+        # 创建实例级别的 scale_configs 副本，避免修改类属性
+        import copy
+        self.scale_configs = copy.deepcopy(self.SCALE_CONFIGS)
         self._adjust_scale_configs()
 
         self.enc_embedding = DataEmbedding(
@@ -226,10 +229,10 @@ class Model(nn.Module):
         )
 
         self.n_layers = configs.e_layers
-        self.n_scales = len(self.SCALE_CONFIGS)
+        self.n_scales = len(self.scale_configs)
 
         self.scale_blocks = nn.ModuleDict()
-        for scale_name, scale_cfg in self.SCALE_CONFIGS.items():
+        for scale_name, scale_cfg in self.scale_configs.items():
             self.scale_blocks[scale_name] = nn.ModuleList(
                 [
                     ScaleSpecificTimesBlock(
@@ -270,20 +273,21 @@ class Model(nn.Module):
             )
 
     def _adjust_scale_configs(self):
+        """调整尺度配置，使用实例属性避免类属性污染"""
         seq_len = self.seq_len
-        for scale_name in self.SCALE_CONFIGS:
-            max_period = self.SCALE_CONFIGS[scale_name]["max_period"]
+        for scale_name in self.scale_configs:
+            max_period = self.scale_configs[scale_name]["max_period"]
             if max_period > seq_len // 2:
-                self.SCALE_CONFIGS[scale_name]["max_period"] = seq_len // 2
+                self.scale_configs[scale_name]["max_period"] = seq_len // 2
 
         valid_scales = {
             k: v
-            for k, v in self.SCALE_CONFIGS.items()
+            for k, v in self.scale_configs.items()
             if v["min_period"] < v["max_period"]
         }
 
         if len(valid_scales) < 3:
-            self.SCALE_CONFIGS = {
+            self.scale_configs = {
                 "short": {"min_period": 2, "max_period": max(4, seq_len // 10)},
                 "medium": {
                     "min_period": max(4, seq_len // 10),

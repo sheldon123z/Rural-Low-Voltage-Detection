@@ -497,7 +497,7 @@ class RuralVoltageSegLoader(Dataset):
         ├── test_label.csv   # Test labels
         └── metadata.json    # Meta information (optional)
 
-    Label mapping for multi-class anomaly detection:
+    Label mapping for multi-class anomaly detection (fixed bug: train/val labels now correct):
         0: Normal           - Normal operation
         1: Undervoltage     - Low voltage (V < 198V, -10%)
         2: Overvoltage      - Over voltage (V > 242V, +10%)
@@ -615,12 +615,14 @@ class RuralVoltageSegLoader(Dataset):
     def __getitem__(self, index):
         index = index * self.step
         if self.flag == "train":
-            return np.float32(self.train[index : index + self.win_size]), np.float32(
-                self.test_labels[0 : self.win_size]
+            # BUG FIX: 训练数据是正常数据，标签应为全零(表示无异常)
+            return np.float32(self.train[index : index + self.win_size]), np.zeros(
+                (self.win_size, 1), dtype=np.float32
             )
         elif self.flag == "val":
-            return np.float32(self.val[index : index + self.win_size]), np.float32(
-                self.test_labels[0 : self.win_size]
+            # BUG FIX: 验证数据同样是正常数据，标签应为全零
+            return np.float32(self.val[index : index + self.win_size]), np.zeros(
+                (self.win_size, 1), dtype=np.float32
             )
         elif self.flag == "test":
             return np.float32(self.test[index : index + self.win_size]), np.float32(

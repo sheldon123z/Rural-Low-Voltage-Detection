@@ -198,9 +198,10 @@ class VoltageTimesBlock(nn.Module):
         res = torch.stack(res, dim=-1)
 
         # Adaptive aggregation with softmax weights
+        # 优化: 使用expand替代repeat避免内存复制
         period_weight = F.softmax(period_weight, dim=1)
         period_weight = period_weight.unsqueeze(1).unsqueeze(1)
-        period_weight = period_weight.repeat(1, T, N, 1)
+        period_weight = period_weight.expand(-1, T, N, -1)
         res = torch.sum(res * period_weight, -1)
 
         # Apply temporal smoothing
