@@ -222,3 +222,7 @@ MSL_TimesNet_100_TimesNet_MSL_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_MSL_
 Accuracy: 0.9550, Precision: 0.8562, Recall: 0.6891, F1-score: 0.7636
 
 
+SMAP_TimesNet_100_TimesNet_SMAP_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_SMAP_Exp_0  
+Accuracy: 0.9349, Precision: 0.8952, Recall: 0.5567, F1-score: 0.6865
+
+
