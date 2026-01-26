@@ -218,3 +218,7 @@ SMD_TimesNet_100_TimesNet_SMD_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_SMD_
 Accuracy: 0.9846, Precision: 0.7821, Recall: 0.8719, F1-score: 0.8246
 
 
+MSL_TimesNet_100_TimesNet_MSL_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_MSL_Exp_0  
+Accuracy: 0.9550, Precision: 0.8562, Recall: 0.6891, F1-score: 0.7636
+
+
