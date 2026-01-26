@@ -30,7 +30,7 @@ fm._load_fontmanager(try_read_cache=False)
 
 def create_rounded_box(ax, xy, width, height, color, text, fontsize=9,
                        text_color='black', edgecolor='black', linewidth=1.5,
-                       alpha=1.0, bold=False):
+                       alpha=1.0, bold=False, text_offset=(0, 0)):
     """创建圆角矩形框"""
     box = FancyBboxPatch(
         xy, width, height,
@@ -43,8 +43,8 @@ def create_rounded_box(ax, xy, width, height, color, text, fontsize=9,
     ax.add_patch(box)
 
     # 添加文本
-    center_x = xy[0] + width / 2
-    center_y = xy[1] + height / 2
+    center_x = xy[0] + width / 2 + text_offset[0]
+    center_y = xy[1] + height / 2 + text_offset[1]
     weight = 'bold' if bold else 'normal'
     ax.text(center_x, center_y, text, ha='center', va='center',
             fontsize=fontsize, color=text_color, fontweight=weight)
@@ -58,19 +58,11 @@ def draw_arrow(ax, start, end, color='black', style='->', linewidth=1.5,
                 arrowprops=dict(arrowstyle=style, color=color, lw=linewidth,
                                connectionstyle=connectionstyle))
 
-def draw_double_arrow(ax, start, end, color='black', linewidth=1.5):
-    """绘制双向箭头（用于表示融合）"""
-    mid = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
-    ax.annotate('', xy=mid, xytext=start,
-                arrowprops=dict(arrowstyle='->', color=color, lw=linewidth))
-    ax.annotate('', xy=mid, xytext=end,
-                arrowprops=dict(arrowstyle='->', color=color, lw=linewidth))
-
 def main():
-    # 创建图形
-    fig, ax = plt.subplots(1, 1, figsize=(14, 16), dpi=100)
+    # 创建图形 - 增大高度以容纳所有内容
+    fig, ax = plt.subplots(1, 1, figsize=(14, 18), dpi=100)
     ax.set_xlim(0, 14)
-    ax.set_ylim(0, 16)
+    ax.set_ylim(-2, 18)
     ax.axis('off')
 
     # 颜色定义 - IEEE 风格
@@ -92,27 +84,27 @@ def main():
     edge_highlight = '#FF9800'    # 橙色 - 改进点高亮
 
     # ============ 顶部：输入 ============
-    create_rounded_box(ax, (5.5, 15.0), 3, 0.6, color_input, '输入', fontsize=11, bold=True)
-    ax.text(7, 14.5, r'$X \in \mathbb{R}^{B \times T \times C}$', ha='center', va='center', fontsize=10)
+    create_rounded_box(ax, (5.5, 16.5), 3, 0.6, color_input, '输入', fontsize=11, bold=True)
+    ax.text(7, 16.0, r'$X \in \mathbb{R}^{B \times T \times C}$', ha='center', va='center', fontsize=10)
 
     # 右侧注释
-    ax.text(12.5, 15.2, 'B: 批量大小', ha='left', va='center', fontsize=9, color='#666666')
-    ax.text(12.5, 14.85, 'T: 序列长度', ha='left', va='center', fontsize=9, color='#666666')
-    ax.text(12.5, 14.5, 'C: 特征维度', ha='left', va='center', fontsize=9, color='#666666')
+    ax.text(12.5, 16.7, 'B: 批量大小', ha='left', va='center', fontsize=9, color='#666666')
+    ax.text(12.5, 16.35, 'T: 序列长度', ha='left', va='center', fontsize=9, color='#666666')
+    ax.text(12.5, 16.0, 'C: 特征维度', ha='left', va='center', fontsize=9, color='#666666')
 
     # 箭头：输入 -> Token Embedding
-    draw_arrow(ax, (7, 14.2), (7, 13.7))
+    draw_arrow(ax, (7, 15.7), (7, 15.2))
 
     # ============ Token Embedding ============
-    create_rounded_box(ax, (5, 13.0), 4, 0.6, color_embed, 'Token Embedding', fontsize=11, bold=True)
+    create_rounded_box(ax, (5, 14.5), 4, 0.6, color_embed, 'Token Embedding', fontsize=11, bold=True)
 
     # 箭头：Token Embedding -> VoltageTimesBlock
-    draw_arrow(ax, (7, 12.9), (7, 12.3))
+    draw_arrow(ax, (7, 14.4), (7, 13.8))
 
     # ============ VoltageTimesBlock 主模块 ============
     # 背景框
     block_bg = FancyBboxPatch(
-        (1.2, 3.5), 11.6, 8.6,
+        (1.2, 4.5), 11.6, 9.1,
         boxstyle="round,pad=0.02,rounding_size=0.03",
         facecolor=color_block,
         edgecolor='#3F51B5',
@@ -120,13 +112,13 @@ def main():
         alpha=0.5
     )
     ax.add_patch(block_bg)
-    ax.text(7, 11.85, 'VoltageTimesBlock', ha='center', va='center',
+    ax.text(7, 13.35, 'VoltageTimesBlock', ha='center', va='center',
             fontsize=13, fontweight='bold', color='#1A237E')
 
     # ============ 混合周期发现模块 (核心改进) ============
     # 混合模块背景框
     hybrid_bg = FancyBboxPatch(
-        (1.8, 8.8), 10.4, 2.7,
+        (1.8, 10.0), 10.4, 2.9,
         boxstyle="round,pad=0.02,rounding_size=0.02",
         facecolor='#FAFAFA',
         edgecolor=edge_highlight,
@@ -135,21 +127,21 @@ def main():
         alpha=0.8
     )
     ax.add_patch(hybrid_bg)
-    ax.text(7, 11.25, '混合周期发现 (改进点1)', ha='center', va='center',
+    ax.text(7, 12.7, '混合周期发现 (改进点1)', ha='center', va='center',
             fontsize=10, fontweight='bold', color=edge_highlight)
 
     # FFT 周期发现 (左侧路径)
-    create_rounded_box(ax, (2.5, 9.8), 3.5, 0.7, color_fft, 'FFT 周期发现',
+    create_rounded_box(ax, (2.5, 11.3), 3.5, 0.7, color_fft, 'FFT 周期发现',
                        fontsize=10, edgecolor=edge_fft, linewidth=2)
-    ax.text(4.25, 9.3, r'FFT_for_Period$(x, k)$', ha='center', va='center',
+    ax.text(4.25, 10.8, r'FFT_for_Period$(x, k)$', ha='center', va='center',
             fontsize=8, color='#2E7D32', style='italic')
 
     # 预设电网周期 (右侧路径)
-    create_rounded_box(ax, (8, 9.8), 3.5, 0.7, color_preset, '预设电网周期',
+    create_rounded_box(ax, (8, 11.3), 3.5, 0.7, color_preset, '预设电网周期',
                        fontsize=10, edgecolor=edge_preset, linewidth=2)
 
     # 预设周期表格
-    table_x, table_y = 8.2, 9.0
+    table_x, table_y = 8.2, 10.5
     table_data = [
         ('周期名称', '采样点数'),
         ('1分钟', '60'),
@@ -180,53 +172,53 @@ def main():
             ax.text(table_x + 2.2, y_pos, value, ha='center', va='center', fontsize=7.5)
 
     # 权重融合框 (改进点2)
-    create_rounded_box(ax, (5, 7.6), 4, 0.8, color_fusion, '权重融合',
+    create_rounded_box(ax, (5, 8.9), 4, 0.8, color_fusion, '权重融合',
                        fontsize=10, edgecolor=edge_fusion, linewidth=2, bold=True)
-    ax.text(7, 7.1, '70% FFT + 30% 预设 (改进点2)', ha='center', va='center',
+    ax.text(7, 8.4, '70% FFT + 30% 预设 (改进点2)', ha='center', va='center',
             fontsize=9, fontweight='bold', color=edge_fusion)
 
     # 箭头：FFT -> 融合
-    draw_arrow(ax, (4.25, 9.7), (5.8, 8.5), color=edge_fft, linewidth=1.5,
+    draw_arrow(ax, (4.25, 11.2), (5.8, 9.8), color=edge_fft, linewidth=1.5,
                connectionstyle='arc3,rad=0.15')
 
     # 箭头：预设周期 -> 融合
-    draw_arrow(ax, (9.75, 9.7), (8.2, 8.5), color=edge_preset, linewidth=1.5,
+    draw_arrow(ax, (9.75, 11.2), (8.2, 9.8), color=edge_preset, linewidth=1.5,
                connectionstyle='arc3,rad=-0.15')
 
     # ============ 1D -> 2D 重塑 ============
-    draw_arrow(ax, (7, 7.5), (7, 7.1))
-    create_rounded_box(ax, (5, 6.35), 4, 0.6, color_conv, '1D → 2D 重塑', fontsize=10)
-    ax.text(10.5, 6.65, r'Reshape$(B,T,C) \rightarrow (B,p,T/p,C)$',
+    draw_arrow(ax, (7, 8.8), (7, 8.4))
+    create_rounded_box(ax, (5, 7.7), 4, 0.6, color_conv, '1D → 2D 重塑', fontsize=10)
+    ax.text(10.5, 8.0, r'Reshape$(B,T,C) \rightarrow (B,p,T/p,C)$',
             ha='left', va='center', fontsize=8, color='#666666')
 
     # ============ Inception 2D Conv ============
-    draw_arrow(ax, (7, 6.25), (7, 5.85))
-    create_rounded_box(ax, (4.5, 5.15), 5, 0.6, color_conv, 'Inception 2D Conv',
+    draw_arrow(ax, (7, 7.6), (7, 7.2))
+    create_rounded_box(ax, (4.5, 6.5), 5, 0.6, color_conv, 'Inception 2D Conv',
                        fontsize=10, bold=True)
-    ax.text(10.5, 5.45, '多尺度卷积核', ha='left', va='center',
+    ax.text(10.5, 6.8, '多尺度卷积核', ha='left', va='center',
             fontsize=8, color='#666666')
 
     # ============ 2D -> 1D 还原 ============
-    draw_arrow(ax, (7, 5.05), (7, 4.65))
-    create_rounded_box(ax, (5, 3.95), 4, 0.6, color_conv, '2D → 1D 还原', fontsize=10)
-    ax.text(10.5, 4.25, r'Reshape$(B,p,T/p,C) \rightarrow (B,T,C)$',
+    draw_arrow(ax, (7, 6.4), (7, 6.0))
+    create_rounded_box(ax, (5, 5.3), 4, 0.6, color_conv, '2D → 1D 还原', fontsize=10)
+    ax.text(10.5, 5.6, r'Reshape$(B,p,T/p,C) \rightarrow (B,T,C)$',
             ha='left', va='center', fontsize=8, color='#666666')
 
     # ============ 多周期自适应聚合 ============
-    draw_arrow(ax, (7, 3.85), (7, 3.55))
+    draw_arrow(ax, (7, 5.2), (7, 4.9))
 
     # 残差连接 (虚线框)
-    residual_arrow_start = (1.5, 12.0)
-    residual_arrow_end = (1.5, 3.2)
+    residual_arrow_start = (1.5, 13.5)
+    residual_arrow_end = (1.5, 4.3)
     ax.annotate('', xy=residual_arrow_end, xytext=residual_arrow_start,
                 arrowprops=dict(arrowstyle='-', color='#757575', lw=1.5,
                                linestyle='--'))
-    ax.text(1.3, 7.5, '残\n差\n连\n接', ha='center', va='center',
+    ax.text(1.3, 8.5, '残\n差\n连\n接', ha='center', va='center',
             fontsize=8, color='#757575')
 
     # ============ 时域平滑卷积 (改进点3) ============
     smooth_bg = FancyBboxPatch(
-        (4.3, 2.0), 5.4, 1.5,
+        (4.3, 3.2), 5.4, 1.5,
         boxstyle="round,pad=0.02,rounding_size=0.02",
         facecolor=color_highlight,
         edgecolor=edge_highlight,
@@ -236,48 +228,48 @@ def main():
     )
     ax.add_patch(smooth_bg)
 
-    create_rounded_box(ax, (4.5, 2.7), 5, 0.7, color_smooth, '时域平滑卷积 (改进点3)',
+    create_rounded_box(ax, (4.5, 3.9), 5, 0.7, color_smooth, '时域平滑卷积 (改进点3)',
                        fontsize=10, edgecolor=edge_highlight, linewidth=2, bold=True)
-    ax.text(7, 2.2, '深度可分离1D卷积，抑制高频噪声', ha='center', va='center',
+    ax.text(7, 3.4, '深度可分离1D卷积，抑制高频噪声', ha='center', va='center',
             fontsize=8, color='#E65100')
 
     # 残差连接到时域平滑
-    ax.annotate('', xy=(4.4, 3.0), xytext=(1.5, 3.0),
+    ax.annotate('', xy=(4.4, 4.2), xytext=(1.5, 4.2),
                 arrowprops=dict(arrowstyle='->', color='#757575', lw=1.5,
                                linestyle='--'))
 
     # 循环标记
-    ax.text(12.3, 7.5, r'$\times N_{layers}$', ha='center', va='center',
+    ax.text(12.3, 8.5, r'$\times N_{layers}$', ha='center', va='center',
             fontsize=11, fontweight='bold', color='#3F51B5')
 
     # 循环箭头
     loop_style = 'arc3,rad=0.3'
-    ax.annotate('', xy=(12.0, 11.5), xytext=(12.0, 3.5),
+    ax.annotate('', xy=(12.0, 13.0), xytext=(12.0, 4.5),
                 arrowprops=dict(arrowstyle='->', color='#3F51B5', lw=1.5,
                                connectionstyle=loop_style))
 
     # ============ Layer Normalization ============
-    draw_arrow(ax, (7, 1.9), (7, 1.5))
-    create_rounded_box(ax, (5, 0.8), 4, 0.6, color_norm, 'Layer Normalization',
+    draw_arrow(ax, (7, 3.1), (7, 2.7))
+    create_rounded_box(ax, (5, 2.0), 4, 0.6, color_norm, 'Layer Normalization',
                        fontsize=10, edgecolor='#00838F', linewidth=1.5, bold=True)
 
     # ============ 输出投影层 ============
-    draw_arrow(ax, (7, 0.7), (7, 0.3))
-    create_rounded_box(ax, (5.5, -0.4), 3, 0.6, color_embed, '输出投影层', fontsize=10)
+    draw_arrow(ax, (7, 1.9), (7, 1.5))
+    create_rounded_box(ax, (5.5, 0.8), 3, 0.6, color_embed, '输出投影层', fontsize=10)
 
     # ============ 输出 ============
-    draw_arrow(ax, (7, -0.5), (7, -0.9))
-    create_rounded_box(ax, (5.5, -1.6), 3, 0.6, color_input, '输出', fontsize=11, bold=True)
-    ax.text(7, -2.1, r'$\hat{X} \in \mathbb{R}^{B \times T \times C}$',
+    draw_arrow(ax, (7, 0.7), (7, 0.3))
+    create_rounded_box(ax, (5.5, -0.4), 3, 0.6, color_input, '输出', fontsize=11, bold=True)
+    ax.text(7, -0.9, r'$\hat{X} \in \mathbb{R}^{B \times T \times C}$',
             ha='center', va='center', fontsize=10)
 
     # ============ 图例 ============
-    legend_x = 0.3
-    legend_y = -0.5
+    legend_x = 0.5
+    legend_y = 0.5
 
     # 图例背景
     legend_bg = FancyBboxPatch(
-        (legend_x - 0.1, legend_y - 1.7), 3.8, 1.6,
+        (legend_x - 0.1, legend_y - 1.8), 4.0, 1.7,
         boxstyle="round,pad=0.02,rounding_size=0.02",
         facecolor='white',
         edgecolor='#BDBDBD',
@@ -286,7 +278,7 @@ def main():
     )
     ax.add_patch(legend_bg)
 
-    ax.text(legend_x + 1.8, legend_y - 0.15, '图例', ha='center', va='center',
+    ax.text(legend_x + 1.9, legend_y - 0.2, '图例', ha='center', va='center',
             fontsize=10, fontweight='bold')
 
     # 图例项
@@ -297,7 +289,7 @@ def main():
     ]
 
     for i, (fc, ec, text) in enumerate(legend_items):
-        y = legend_y - 0.5 - i * 0.4
+        y = legend_y - 0.6 - i * 0.4
         rect = Rectangle((legend_x, y - 0.12), 0.5, 0.24,
                          facecolor=fc, edgecolor=ec, linewidth=1.5)
         ax.add_patch(rect)

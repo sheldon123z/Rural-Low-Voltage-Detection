@@ -12,7 +12,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle
+from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle, Polygon
 import numpy as np
 
 # 设置中文字体（使用系统可用的 Noto Sans CJK SC）
@@ -27,179 +27,22 @@ COLORS = {
     'green': '#70AD47',
     'red': '#C00000',
     'purple': '#7030A0',
-    'gray': '#808080',
-    'light_blue': '#B4C7E7',
-    'light_orange': '#F8CBAD',
-    'light_green': '#C6EFCE',
-    'light_gray': '#D9D9D9',
+    'gray': '#666666',
+    'light_blue': '#D6E3F8',
+    'light_orange': '#FDE5D4',
+    'light_green': '#E2F0D9',
+    'light_gray': '#E0E0E0',
     'white': '#FFFFFF',
+    'dark_blue': '#2F5597',
+    'dark_orange': '#C65911',
 }
 
-def draw_1d_sequence(ax, x_start, y_center, width, height, T, C, label_below=True):
-    """绘制 1D 时间序列表示"""
-    # 绘制主矩形框
-    rect = FancyBboxPatch(
-        (x_start, y_center - height/2), width, height,
-        boxstyle="round,pad=0.02,rounding_size=0.02",
-        facecolor=COLORS['light_blue'],
-        edgecolor=COLORS['blue'],
-        linewidth=1.5
-    )
-    ax.add_patch(rect)
-
-    # 绘制内部分割线（表示时间步）
-    num_divisions = 10
-    for i in range(1, num_divisions):
-        x = x_start + i * width / num_divisions
-        ax.plot([x, x], [y_center - height/2 + 0.02, y_center + height/2 - 0.02],
-                color=COLORS['blue'], linewidth=0.5, alpha=0.5)
-
-    # 维度标注
-    ax.annotate('', xy=(x_start + width, y_center - height/2 - 0.08),
-                xytext=(x_start, y_center - height/2 - 0.08),
-                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1))
-    ax.text(x_start + width/2, y_center - height/2 - 0.15, f'T = {T}',
-            ha='center', va='top', fontsize=9, color=COLORS['gray'])
-
-    # 通道标注（竖向）
-    ax.annotate('', xy=(x_start - 0.05, y_center + height/2),
-                xytext=(x_start - 0.05, y_center - height/2),
-                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1))
-    ax.text(x_start - 0.1, y_center, f'C',
-            ha='right', va='center', fontsize=9, color=COLORS['gray'])
-
-    # 张量形状标注
-    if label_below:
-        ax.text(x_start + width/2, y_center + height/2 + 0.08,
-                r'$\mathbf{X}^{1D}$: [B, T, C]',
-                ha='center', va='bottom', fontsize=10, fontweight='bold',
-                color=COLORS['blue'])
-        ax.text(x_start + width/2, y_center + height/2 + 0.2,
-                f'[B, {T}, C]',
-                ha='center', va='bottom', fontsize=9, color=COLORS['gray'])
-
-def draw_2d_tensor(ax, x_start, y_center, size, periods, num_periods, is_padded=False):
-    """绘制 2D 张量表示"""
-    # 计算实际绘制尺寸
-    cell_size = size / max(periods, num_periods)
-
-    # 绘制网格
-    for i in range(num_periods):
-        for j in range(periods):
-            # 判断是否为 padding 区域
-            if is_padded and (i == num_periods - 1 and j >= periods - 2):
-                color = COLORS['light_gray']
-                edge_color = COLORS['gray']
-            else:
-                color = COLORS['light_orange']
-                edge_color = COLORS['orange']
-
-            rect = Rectangle(
-                (x_start + j * cell_size, y_center - size/2 + i * cell_size),
-                cell_size, cell_size,
-                facecolor=color,
-                edgecolor=edge_color,
-                linewidth=0.8
-            )
-            ax.add_patch(rect)
-
-    # 外框
-    outer_rect = Rectangle(
-        (x_start, y_center - size/2),
-        periods * cell_size, num_periods * cell_size,
-        facecolor='none',
-        edgecolor=COLORS['orange'],
-        linewidth=2
-    )
-    ax.add_patch(outer_rect)
-
-    # 维度标注 - 水平方向（周期内：intra-period）
-    ax.annotate('', xy=(x_start + periods * cell_size, y_center - size/2 - 0.08),
-                xytext=(x_start, y_center - size/2 - 0.08),
-                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1))
-    ax.text(x_start + periods * cell_size / 2, y_center - size/2 - 0.15,
-            f'p = {periods}',
-            ha='center', va='top', fontsize=9, color=COLORS['gray'])
-    ax.text(x_start + periods * cell_size / 2, y_center - size/2 - 0.28,
-            '周期内变化',
-            ha='center', va='top', fontsize=8, color=COLORS['orange'])
-
-    # 维度标注 - 垂直方向（周期间：inter-period）
-    ax.annotate('', xy=(x_start - 0.05, y_center - size/2 + num_periods * cell_size),
-                xytext=(x_start - 0.05, y_center - size/2),
-                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1))
-    ax.text(x_start - 0.1, y_center,
-            f'T/p\n= {num_periods}',
-            ha='right', va='center', fontsize=9, color=COLORS['gray'])
-    ax.text(x_start - 0.25, y_center,
-            '周\n期\n间\n变\n化',
-            ha='right', va='center', fontsize=8, color=COLORS['orange'])
-
-    # 张量形状标注
-    ax.text(x_start + periods * cell_size / 2, y_center + size/2 + 0.08,
-            r'$\mathbf{X}^{2D}$: [B, C, T/p, p]',
-            ha='center', va='bottom', fontsize=10, fontweight='bold',
-            color=COLORS['orange'])
-    ax.text(x_start + periods * cell_size / 2, y_center + size/2 + 0.2,
-            f'[B, C, {num_periods}, {periods}]',
-            ha='center', va='bottom', fontsize=9, color=COLORS['gray'])
-
-def draw_arrow(ax, start, end, label='', color='gray', style='simple'):
-    """绘制箭头"""
-    if style == 'simple':
-        ax.annotate('', xy=end, xytext=start,
-                    arrowprops=dict(arrowstyle='->', color=COLORS[color],
-                                   lw=2, connectionstyle='arc3,rad=0'))
-    else:
-        ax.annotate('', xy=end, xytext=start,
-                    arrowprops=dict(arrowstyle='->', color=COLORS[color],
-                                   lw=2, connectionstyle='arc3,rad=0.2'))
-
-    if label:
-        mid_x = (start[0] + end[0]) / 2
-        mid_y = (start[1] + end[1]) / 2 + 0.1
-        ax.text(mid_x, mid_y, label, ha='center', va='bottom',
-                fontsize=9, color=COLORS[color], fontweight='bold')
-
-def draw_padding_illustration(ax, x_start, y_center):
-    """绘制 padding 说明"""
-    # 绘制原始序列
-    rect1 = FancyBboxPatch(
-        (x_start, y_center), 0.6, 0.15,
-        boxstyle="round,pad=0.01,rounding_size=0.01",
-        facecolor=COLORS['light_blue'],
-        edgecolor=COLORS['blue'],
-        linewidth=1
-    )
-    ax.add_patch(rect1)
-    ax.text(x_start + 0.3, y_center + 0.075, 'T=102',
-            ha='center', va='center', fontsize=8)
-
-    # 绘制 padding 部分
-    rect2 = FancyBboxPatch(
-        (x_start + 0.6, y_center), 0.18, 0.15,
-        boxstyle="round,pad=0.01,rounding_size=0.01",
-        facecolor=COLORS['light_gray'],
-        edgecolor=COLORS['gray'],
-        linewidth=1
-    )
-    ax.add_patch(rect2)
-    ax.text(x_start + 0.69, y_center + 0.075, '+8',
-            ha='center', va='center', fontsize=8, color=COLORS['gray'])
-
-    # 箭头指向
-    ax.annotate('', xy=(x_start + 0.39, y_center - 0.02),
-                xytext=(x_start + 0.39, y_center - 0.12),
-                arrowprops=dict(arrowstyle='->', color=COLORS['gray'], lw=1))
-    ax.text(x_start + 0.39, y_center - 0.18,
-            'padding至\n可整除长度\n(110=11×10)',
-            ha='center', va='top', fontsize=7, color=COLORS['gray'])
 
 def create_1d_to_2d_diagram():
     """创建完整的 1D→2D 转换示意图"""
-    fig, ax = plt.subplots(1, 1, figsize=(12, 7))
-    ax.set_xlim(-0.5, 4.5)
-    ax.set_ylim(-0.8, 1.2)
+    fig, ax = plt.subplots(1, 1, figsize=(11, 6.5))
+    ax.set_xlim(-0.3, 5.5)
+    ax.set_ylim(-1.0, 1.6)
     ax.set_aspect('equal')
     ax.axis('off')
 
@@ -207,70 +50,213 @@ def create_1d_to_2d_diagram():
     T = 100  # 序列长度
     p = 10   # 周期
     num_periods = T // p  # 周期数 = 10
-    C = 'C'  # 通道数（符号表示）
 
-    # ========== 第一部分：1D 时间序列 ==========
-    draw_1d_sequence(ax, x_start=0, y_center=0.5, width=1.2, height=0.3, T=T, C=C)
+    # ==================== 第一部分：1D 时间序列 ====================
+    seq_x, seq_y = 0, 0.65
+    seq_width, seq_height = 1.4, 0.25
 
-    # ========== 第二部分：FFT 周期发现框 ==========
-    fft_x = 1.5
+    # 绘制 1D 序列（分段显示）
+    num_segments = 10
+    segment_width = seq_width / num_segments
+    for i in range(num_segments):
+        # 使用渐变色表示不同时间段
+        intensity = 0.3 + 0.7 * (i / num_segments)
+        color = plt.cm.Blues(intensity)
+        rect = Rectangle(
+            (seq_x + i * segment_width, seq_y - seq_height/2),
+            segment_width, seq_height,
+            facecolor=color,
+            edgecolor=COLORS['dark_blue'],
+            linewidth=0.8
+        )
+        ax.add_patch(rect)
+
+    # 外框加粗
+    outer_rect = Rectangle(
+        (seq_x, seq_y - seq_height/2),
+        seq_width, seq_height,
+        facecolor='none',
+        edgecolor=COLORS['dark_blue'],
+        linewidth=2
+    )
+    ax.add_patch(outer_rect)
+
+    # 时间轴标注
+    ax.annotate('', xy=(seq_x + seq_width, seq_y - seq_height/2 - 0.08),
+                xytext=(seq_x, seq_y - seq_height/2 - 0.08),
+                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1.2))
+    ax.text(seq_x + seq_width/2, seq_y - seq_height/2 - 0.18, f'T = {T}',
+            ha='center', va='top', fontsize=10, color=COLORS['gray'], fontweight='bold')
+
+    # 通道标注
+    ax.annotate('', xy=(seq_x - 0.06, seq_y + seq_height/2),
+                xytext=(seq_x - 0.06, seq_y - seq_height/2),
+                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1.2))
+    ax.text(seq_x - 0.12, seq_y, 'C',
+            ha='right', va='center', fontsize=10, color=COLORS['gray'], fontweight='bold')
+
+    # 张量形状标注
+    ax.text(seq_x + seq_width/2, seq_y + seq_height/2 + 0.1,
+            r'$\mathbf{X}^{1D}$: [B, T, C]',
+            ha='center', va='bottom', fontsize=11, fontweight='bold',
+            color=COLORS['dark_blue'])
+
+    # ==================== 第二部分：FFT 周期发现框 ====================
+    fft_x, fft_y = 1.75, 0.5
+    fft_width, fft_height = 0.65, 0.55
+
+    # FFT 框
     fft_box = FancyBboxPatch(
-        (fft_x, 0.25), 0.6, 0.5,
-        boxstyle="round,pad=0.02,rounding_size=0.05",
+        (fft_x, fft_y), fft_width, fft_height,
+        boxstyle="round,pad=0.02,rounding_size=0.06",
         facecolor=COLORS['light_green'],
         edgecolor=COLORS['green'],
-        linewidth=1.5
+        linewidth=2
     )
     ax.add_patch(fft_box)
-    ax.text(fft_x + 0.3, 0.55, 'FFT', ha='center', va='center',
-            fontsize=11, fontweight='bold', color=COLORS['green'])
-    ax.text(fft_x + 0.3, 0.4, '周期发现', ha='center', va='center',
-            fontsize=9, color=COLORS['green'])
-    ax.text(fft_x + 0.3, 0.28, f'p = {p}', ha='center', va='center',
-            fontsize=9, color=COLORS['gray'])
 
-    # 箭头：1D → FFT
-    draw_arrow(ax, (1.25, 0.5), (1.48, 0.5), '', 'gray')
+    ax.text(fft_x + fft_width/2, fft_y + fft_height - 0.12, 'FFT',
+            ha='center', va='center', fontsize=12, fontweight='bold', color=COLORS['green'])
+    ax.text(fft_x + fft_width/2, fft_y + fft_height/2 - 0.02, '周期发现',
+            ha='center', va='center', fontsize=10, color=COLORS['green'])
+    ax.text(fft_x + fft_width/2, fft_y + 0.12, f'p = {p}',
+            ha='center', va='center', fontsize=10, color=COLORS['gray'], fontweight='bold')
 
-    # ========== 第三部分：Reshape 操作框 ==========
-    reshape_x = 2.3
+    # 箭头 1D → FFT
+    ax.annotate('', xy=(fft_x - 0.02, seq_y),
+                xytext=(seq_x + seq_width + 0.05, seq_y),
+                arrowprops=dict(arrowstyle='->', color=COLORS['gray'],
+                               lw=2, connectionstyle='arc3,rad=0'))
+
+    # ==================== 第三部分：Reshape 操作框 ====================
+    reshape_x, reshape_y = 2.7, 0.42
+    reshape_width, reshape_height = 0.6, 0.7
+
+    # Reshape 框
     reshape_box = FancyBboxPatch(
-        (reshape_x, 0.15), 0.5, 0.7,
-        boxstyle="round,pad=0.02,rounding_size=0.05",
-        facecolor=COLORS['white'],
+        (reshape_x, reshape_y), reshape_width, reshape_height,
+        boxstyle="round,pad=0.02,rounding_size=0.06",
+        facecolor='#F3E5F5',
         edgecolor=COLORS['purple'],
-        linewidth=1.5
+        linewidth=2
     )
     ax.add_patch(reshape_box)
-    ax.text(reshape_x + 0.25, 0.65, 'Reshape', ha='center', va='center',
-            fontsize=10, fontweight='bold', color=COLORS['purple'])
-    ax.text(reshape_x + 0.25, 0.5, '1D → 2D', ha='center', va='center',
-            fontsize=9, color=COLORS['purple'])
-    ax.text(reshape_x + 0.25, 0.35, f'[B,{T},C]', ha='center', va='center',
-            fontsize=8, color=COLORS['gray'])
-    ax.text(reshape_x + 0.25, 0.22, '↓', ha='center', va='center',
-            fontsize=10, color=COLORS['purple'])
-    ax.text(reshape_x + 0.25, 0.18, f'[B,C,{num_periods},{p}]', ha='center', va='center',
-            fontsize=8, color=COLORS['gray'])
 
-    # 箭头：FFT → Reshape
-    draw_arrow(ax, (2.12, 0.5), (2.28, 0.5), '', 'gray')
+    ax.text(reshape_x + reshape_width/2, reshape_y + reshape_height - 0.12, 'Reshape',
+            ha='center', va='center', fontsize=11, fontweight='bold', color=COLORS['purple'])
+    ax.text(reshape_x + reshape_width/2, reshape_y + reshape_height/2, '1D → 2D',
+            ha='center', va='center', fontsize=10, color=COLORS['purple'])
 
-    # ========== 第四部分：2D 张量 ==========
-    draw_2d_tensor(ax, x_start=3.1, y_center=0.5, size=0.8,
-                   periods=p, num_periods=num_periods, is_padded=False)
+    # 维度转换说明
+    ax.text(reshape_x + reshape_width/2, reshape_y + 0.22, f'[B,{T},C]',
+            ha='center', va='center', fontsize=8, color=COLORS['gray'])
+    ax.text(reshape_x + reshape_width/2, reshape_y + 0.12, '↓',
+            ha='center', va='center', fontsize=12, color=COLORS['purple'], fontweight='bold')
+    ax.text(reshape_x + reshape_width/2, reshape_y + 0.04, f'[B,C,{num_periods},{p}]',
+            ha='center', va='center', fontsize=8, color=COLORS['gray'])
 
-    # 箭头：Reshape → 2D
-    draw_arrow(ax, (2.82, 0.5), (3.05, 0.5), '', 'gray')
+    # 箭头 FFT → Reshape
+    ax.annotate('', xy=(reshape_x - 0.02, fft_y + fft_height/2),
+                xytext=(fft_x + fft_width + 0.02, fft_y + fft_height/2),
+                arrowprops=dict(arrowstyle='->', color=COLORS['gray'],
+                               lw=2, connectionstyle='arc3,rad=0'))
 
-    # ========== 底部：详细过程说明 ==========
-    # 步骤说明框
-    step_y = -0.35
-    step_box_width = 3.8
+    # ==================== 第四部分：2D 张量（核心可视化） ====================
+    tensor_x, tensor_y = 3.7, 0.25
+    grid_size = 0.9
+    cell_size = grid_size / num_periods
+
+    # 绘制 2D 网格（10×10）
+    for i in range(num_periods):
+        for j in range(p):
+            # 使用渐变色，展示数据填充顺序
+            idx = i * p + j
+            intensity = 0.2 + 0.8 * (idx / (T - 1))
+            color = plt.cm.Oranges(intensity)
+
+            rect = Rectangle(
+                (tensor_x + j * cell_size, tensor_y + (num_periods - 1 - i) * cell_size),
+                cell_size, cell_size,
+                facecolor=color,
+                edgecolor=COLORS['dark_orange'],
+                linewidth=0.6
+            )
+            ax.add_patch(rect)
+
+    # 外框加粗
+    outer_rect = Rectangle(
+        (tensor_x, tensor_y),
+        grid_size, grid_size,
+        facecolor='none',
+        edgecolor=COLORS['dark_orange'],
+        linewidth=2.5
+    )
+    ax.add_patch(outer_rect)
+
+    # 维度标注 - 水平方向（周期内：intra-period）
+    ax.annotate('', xy=(tensor_x + grid_size, tensor_y - 0.1),
+                xytext=(tensor_x, tensor_y - 0.1),
+                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1.2))
+    ax.text(tensor_x + grid_size/2, tensor_y - 0.2, f'p = {p}',
+            ha='center', va='top', fontsize=10, color=COLORS['gray'], fontweight='bold')
+    ax.text(tensor_x + grid_size/2, tensor_y - 0.35, '(周期内变化)',
+            ha='center', va='top', fontsize=9, color=COLORS['dark_orange'])
+
+    # 维度标注 - 垂直方向（周期间：inter-period）
+    ax.annotate('', xy=(tensor_x - 0.1, tensor_y + grid_size),
+                xytext=(tensor_x - 0.1, tensor_y),
+                arrowprops=dict(arrowstyle='<->', color=COLORS['gray'], lw=1.2))
+    ax.text(tensor_x - 0.2, tensor_y + grid_size/2, f'T/p\n= {num_periods}',
+            ha='right', va='center', fontsize=10, color=COLORS['gray'], fontweight='bold')
+    ax.text(tensor_x - 0.45, tensor_y + grid_size/2, '(周期间\n 变化)',
+            ha='right', va='center', fontsize=9, color=COLORS['dark_orange'])
+
+    # 张量形状标注
+    ax.text(tensor_x + grid_size/2, tensor_y + grid_size + 0.12,
+            r'$\mathbf{X}^{2D}$: [B, C, T/p, p]',
+            ha='center', va='bottom', fontsize=11, fontweight='bold',
+            color=COLORS['dark_orange'])
+
+    # 箭头 Reshape → 2D
+    ax.annotate('', xy=(tensor_x - 0.02, reshape_y + reshape_height/2),
+                xytext=(reshape_x + reshape_width + 0.02, reshape_y + reshape_height/2),
+                arrowprops=dict(arrowstyle='->', color=COLORS['gray'],
+                               lw=2, connectionstyle='arc3,rad=0'))
+
+    # ==================== 第五部分：2D 卷积说明框 ====================
+    conv_x, conv_y = 4.8, 0.4
+    conv_width, conv_height = 0.6, 0.7
+
+    conv_box = FancyBboxPatch(
+        (conv_x, conv_y), conv_width, conv_height,
+        boxstyle="round,pad=0.02,rounding_size=0.06",
+        facecolor=COLORS['light_orange'],
+        edgecolor=COLORS['dark_orange'],
+        linewidth=2
+    )
+    ax.add_patch(conv_box)
+
+    ax.text(conv_x + conv_width/2, conv_y + conv_height - 0.1, '2D Conv',
+            ha='center', va='center', fontsize=10, fontweight='bold', color=COLORS['dark_orange'])
+    ax.text(conv_x + conv_width/2, conv_y + conv_height/2 + 0.05, 'Inception',
+            ha='center', va='center', fontsize=9, color=COLORS['dark_orange'])
+    ax.text(conv_x + conv_width/2, conv_y + conv_height/2 - 0.1, '多尺度卷积',
+            ha='center', va='center', fontsize=8, color=COLORS['gray'])
+    ax.text(conv_x + conv_width/2, conv_y + 0.12, '(1×1,3×3,5×5)',
+            ha='center', va='center', fontsize=7, color=COLORS['gray'])
+
+    # 箭头 2D → Conv
+    ax.annotate('', xy=(conv_x - 0.02, tensor_y + grid_size/2 + 0.15),
+                xytext=(tensor_x + grid_size + 0.05, tensor_y + grid_size/2 + 0.15),
+                arrowprops=dict(arrowstyle='->', color=COLORS['gray'],
+                               lw=2, connectionstyle='arc3,rad=0'))
+
+    # ==================== 底部：详细步骤说明 ====================
+    step_y = -0.25
     step_box = FancyBboxPatch(
-        (0.3, step_y - 0.35), step_box_width, 0.55,
-        boxstyle="round,pad=0.02,rounding_size=0.03",
-        facecolor='#F5F5F5',
+        (0, step_y - 0.55), 5.3, 0.7,
+        boxstyle="round,pad=0.02,rounding_size=0.04",
+        facecolor='#FAFAFA',
         edgecolor=COLORS['gray'],
         linewidth=1,
         linestyle='--'
@@ -278,59 +264,60 @@ def create_1d_to_2d_diagram():
     ax.add_patch(step_box)
 
     # 步骤标题
-    ax.text(2.2, step_y - 0.0, '转换过程详解', ha='center', va='center',
-            fontsize=10, fontweight='bold', color=COLORS['gray'])
+    ax.text(2.65, step_y - 0.02, '转换过程详解',
+            ha='center', va='center', fontsize=11, fontweight='bold', color=COLORS['gray'])
 
-    # 步骤1
-    ax.text(0.5, step_y - 0.15, '① FFT周期发现:', ha='left', va='center',
-            fontsize=9, fontweight='bold', color=COLORS['green'])
-    ax.text(1.5, step_y - 0.15, r'$\mathbf{X}_f = \mathrm{FFT}(\mathbf{X}^{1D})$，取幅值最大的频率对应的周期 $p$',
-            ha='left', va='center', fontsize=8, color=COLORS['gray'])
+    # 步骤内容
+    step_texts = [
+        ('① FFT周期发现:', r'$\mathbf{X}_f = \mathrm{FFT}(\mathbf{X}^{1D})$，提取幅值最大的频率分量，计算对应周期 $p$', COLORS['green']),
+        ('② Padding对齐:', f'若 T 不能被 p 整除，零填充至 T\' = ⌈T/p⌉ × p（本例: {T} 可被 {p} 整除，无需填充）', COLORS['gray']),
+        ('③ 维度重塑:', r'$\mathbf{X}^{2D} = \mathrm{Reshape}(\mathbf{X}^{1D})$: [B, T, C] → [B, T/p, p, C] → [B, C, T/p, p]', COLORS['purple']),
+    ]
 
-    # 步骤2
-    ax.text(0.5, step_y - 0.35, '② Padding对齐:', ha='left', va='center',
-            fontsize=9, fontweight='bold', color=COLORS['gray'])
-    ax.text(1.5, step_y - 0.35, f'若 T 不能被 p 整除，零填充至 T\' = ⌈T/p⌉ × p（本例: {T}→{T}, 无需填充）',
-            ha='left', va='center', fontsize=8, color=COLORS['gray'])
+    for i, (label, content, color) in enumerate(step_texts):
+        y_pos = step_y - 0.18 - i * 0.16
+        ax.text(0.15, y_pos, label, ha='left', va='center',
+                fontsize=9, fontweight='bold', color=color)
+        ax.text(1.25, y_pos, content, ha='left', va='center',
+                fontsize=8, color=COLORS['gray'])
 
-    # 步骤3
-    ax.text(0.5, step_y - 0.55, '③ 维度重塑:', ha='left', va='center',
-            fontsize=9, fontweight='bold', color=COLORS['purple'])
-    ax.text(1.5, step_y - 0.55, r'$\mathbf{X}^{2D} = \mathrm{Reshape}(\mathbf{X}^{1D})$: [B, T, C] → [B, T/p, p, C] → [B, C, T/p, p]',
-            ha='left', va='center', fontsize=8, color=COLORS['gray'])
-
-    # ========== 右侧：2D 卷积优势说明 ==========
-    adv_x = 3.1
-    adv_y = -0.35
-    adv_box = FancyBboxPatch(
-        (adv_x, adv_y - 0.35), 1.2, 0.55,
-        boxstyle="round,pad=0.02,rounding_size=0.03",
-        facecolor=COLORS['light_orange'],
-        edgecolor=COLORS['orange'],
+    # ==================== 顶部：参数说明 ====================
+    param_text = f'示例参数: 序列长度 T = {T}, 发现周期 p = {p}, 周期数 T/p = {num_periods}'
+    param_box = FancyBboxPatch(
+        (1.2, 1.35), 2.9, 0.2,
+        boxstyle="round,pad=0.02,rounding_size=0.04",
+        facecolor='white',
+        edgecolor=COLORS['gray'],
         linewidth=1
     )
-    ax.add_patch(adv_box)
+    ax.add_patch(param_box)
+    ax.text(2.65, 1.45, param_text,
+            ha='center', va='center', fontsize=10, color=COLORS['gray'])
 
-    ax.text(adv_x + 0.6, adv_y - 0.02, '2D卷积优势', ha='center', va='center',
-            fontsize=10, fontweight='bold', color=COLORS['orange'])
-    ax.text(adv_x + 0.1, adv_y - 0.2, '• 行方向: 捕获周期间变化', ha='left', va='center',
-            fontsize=8, color=COLORS['gray'])
-    ax.text(adv_x + 0.1, adv_y - 0.35, '• 列方向: 捕获周期内变化', ha='left', va='center',
-            fontsize=8, color=COLORS['gray'])
-    ax.text(adv_x + 0.1, adv_y - 0.5, '• 多尺度: Inception模块', ha='left', va='center',
-            fontsize=8, color=COLORS['gray'])
-    ax.text(adv_x + 0.1, adv_y - 0.65, '• 并行: Top-k周期聚合', ha='left', va='center',
-            fontsize=8, color=COLORS['gray'])
+    # ==================== 添加数据填充顺序示意 ====================
+    # 在 1D 序列上标注起止
+    ax.text(seq_x + 0.02, seq_y, '0', ha='left', va='center',
+            fontsize=7, color='white', fontweight='bold')
+    ax.text(seq_x + seq_width - 0.08, seq_y, f'{T-1}', ha='right', va='center',
+            fontsize=7, color='white', fontweight='bold')
 
-    # ========== 顶部：示例数值说明 ==========
-    example_text = f'示例参数: 序列长度 T = {T}, 周期 p = {p}, 周期数 T/p = {num_periods}'
-    ax.text(2.2, 1.05, example_text, ha='center', va='bottom',
-            fontsize=10, color=COLORS['gray'],
-            bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
-                     edgecolor=COLORS['gray'], linewidth=1))
+    # 在 2D 张量上标注填充方向
+    # 起点标注
+    ax.text(tensor_x + cell_size/2, tensor_y + grid_size - cell_size/2, '0',
+            ha='center', va='center', fontsize=6, color='white', fontweight='bold')
+    # 终点标注
+    ax.text(tensor_x + grid_size - cell_size/2, tensor_y + cell_size/2, f'{T-1}',
+            ha='center', va='center', fontsize=6, color='white', fontweight='bold')
+
+    # 添加行填充方向箭头（小箭头）
+    arrow_y = tensor_y + grid_size - cell_size/2
+    ax.annotate('', xy=(tensor_x + grid_size - 0.02, arrow_y),
+                xytext=(tensor_x + cell_size, arrow_y),
+                arrowprops=dict(arrowstyle='->', color='white', lw=1.5))
 
     plt.tight_layout()
     return fig
+
 
 def main():
     # 创建图形
@@ -342,7 +329,6 @@ def main():
     # 保存为 300 DPI PNG
     fig.savefig(save_path, dpi=300, bbox_inches='tight',
                 facecolor='white', edgecolor='none')
-
     print(f'图形已保存至: {save_path}')
 
     # 同时保存 PDF 版本（用于论文）
@@ -352,6 +338,7 @@ def main():
     print(f'PDF版本已保存至: {pdf_path}')
 
     plt.close()
+
 
 if __name__ == '__main__':
     main()
