@@ -214,3 +214,7 @@ RuralVoltage_MTSTimesNet_100_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl10
 Accuracy: 0.7863, Precision: 0.8509, Recall: 0.3251, F1-score: 0.4705
 
 
+SMD_TimesNet_100_TimesNet_SMD_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_SMD_Exp_0  
+Accuracy: 0.9846, Precision: 0.7821, Recall: 0.8719, F1-score: 0.8246
+
+
