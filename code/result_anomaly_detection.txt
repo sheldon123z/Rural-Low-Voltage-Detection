@@ -210,3 +210,7 @@ RuralVoltage_TPATimesNet_100_TPATimesNet_RuralVoltage_anomaly_detection_ftM_sl10
 Accuracy: 0.8303, Precision: 0.8983, Recall: 0.4723, F1-score: 0.6191
 
 
+RuralVoltage_MTSTimesNet_100_MTSTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.7863, Precision: 0.8509, Recall: 0.3251, F1-score: 0.4705
+
+
