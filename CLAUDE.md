@@ -237,3 +237,44 @@ python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparis
 - 标题：无标题（文件名即为标题）
 - 字体：中文宋体/黑体
 - 尺寸：宽度 8-10 英寸
+
+---
+
+## 科学写作支持
+
+本项目已集成 Scientific Writer 功能，用于学术论文、文献综述、研究报告等科学文档的撰写。
+
+### 核心写作指南
+
+- **写作指南**：`.claude/WRITING_GUIDE.md` - 科学论文写作的核心原则和流程
+- **技能参考**：`.claude/SKILLS_REFERENCE.md` - 19+ 个专业技能的快速索引
+
+### 关键原则
+
+1. **所有引用必须是真实可验证的论文** - 使用 `research-lookup` 技能检索
+2. **先研究后写作** - 每章 5-10 篇相关真实论文
+3. **默认格式** - LaTeX + BibTeX（学术出版标准）
+4. **自动质量检查** - PDF 格式验证和迭代改进
+
+### 常用提示词
+
+```
+"使用 @research-lookup 技能查找关于 '深度学习异常检测' 的论文"
+"创建一篇关于 TimesNet 的文献综述"
+"使用 @peer-review 技能评估论文质量"
+"生成关于电压异常检测的研究提案"
+```
+
+### 支持的文档类型
+
+- 学术论文（Nature, Science, NeurIPS, IEEE 等）
+- 文献综述和系统综述
+- 研究资助提案（NSF, NIH, DOE）
+- 会议海报和演示文稿
+- 临床报告和治疗计划
+
+### 项目输出
+
+所有写作成果保存在：`writing_outputs/<timestamp>_<description>/`
+
+详细文档：https://github.com/K-Dense-AI/claude-scientific-writer
