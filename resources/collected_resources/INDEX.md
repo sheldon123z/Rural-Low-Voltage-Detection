@@ -77,6 +77,30 @@
    - 时间: 2026-01-20T10:28:05.320814
 
 3. https://zhuanlan.zhihu.com/p/133771041
-   - 错误: 403 Client Error: Forbidden for url: https://zhuanlan.zhihu.com/p/133771041
-   - 时间: 2026-01-20T10:29:07.235222
+    - 错误: 403 Client Error: Forbidden for url: https://zhuanlan.zhihu.com/p/133771041
+    - 时间: 2026-01-20T10:29:07.235222
+
+---
+
+## 时序异常检测论文 (2026-01-26 更新)
+
+### 新增论文目录
+
+已下载 9 篇时序建模和异常检测核心论文至 `resources/papers/`：
+
+1. **TimesNet** (ICLR 2023) - 核心架构，2D 变换建模
+2. **DLinear** (arXiv 2022) - 线性基线模型
+3. **PatchTST** (ICLR 2023) - 补丁级 Transformer
+4. **iTransformer** (ICLR 2024) - 倒置 Transformer
+5. **Autoformer** (NeurIPS 2021) - 分解 Transformer
+6. **Informer** (AAAI 2021) - 高效 Transformer
+7. **Reformer** (ICLR 2020) - 可逆残差层
+8. **FEDformer** (ICML 2022) - 频率增强
+9. **LightGTS** (ICML 2025) - 轻量级模型
+
+### 论文资源
+
+- **索引文件**: [INDEX.md](resources/papers/INDEX.md) - 完整的中文介绍
+- **BibTeX 文件**: [references.bib](resources/papers/references.bib) - 可直接引用
+- **下载脚本**: [download_papers.py](resources/papers/download_papers.py) - 可重复下载
 
