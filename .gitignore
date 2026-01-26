@@ -50,3 +50,6 @@ data/processed/
 # OS
 .DS_Store
 Thumbs.db
+
+# Thesis 独立仓库
+thesis/
