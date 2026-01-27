@@ -10,6 +10,7 @@
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+*.xdv
 
 # Python
 __pycache__/
