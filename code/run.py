@@ -124,6 +124,12 @@ def main():
         help="TimesNet: number of kernels in Inception block",
     )
     parser.add_argument(
+        "--preset_weight",
+        type=float,
+        default=0.3,
+        help="VoltageTimesNet: weight for preset periods (alpha=1-preset_weight for FFT periods)",
+    )
+    parser.add_argument(
         "--enc_in",
         type=int,
         default=25,

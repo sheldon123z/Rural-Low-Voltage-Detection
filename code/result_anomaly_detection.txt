@@ -242,3 +242,27 @@ test_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128
 Accuracy: 0.7549, Precision: 0.8636, Recall: 0.1906, F1-score: 0.3123
 
 
+ablation_alpha_.9_VoltageTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9843, Precision: 0.9832, Recall: 0.9599, F1-score: 0.9714
+
+
+ablation_alpha_.8_VoltageTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9843, Precision: 0.9832, Recall: 0.9599, F1-score: 0.9714
+
+
+ablation_alpha_.7_VoltageTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9843, Precision: 0.9832, Recall: 0.9599, F1-score: 0.9714
+
+
+ablation_alpha_.6_VoltageTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9843, Precision: 0.9832, Recall: 0.9599, F1-score: 0.9714
+
+
+ablation_alpha_.5_VoltageTimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9843, Precision: 0.9832, Recall: 0.9599, F1-score: 0.9714
+
+
+ablation_baseline_timesnet_TimesNet_PSM_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.9838, Precision: 0.9825, Recall: 0.9586, F1-score: 0.9704
+
+

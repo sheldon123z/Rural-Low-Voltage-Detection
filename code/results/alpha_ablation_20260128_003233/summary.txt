@@ -1,0 +1,16 @@
+
+Alpha Parameter Ablation Study Summary
+======================================
+Date: 20260128_003233
+
+Configurations tested:
+  - alpha=0.5 (preset_weight=0.5)
+  - alpha=0.6 (preset_weight=0.4)
+  - alpha=0.7 (preset_weight=0.3) [default]
+  - alpha=0.8 (preset_weight=0.2)
+  - alpha=0.9 (preset_weight=0.1)
+  - baseline: TimesNet (FFT only)
+
+Dataset: PSM
+Sequence length: 100
+Training epochs: 10

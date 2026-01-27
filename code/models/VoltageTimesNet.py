@@ -144,11 +144,12 @@ class VoltageTimesBlock(nn.Module):
     3. Residual connections for better gradient flow
     """
 
-    def __init__(self, configs, preset_periods=None):
+    def __init__(self, configs, preset_periods=None, preset_weight=0.3):
         super(VoltageTimesBlock, self).__init__()
         self.seq_len = configs.seq_len
         self.pred_len = configs.pred_len
         self.k = configs.top_k
+        self.preset_weight = preset_weight  # Weight for preset periods (alpha=1-preset_weight for FFT)
 
         # Preset periods for voltage signals
         if preset_periods is None:
@@ -186,7 +187,7 @@ class VoltageTimesBlock(nn.Module):
 
         # Enhanced period discovery with preset periods
         period_list, period_weight = FFT_for_Period_Voltage(
-            x, self.k, preset_periods=self.preset_periods, preset_weight=0.3
+            x, self.k, preset_periods=self.preset_periods, preset_weight=self.preset_weight
         )
 
         res = []
@@ -260,10 +261,13 @@ class Model(nn.Module):
         # Calculate preset periods based on sequence length
         self.preset_periods = self._calculate_preset_periods(configs.seq_len)
 
+        # Get preset_weight from configs (default 0.3, corresponds to alpha=0.7 for FFT)
+        self.preset_weight = getattr(configs, "preset_weight", 0.3)
+
         # Encoder layers with VoltageTimesBlock
         self.model = nn.ModuleList(
             [
-                VoltageTimesBlock(configs, self.preset_periods)
+                VoltageTimesBlock(configs, self.preset_periods, self.preset_weight)
                 for _ in range(configs.e_layers)
             ]
         )
