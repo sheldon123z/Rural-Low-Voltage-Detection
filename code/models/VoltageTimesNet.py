@@ -46,7 +46,7 @@ def FFT_for_Period_Voltage(x, k=2, preset_periods=None, preset_weight=0.3):
 
     Returns:
         period_list: List of selected periods
-        period_weight: Weights for each period
+        period_weight: Weights for each period [B, k]
     """
     # [B, T, C]
     B, T, C = x.size()
@@ -62,14 +62,20 @@ def FFT_for_Period_Voltage(x, k=2, preset_periods=None, preset_weight=0.3):
 
     # Calculate periods from frequencies
     fft_periods = []
+    fft_freq_indices = []  # Track which frequency index corresponds to each period
     for freq_idx in top_list:
         if freq_idx > 0:
             period = max(2, T // freq_idx)  # Ensure period >= 2
             fft_periods.append(period)
+            fft_freq_indices.append(freq_idx)
         else:
             fft_periods.append(T)
+            fft_freq_indices.append(1)  # Use frequency index 1 for DC
 
     # Combine with preset periods if provided
+    final_periods = []
+    final_freq_indices = []  # Track frequency indices for weight calculation
+
     if preset_periods is not None and len(preset_periods) > 0:
         # Filter preset periods that fit within sequence length
         valid_presets = [p for p in preset_periods if 2 <= p <= T // 2]
@@ -80,31 +86,50 @@ def FFT_for_Period_Voltage(x, k=2, preset_periods=None, preset_weight=0.3):
             n_preset = max(1, int(k * preset_weight))
             n_fft = k - n_preset
 
-            combined_periods = fft_periods[:n_fft] + valid_presets[:n_preset]
-
-            # Remove duplicates while preserving order
+            # Add FFT periods first
             seen = set()
-            unique_periods = []
-            for p in combined_periods:
+            for i in range(min(n_fft, len(fft_periods))):
+                p = fft_periods[i]
                 if p not in seen:
                     seen.add(p)
-                    unique_periods.append(p)
+                    final_periods.append(p)
+                    final_freq_indices.append(fft_freq_indices[i])
 
-            # Pad with FFT periods if needed
-            while len(unique_periods) < k:
-                for p in fft_periods:
-                    if p not in seen and len(unique_periods) < k:
-                        seen.add(p)
-                        unique_periods.append(p)
+            # Add preset periods
+            for p in valid_presets[:n_preset]:
+                if p not in seen:
+                    seen.add(p)
+                    final_periods.append(p)
+                    # Calculate frequency index for preset period
+                    freq_idx = max(1, min(T // p, xf.shape[1] - 1))
+                    final_freq_indices.append(freq_idx)
 
-            period_list = np.array(unique_periods[:k])
+            # Pad with remaining FFT periods if needed
+            for i, p in enumerate(fft_periods):
+                if len(final_periods) >= k:
+                    break
+                if p not in seen:
+                    seen.add(p)
+                    final_periods.append(p)
+                    final_freq_indices.append(fft_freq_indices[i])
+
+            # Ensure we have exactly k periods
+            final_periods = final_periods[:k]
+            final_freq_indices = final_freq_indices[:k]
         else:
-            period_list = np.array(fft_periods[:k])
+            final_periods = fft_periods[:k]
+            final_freq_indices = fft_freq_indices[:k]
     else:
-        period_list = np.array(fft_periods[:k])
+        final_periods = fft_periods[:k]
+        final_freq_indices = fft_freq_indices[:k]
 
-    # Calculate period weights based on FFT amplitudes
-    period_weight = abs(xf).mean(-1)[:, top_list[: len(period_list)]]
+    period_list = np.array(final_periods)
+
+    # Calculate period weights based on FFT amplitudes at corresponding frequencies
+    # This ensures dimension match: period_weight.shape[1] == len(period_list)
+    freq_indices_tensor = torch.tensor(final_freq_indices, device=x.device, dtype=torch.long)
+    xf_amplitudes = abs(xf).mean(-1)  # [B, T//2+1]
+    period_weight = xf_amplitudes[:, freq_indices_tensor]  # [B, k]
 
     return period_list, period_weight
 

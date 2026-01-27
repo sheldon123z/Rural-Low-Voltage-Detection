@@ -230,3 +230,15 @@ RuralVoltage_TimesNet_100_TimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64
 Accuracy: 0.8259, Precision: 0.8939, Recall: 0.4582, F1-score: 0.6059
 
 
+test_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.7735, Precision: 0.7916, Recall: 0.3045, F1-score: 0.4398
+
+
+RuralVoltage_VoltageTimesNet_Fixed_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.7745, Precision: 0.7918, Recall: 0.3088, F1-score: 0.4443
+
+
+test_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.7549, Precision: 0.8636, Recall: 0.1906, F1-score: 0.3123
+
+
