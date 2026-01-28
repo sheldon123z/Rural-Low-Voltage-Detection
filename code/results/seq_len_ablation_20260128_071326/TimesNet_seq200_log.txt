@@ -1,0 +1,226 @@
+Args in experiment:
+[1mBasic Config[0m
+  Task Name:          anomaly_detection   Is Training:        1                   
+  Model ID:           ablation_seqlen_TimesNet_200Model:              TimesNet            
+
+[1mData Loader[0m
+  Data:               RuralVoltage        Root Path:          ./dataset/RuralVoltage/comprehensive
+  Features:           M                   Checkpoints:        ./checkpoints/      
+
+[1mAnomaly Detection Task[0m
+  Seq Len:            200                 Anomaly Ratio:      1.0                 
+
+[1mModel Parameters[0m
+  Top k:              5                   Num Kernels:        6                   
+  Enc In:             16                  C Out:              16                  
+  d model:            64                  d FF:               64                  
+  n heads:            8                   e layers:           2                   
+  Dropout:            0.1                 Embed:              timeF               
+
+[1mRun Parameters[0m
+  Num Workers:        10                  Itr:                1                   
+  Train Epochs:       10                  Batch Size:         32                  
+  Patience:           3                   Learning Rate:      0.0001              
+  Lradj:              type1               Use Amp:            0                   
+
+[1mGPU[0m
+  Use GPU:            1                   GPU:                0                   
+  Use Multi GPU:      0                   Devices:            0,1,2,3             
+
+Use GPU: cuda:0
+>>>>>>>>>> Training: ablation_seqlen_TimesNet_200_TimesNet_RuralVoltage_anomaly_detection_ftM_sl200_dm64_nh8_el2_df64_test_0 <<<<<<<<<<<<
+RuralVoltage Dataset loaded:
+  - Features: 16 (Va, Vb, Vc, Ia, Ib...)
+  - Train: (20000, 16)
+  - Test: (6000, 16)
+  - Val: (4000, 16)
+train 19801
+RuralVoltage Dataset loaded:
+  - Features: 16 (Va, Vb, Vc, Ia, Ib...)
+  - Train: (20000, 16)
+  - Test: (6000, 16)
+  - Val: (4000, 16)
+val 3801
+RuralVoltage Dataset loaded:
+  - Features: 16 (Va, Vb, Vc, Ia, Ib...)
+  - Train: (20000, 16)
+  - Test: (6000, 16)
+  - Val: (4000, 16)
+test 5801
+	iters: 100, epoch: 1 | loss: 0.4777864
+	speed: 0.1036s/iter; left time: 631.1720s
+	iters: 200, epoch: 1 | loss: 0.1695645
+	speed: 0.0753s/iter; left time: 451.2821s
+	iters: 300, epoch: 1 | loss: 0.0974046
+	speed: 0.0863s/iter; left time: 508.3908s
+	iters: 400, epoch: 1 | loss: 0.0751787
+	speed: 0.0758s/iter; left time: 438.7705s
+	iters: 500, epoch: 1 | loss: 0.0650544
+	speed: 0.0742s/iter; left time: 422.0600s
+	iters: 600, epoch: 1 | loss: 0.0576194
+	speed: 0.0838s/iter; left time: 468.4682s
+Epoch: 1 cost time: 50.136642932891846
+Epoch: 1, Steps: 619 | Train Loss: 0.2409975 Vali Loss: 0.0203804 Test Loss: 0.3425182
+Validation loss decreased (inf --> 0.020380).  Saving model ...
+Updating learning rate to 0.0001
+	iters: 100, epoch: 2 | loss: 0.0535476
+	speed: 0.2147s/iter; left time: 1174.7195s
+	iters: 200, epoch: 2 | loss: 0.0498316
+	speed: 0.0890s/iter; left time: 478.1277s
+	iters: 300, epoch: 2 | loss: 0.0477554
+	speed: 0.0792s/iter; left time: 417.7589s
+	iters: 400, epoch: 2 | loss: 0.0439510
+	speed: 0.0820s/iter; left time: 424.0274s
+	iters: 500, epoch: 2 | loss: 0.0434005
+	speed: 0.0783s/iter; left time: 397.3159s
+	iters: 600, epoch: 2 | loss: 0.0412657
+	speed: 0.0936s/iter; left time: 465.2186s
+Epoch: 2 cost time: 52.526371479034424
+Epoch: 2, Steps: 619 | Train Loss: 0.0476306 Vali Loss: 0.0105614 Test Loss: 0.2487318
+Validation loss decreased (0.020380 --> 0.010561).  Saving model ...
+Updating learning rate to 5e-05
+	iters: 100, epoch: 3 | loss: 0.0400281
+	speed: 0.2087s/iter; left time: 1012.8683s
+	iters: 200, epoch: 3 | loss: 0.0385779
+	speed: 0.0775s/iter; left time: 368.5685s
+	iters: 300, epoch: 3 | loss: 0.0392174
+	speed: 0.0691s/iter; left time: 321.6703s
+	iters: 400, epoch: 3 | loss: 0.0377077
+	speed: 0.0846s/iter; left time: 385.3671s
+	iters: 500, epoch: 3 | loss: 0.0378332
+	speed: 0.0930s/iter; left time: 414.0361s
+	iters: 600, epoch: 3 | loss: 0.0369677
+	speed: 0.0740s/iter; left time: 322.3321s
+Epoch: 3 cost time: 50.40632367134094
+Epoch: 3, Steps: 619 | Train Loss: 0.0388783 Vali Loss: 0.0083688 Test Loss: 0.2047828
+Validation loss decreased (0.010561 --> 0.008369).  Saving model ...
+Updating learning rate to 2.5e-05
+	iters: 100, epoch: 4 | loss: 0.0368628
+	speed: 0.2608s/iter; left time: 1104.2765s
+	iters: 200, epoch: 4 | loss: 0.0360722
+	speed: 0.0766s/iter; left time: 316.8263s
+	iters: 300, epoch: 4 | loss: 0.0359972
+	speed: 0.0908s/iter; left time: 366.1297s
+	iters: 400, epoch: 4 | loss: 0.0366161
+	speed: 0.0835s/iter; left time: 328.4981s
+	iters: 500, epoch: 4 | loss: 0.0354988
+	speed: 0.0763s/iter; left time: 292.4337s
+	iters: 600, epoch: 4 | loss: 0.0349826
+	speed: 0.0899s/iter; left time: 335.5033s
+Epoch: 4 cost time: 50.691330671310425
+Epoch: 4, Steps: 619 | Train Loss: 0.0361299 Vali Loss: 0.0076224 Test Loss: 0.1874100
+Validation loss decreased (0.008369 --> 0.007622).  Saving model ...
+Updating learning rate to 1.25e-05
+	iters: 100, epoch: 5 | loss: 0.0351355
+	speed: 0.1948s/iter; left time: 704.1621s
+	iters: 200, epoch: 5 | loss: 0.0347879
+	speed: 0.0937s/iter; left time: 329.2765s
+	iters: 300, epoch: 5 | loss: 0.0345888
+	speed: 0.0780s/iter; left time: 266.4216s
+	iters: 400, epoch: 5 | loss: 0.0347859
+	speed: 0.0796s/iter; left time: 264.0094s
+	iters: 500, epoch: 5 | loss: 0.0342454
+	speed: 0.0784s/iter; left time: 251.9132s
+	iters: 600, epoch: 5 | loss: 0.0339478
+	speed: 0.0893s/iter; left time: 278.2293s
+Epoch: 5 cost time: 51.96226787567139
+Epoch: 5, Steps: 619 | Train Loss: 0.0348687 Vali Loss: 0.0070492 Test Loss: 0.1814754
+Validation loss decreased (0.007622 --> 0.007049).  Saving model ...
+Updating learning rate to 6.25e-06
+	iters: 100, epoch: 6 | loss: 0.0345207
+	speed: 0.2197s/iter; left time: 658.0924s
+	iters: 200, epoch: 6 | loss: 0.0345524
+	speed: 0.0822s/iter; left time: 238.0777s
+	iters: 300, epoch: 6 | loss: 0.0345504
+	speed: 0.0696s/iter; left time: 194.7160s
+	iters: 400, epoch: 6 | loss: 0.0340278
+	speed: 0.0889s/iter; left time: 239.7820s
+	iters: 500, epoch: 6 | loss: 0.0342183
+	speed: 0.0796s/iter; left time: 206.5906s
+	iters: 600, epoch: 6 | loss: 0.0340728
+	speed: 0.0788s/iter; left time: 196.6180s
+Epoch: 6 cost time: 50.60631990432739
+Epoch: 6, Steps: 619 | Train Loss: 0.0342093 Vali Loss: 0.0068194 Test Loss: 0.1754855
+Validation loss decreased (0.007049 --> 0.006819).  Saving model ...
+Updating learning rate to 3.125e-06
+	iters: 100, epoch: 7 | loss: 0.0335395
+	speed: 0.2357s/iter; left time: 560.2823s
+	iters: 200, epoch: 7 | loss: 0.0339176
+	speed: 0.0827s/iter; left time: 188.4169s
+	iters: 300, epoch: 7 | loss: 0.0336172
+	speed: 0.0783s/iter; left time: 170.4802s
+	iters: 400, epoch: 7 | loss: 0.0344246
+	speed: 0.0818s/iter; left time: 169.9987s
+	iters: 500, epoch: 7 | loss: 0.0337886
+	speed: 0.0752s/iter; left time: 148.6038s
+	iters: 600, epoch: 7 | loss: 0.0344916
+	speed: 0.0846s/iter; left time: 158.8175s
+Epoch: 7 cost time: 50.09024000167847
+Epoch: 7, Steps: 619 | Train Loss: 0.0338154 Vali Loss: 0.0066633 Test Loss: 0.1737462
+Validation loss decreased (0.006819 --> 0.006663).  Saving model ...
+Updating learning rate to 1.5625e-06
+	iters: 100, epoch: 8 | loss: 0.0337556
+	speed: 0.2235s/iter; left time: 392.9257s
+	iters: 200, epoch: 8 | loss: 0.0338216
+	speed: 0.0755s/iter; left time: 125.2456s
+	iters: 300, epoch: 8 | loss: 0.0332450
+	speed: 0.0707s/iter; left time: 110.1080s
+	iters: 400, epoch: 8 | loss: 0.0333882
+	speed: 0.0772s/iter; left time: 112.5846s
+	iters: 500, epoch: 8 | loss: 0.0335708
+	speed: 0.0711s/iter; left time: 96.5971s
+	iters: 600, epoch: 8 | loss: 0.0335069
+	speed: 0.0775s/iter; left time: 97.5487s
+Epoch: 8 cost time: 46.32327389717102
+Epoch: 8, Steps: 619 | Train Loss: 0.0335937 Vali Loss: 0.0065710 Test Loss: 0.1721978
+Validation loss decreased (0.006663 --> 0.006571).  Saving model ...
+Updating learning rate to 7.8125e-07
+	iters: 100, epoch: 9 | loss: 0.0324743
+	speed: 0.2110s/iter; left time: 240.3348s
+	iters: 200, epoch: 9 | loss: 0.0336170
+	speed: 0.0775s/iter; left time: 80.4795s
+	iters: 300, epoch: 9 | loss: 0.0327421
+	speed: 0.0792s/iter; left time: 74.3976s
+	iters: 400, epoch: 9 | loss: 0.0332261
+	speed: 0.0803s/iter; left time: 67.3662s
+	iters: 500, epoch: 9 | loss: 0.0332509
+	speed: 0.0786s/iter; left time: 58.0974s
+	iters: 600, epoch: 9 | loss: 0.0335277
+	speed: 0.0782s/iter; left time: 49.9587s
+Epoch: 9 cost time: 49.49090003967285
+Epoch: 9, Steps: 619 | Train Loss: 0.0334955 Vali Loss: 0.0064796 Test Loss: 0.1710339
+Validation loss decreased (0.006571 --> 0.006480).  Saving model ...
+Updating learning rate to 3.90625e-07
+	iters: 100, epoch: 10 | loss: 0.0335289
+	speed: 0.2143s/iter; left time: 111.4590s
+	iters: 200, epoch: 10 | loss: 0.0330282
+	speed: 0.0811s/iter; left time: 34.0562s
+	iters: 300, epoch: 10 | loss: 0.0334727
+	speed: 0.0835s/iter; left time: 26.7206s
+	iters: 400, epoch: 10 | loss: 0.0337272
+	speed: 0.0822s/iter; left time: 18.0799s
+	iters: 500, epoch: 10 | loss: 0.0331044
+	speed: 0.0806s/iter; left time: 9.6775s
+	iters: 600, epoch: 10 | loss: 0.0339184
+	speed: 0.0869s/iter; left time: 1.7381s
+Epoch: 10 cost time: 51.678181409835815
+Epoch: 10, Steps: 619 | Train Loss: 0.0334047 Vali Loss: 0.0064534 Test Loss: 0.1707013
+Validation loss decreased (0.006480 --> 0.006453).  Saving model ...
+Updating learning rate to 1.953125e-07
+>>>>>>>>>> Testing: ablation_seqlen_TimesNet_200_TimesNet_RuralVoltage_anomaly_detection_ftM_sl200_dm64_nh8_el2_df64_test_0 <<<<<<<<<<<<
+RuralVoltage Dataset loaded:
+  - Features: 16 (Va, Vb, Vc, Ia, Ib...)
+  - Train: (20000, 16)
+  - Test: (6000, 16)
+  - Val: (4000, 16)
+test 5801
+RuralVoltage Dataset loaded:
+  - Features: 16 (Va, Vb, Vc, Ia, Ib...)
+  - Train: (20000, 16)
+  - Test: (6000, 16)
+  - Val: (4000, 16)
+train 19801
+Threshold: 0.7211102
+pred:    (1160200,)
+gt:      (1160200,)
+Accuracy: 0.8356, Precision: 0.9989, Recall: 0.6651, F1-score: 0.7985

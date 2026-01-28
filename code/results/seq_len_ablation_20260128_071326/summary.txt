@@ -1,0 +1,22 @@
+Sequence Length Ablation Study Summary
+======================================
+
+Part 1: TimesNet Configurations:
+  - seq_len=50:  Short window
+  - seq_len=100: Default window [baseline]
+  - seq_len=200: Medium window
+  - seq_len=500: Long window
+
+Part 2: VoltageTimesNet Configurations:
+  - seq_len=100: Can utilize 60s preset period
+  - seq_len=360: Can utilize 60s, 300s preset periods
+  - seq_len=720: Can utilize 60s, 300s preset periods (full 5min coverage)
+
+Preset Period Requirements:
+  - 60s (1min):   seq_len >= 120
+  - 300s (5min):  seq_len >= 600
+  - 900s (15min): seq_len >= 1800
+  - 3600s (1h):   seq_len >= 7200
+
+Dataset: RuralVoltage (16 features)
+Training epochs: 10
