@@ -294,3 +294,15 @@ ablation_seqlen_VoltageTimesNet_720_VoltageTimesNet_RuralVoltage_anomaly_detecti
 Accuracy: 0.8730, Precision: 0.9930, Recall: 0.7507, F1-score: 0.8550
 
 
+test_AdaptiveVoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.8140, Precision: 0.9915, Recall: 0.6262, F1-score: 0.7677
+
+
+test_TPATimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.8031, Precision: 0.9967, Recall: 0.6006, F1-score: 0.7495
+
+
+test_TimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df64_test_0  
+Accuracy: 0.8119, Precision: 0.9942, Recall: 0.6202, F1-score: 0.7639
+
+
