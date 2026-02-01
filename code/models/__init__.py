@@ -20,6 +20,7 @@ from .TimesNet import Model as TimesNet
 from .TPATimesNet import Model as TPATimesNet  # Three-Phase Attention TimesNet
 from .Transformer import Model as Transformer
 from .VoltageTimesNet import Model as VoltageTimesNet
+from .AdaptiveVoltageTimesNet import Model as AdaptiveVoltageTimesNet
 
 __all__ = [
     "TimesNet",
@@ -42,6 +43,7 @@ __all__ = [
     "TPATimesNet",
     "MTSTimesNet",
     "HybridTimesNet",
+    "AdaptiveVoltageTimesNet",
     "model_dict",
     "get_model",
 ]
@@ -68,6 +70,7 @@ model_dict = {
     "TPATimesNet": TPATimesNet,
     "MTSTimesNet": MTSTimesNet,
     "HybridTimesNet": HybridTimesNet,
+    "AdaptiveVoltageTimesNet": AdaptiveVoltageTimesNet,
 }
 
 
