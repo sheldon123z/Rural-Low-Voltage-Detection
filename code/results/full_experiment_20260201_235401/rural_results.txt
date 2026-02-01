@@ -1,3 +1,6 @@
 Accuracy: 0.9102, Precision: 0.7606, Recall: 0.5705, F1-score: 0.6520
 Accuracy: 0.9094, Precision: 0.7541, Recall: 0.5726, F1-score: 0.6509
 Accuracy: 0.9119, Precision: 0.7614, Recall: 0.5858, F1-score: 0.6622
+Accuracy: 0.9090, Precision: 0.7524, Recall: 0.5710, F1-score: 0.6493
+Accuracy: 0.9599, Precision: 0.7936, Recall: 0.9837, F1-score: 0.8785
+Accuracy: 0.9069, Precision: 0.7366, Recall: 0.5735, F1-score: 0.6449

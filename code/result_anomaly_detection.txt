@@ -374,3 +374,35 @@ test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df
 Accuracy: 0.9119, Precision: 0.7614, Recall: 0.5858, F1-score: 0.6622
 
 
+test_TPATimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_full_rural_0  
+Accuracy: 0.9090, Precision: 0.7524, Recall: 0.5710, F1-score: 0.6493
+
+
+test_DLinear_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_full_rural_0  
+Accuracy: 0.9599, Precision: 0.7936, Recall: 0.9837, F1-score: 0.8785
+
+
+test_PatchTST_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_full_rural_0  
+Accuracy: 0.9069, Precision: 0.7366, Recall: 0.5735, F1-score: 0.6449
+
+
+test_TimesNet_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_full_kaggle_0  
+Accuracy: 0.3146, Precision: 1.0000, Recall: 0.2689, F1-score: 0.4238
+
+
+test_VoltageTimesNet_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_full_kaggle_0  
+Accuracy: 0.3281, Precision: 1.0000, Recall: 0.2833, F1-score: 0.4415
+
+
+test_VoltageTimesNet_v2_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_full_kaggle_0  
+Accuracy: 0.3071, Precision: 1.0000, Recall: 0.2609, F1-score: 0.4138
+
+
+test_DLinear_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_full_kaggle_0  
+Accuracy: 0.2449, Precision: 0.9971, Recall: 0.1951, F1-score: 0.3263
+
+
+test_PatchTST_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_full_kaggle_0  
+Accuracy: 0.2701, Precision: 0.9969, Recall: 0.2221, F1-score: 0.3633
+
+
