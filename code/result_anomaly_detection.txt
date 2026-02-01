@@ -366,3 +366,7 @@ test_TimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_full_r
 Accuracy: 0.9102, Precision: 0.7606, Recall: 0.5705, F1-score: 0.6520
 
 
+test_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm64_nh8_el2_df128_full_rural_0  
+Accuracy: 0.9094, Precision: 0.7541, Recall: 0.5726, F1-score: 0.6509
+
+
