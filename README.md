@@ -60,6 +60,7 @@ Rural-Low-Voltage-Detection/
 |------|---------|---------|----------|
 | **TimesNet** | FFT 周期发现 + 2D 卷积 | 通用时序异常检测 | Wu et al., ICLR 2023 |
 | **VoltageTimesNet** | 预设电网周期 + FFT 混合 | 电力系统电压监测 | 创新模型 |
+| **VoltageTimesNet_v2** | 可学习权重 + 异常放大器 | 高召回率场景 | 创新模型 (新增) |
 | **TPATimesNet** | 三相交叉注意力机制 | 三相不平衡异常检测 | 创新模型 |
 | **MTSTimesNet** | 多尺度并行 + 自适应融合 | 复杂多尺度异常 | 创新模型 |
 | **HybridTimesNet** | 置信度融合周期发现 | 鲁棒周期检测 | 创新模型 |
@@ -89,6 +90,7 @@ Rural-Low-Voltage-Detection/
 | **SMAP** | 25 | 135,183 | 427,617 | NASA 航天器 |
 | **SMD** | 38 | 708,405 | 708,420 | 服务器机器 |
 | **SWAT** | 51 | 495,000 | 449,919 | 安全水处理 |
+| **KagglePQ** | 128 | 2,400 | 9,598 | 电力质量波形 (新增) |
 
 ### 农村电压数据集 (RuralVoltage)
 
@@ -141,9 +143,13 @@ cd code
 python run.py --is_training 1 --model TimesNet --data PSM \
   --root_path ./dataset/PSM/ --seq_len 100 --d_model 64
 
-# 使用 VoltageTimesNet 在农村电压数据集训练
-python run.py --is_training 1 --model VoltageTimesNet --data RuralVoltage \
-  --root_path ./dataset/RuralVoltage/ --enc_in 17 --c_out 17
+# 使用 VoltageTimesNet_v2 在农村电压数据集训练（推荐）
+python run.py --is_training 1 --model VoltageTimesNet_v2 --data RuralVoltage \
+  --root_path ./dataset/RuralVoltage/realistic_v2/ --enc_in 16 --c_out 16 --anomaly_ratio 3.0
+
+# 使用 Kaggle 电力质量数据集
+python run.py --is_training 1 --model TimesNet --data KagglePQ \
+  --root_path ./dataset/Kaggle_PowerQuality_2/ --enc_in 128 --c_out 128
 
 # 运行模型对比实验
 bash scripts/PSM/run_comparison.sh

@@ -13,7 +13,15 @@ python run.py --is_training 1 --model TimesNet --data PSM \
 
 # 训练 VoltageTimesNet（农村电压数据）
 python run.py --is_training 1 --model VoltageTimesNet --data RuralVoltage \
-  --root_path ./dataset/RuralVoltage/ --enc_in 16 --c_out 16 --seq_len 100
+  --root_path ./dataset/RuralVoltage/realistic_v2/ --enc_in 16 --c_out 16 --seq_len 100
+
+# 训练 VoltageTimesNet_v2（召回率优化版，推荐）
+python run.py --is_training 1 --model VoltageTimesNet_v2 --data RuralVoltage \
+  --root_path ./dataset/RuralVoltage/realistic_v2/ --enc_in 16 --c_out 16 --anomaly_ratio 3.0
+
+# 训练 Kaggle 电力质量数据集
+python run.py --is_training 1 --model TimesNet --data KagglePQ \
+  --root_path ./dataset/Kaggle_PowerQuality_2/ --enc_in 128 --c_out 128 --seq_len 64
 
 # 仅测试
 python run.py --is_training 0 --model TimesNet --data PSM --root_path ./dataset/PSM/
@@ -31,6 +39,7 @@ code/
 ├── models/                         # 模型实现
 │   ├── TimesNet.py                 # 核心：FFT + 2D卷积
 │   ├── VoltageTimesNet.py          # 预设周期 + FFT 混合
+│   ├── VoltageTimesNet_v2.py       # 召回率优化版（新增）
 │   ├── TPATimesNet.py              # 三相注意力
 │   ├── MTSTimesNet.py              # 多尺度时序
 │   └── DLinear.py                  # 轻量级基线
@@ -52,12 +61,13 @@ code/
 
 ## 数据集
 
-| 数据集 | 特征数 | 训练集 | 测试集 |
-|--------|:------:|-------:|-------:|
-| PSM | 25 | 132,481 | 87,841 |
-| RuralVoltage | 16 | 10,000 | 2,000 |
-| MSL | 55 | 58,317 | 73,729 |
-| SMAP | 25 | 135,183 | 427,617 |
+| 数据集 | 特征数 | 训练集 | 测试集 | 说明 |
+|--------|:------:|-------:|-------:|------|
+| PSM | 25 | 132,481 | 87,841 | 服务器指标 |
+| RuralVoltage/realistic_v2 | 16 | 50,000 | 10,000 | 农村电压（改进版） |
+| KagglePQ | 128 | 2,400 | 9,598 | 电力质量波形（新增） |
+| MSL | 55 | 58,317 | 73,729 | NASA 航天器 |
+| SMAP | 25 | 135,183 | 427,617 | NASA 航天器 |
 
 ## TimesNet 原理
 
