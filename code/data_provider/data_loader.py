@@ -673,3 +673,107 @@ class RuralVoltageSegLoader(Dataset):
             label_name = self.LABEL_MAPPING.get(int(u), f"Unknown_{u}")
             distribution[label_name] = int(c)
         return distribution
+
+
+class KagglePQSegLoader(Dataset):
+    """
+    Kaggle Power Quality Dataset Loader.
+
+    Dataset: PowerQualityDistributionDataset1
+    - 128-sample waveform signals
+    - 5 classes (Class 3 as normal, others as anomaly)
+    - Used for reconstruction-based anomaly detection
+
+    Data structure:
+        dataset/Kaggle_PowerQuality_2/
+        ├── train.csv      (normal samples only)
+        ├── test.csv       (mixed normal + anomaly)
+        └── test_label.csv (binary labels: 0=normal, 1=anomaly)
+    """
+
+    def __init__(self, args, root_path, win_size, step=1, flag="train"):
+        self.flag = flag
+        self.step = step
+        self.win_size = win_size
+        self.scaler = StandardScaler()
+
+        train_path = os.path.join(root_path, "train.csv")
+        test_path = os.path.join(root_path, "test.csv")
+        label_path = os.path.join(root_path, "test_label.csv")
+
+        if not all(os.path.exists(p) for p in [train_path, test_path, label_path]):
+            raise FileNotFoundError(
+                f"Kaggle PQ dataset not found in {root_path}. "
+                f"Please run prepare_dataset.py first to generate train.csv, test.csv, and test_label.csv."
+            )
+
+        train_df = pd.read_csv(train_path)
+        test_df = pd.read_csv(test_path)
+        test_label_df = pd.read_csv(label_path)
+
+        # All columns are features (no index column)
+        train_data = train_df.values
+        test_data = test_df.values
+        test_labels = test_label_df.values
+
+        # Handle NaN values
+        train_data = np.nan_to_num(train_data, nan=0.0)
+        test_data = np.nan_to_num(test_data, nan=0.0)
+
+        # Fit and transform
+        self.scaler.fit(train_data)
+        self.train = self.scaler.transform(train_data)
+        self.test = self.scaler.transform(test_data)
+        self.test_labels = test_labels
+
+        # Validation set from training data
+        data_len = len(self.train)
+        self.val = self.train[int(data_len * 0.8):]
+
+        self.num_features = train_data.shape[1]
+
+        print(f"Kaggle Power Quality Dataset loaded:")
+        print(f"  - Features: {self.num_features} (waveform samples)")
+        print(f"  - Train: {self.train.shape}")
+        print(f"  - Test: {self.test.shape}")
+        print(f"  - Val: {self.val.shape}")
+        print(f"  - Anomaly ratio: {100 * np.mean(self.test_labels):.1f}%")
+
+    def __len__(self):
+        if self.flag == "train":
+            return (self.train.shape[0] - self.win_size) // self.step + 1
+        elif self.flag == "val":
+            return (self.val.shape[0] - self.win_size) // self.step + 1
+        elif self.flag == "test":
+            return (self.test.shape[0] - self.win_size) // self.step + 1
+        else:
+            return (self.test.shape[0] - self.win_size) // self.win_size + 1
+
+    def __getitem__(self, index):
+        index = index * self.step
+        if self.flag == "train":
+            # Training data is all normal, labels are zeros
+            return np.float32(self.train[index:index + self.win_size]), np.zeros(
+                (self.win_size, 1), dtype=np.float32
+            )
+        elif self.flag == "val":
+            # Validation data is normal, labels are zeros
+            return np.float32(self.val[index:index + self.win_size]), np.zeros(
+                (self.win_size, 1), dtype=np.float32
+            )
+        elif self.flag == "test":
+            return np.float32(self.test[index:index + self.win_size]), np.float32(
+                self.test_labels[index:index + self.win_size]
+            )
+        else:
+            return np.float32(
+                self.test[
+                    index // self.step * self.win_size:
+                    index // self.step * self.win_size + self.win_size
+                ]
+            ), np.float32(
+                self.test_labels[
+                    index // self.step * self.win_size:
+                    index // self.step * self.win_size + self.win_size
+                ]
+            )
