@@ -42,9 +42,22 @@ python run.py --is_training 1 \
 
 ## 📦 支持的模型
 
+### TimesNet 系列 (核心模型)
+
+| 模型名称 | 参数量 | 特点 | 最优应用 |
+|---------|-------|------|---------|
+| **TimesNet** | 4.7M | FFT 周期发现 + 2D 卷积 | 通用时序异常检测 |
+| **VoltageTimesNet** | ~5M | 预设电网周期 + FFT 混合 | 电力系统监测 |
+| **VoltageTimesNet_v2** | 9.5M | 可学习权重 + 召回率优化 | 高召回率场景 (71%+) |
+| **TPATimesNet** | ~5M | 三相交叉注意力机制 | 三相不平衡检测 |
+| **MTSTimesNet** | ~6M | 多尺度时序并行 | 多尺度异常 |
+| **HybridTimesNet** | ~5M | 置信度融合周期发现 | 鲁棒周期检测 |
+| **AdaptiveVoltageTimesNet** | ~6M | 自适应周期比例 | 数据驱动优化 |
+
+### 基线模型
+
 | 模型名称 | 参数量 | 论文 |
 |---------|-------|------|
-| **TimesNet** | 4.7M | [ICLR 2023](https://openreview.net/pdf?id=ju_Uqw384Oq) |
 | **Transformer** | 107K | [NeurIPS 2017](https://arxiv.org/abs/1706.03762) |
 | **DLinear** | 20K | [AAAI 2023](https://arxiv.org/abs/2205.13504) |
 | **PatchTST** | 178K | [ICLR 2023](https://arxiv.org/abs/2211.14730) |
@@ -52,12 +65,6 @@ python run.py --is_training 1 \
 | **Autoformer** | 106K | [NeurIPS 2021](https://arxiv.org/abs/2106.13008) |
 | **Informer** | 180K | [AAAI 2021](https://arxiv.org/abs/2012.07436) |
 | **FiLM** | 12.6M | [NeurIPS 2022](https://arxiv.org/abs/2205.08897) |
-| **LightTS** | 16K | [arXiv 2022](https://arxiv.org/abs/2207.01186) |
-| **SegRNN** | 27K | [arXiv 2023](https://arxiv.org/abs/2308.11200) |
-| **KANAD** | 111K | Kolmogorov-Arnold 网络 |
-| **Nonstationary_Transformer** | 166K | [NeurIPS 2022](https://openreview.net/pdf?id=ucNDIDRNjjv) |
-| **MICN** | 403K | [ICLR 2023](https://openreview.net/pdf?id=zt53IDUR1U) |
-| **TimeMixer** | 124K | [ICLR 2024](https://arxiv.org/abs/2405.14616) |
 | **Reformer** | 98K | [ICLR 2020](https://openreview.net/forum?id=rkgNKkHtvB) |
 
 ## 🔧 核心参数说明
@@ -65,7 +72,17 @@ python run.py --is_training 1 \
 ### 任务相关
 - `--task_name`: 任务类型，固定为 `anomaly_detection`
 - `--model`: 模型名称（见上表）
-- `--data`: 数据集名称 (PSM, MSL, SMAP, SMD, SWAT)
+- `--data`: 数据集名称 (PSM, MSL, SMAP, SMD, SWAT, RuralVoltage, KagglePQ)
+
+### 数据集说明
+
+| 数据集 | 特征数 | 训练集 | 测试集 | 领域 |
+|--------|:------:|-------:|-------:|------|
+| **PSM** | 25 | 132,481 | 87,841 | 服务器监控 |
+| **RuralVoltage** | 16 | 50,000 | 10,000 | 农村电网电压 |
+| **KagglePQ** | 128 | 2,400 | 9,598 | 电力质量波形 |
+| **MSL** | 55 | 58,317 | 73,729 | 航天器遥测 |
+| **SMAP** | 25 | 135,183 | 427,617 | 航天器遥测 |
 
 ### 数据相关
 - `--root_path`: 数据集根目录
