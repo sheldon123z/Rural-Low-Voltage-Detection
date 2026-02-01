@@ -23,6 +23,7 @@ data_dict = {
     "SMD": SMDSegLoader,
     "SWAT": SWATSegLoader,
     "RuralVoltage": RuralVoltageSegLoader,
+    "KagglePQ": KagglePQSegLoader,  # Kaggle Power Quality Dataset
 }
 
 

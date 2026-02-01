@@ -314,3 +314,51 @@ test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df
 Accuracy: 0.9103, Precision: 0.7591, Recall: 0.5737, F1-score: 0.6535
 
 
+test_TimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_quick_compare_0  
+Accuracy: 0.9098, Precision: 0.7609, Recall: 0.5660, F1-score: 0.6492
+
+
+test_TimesNet_KagglePQ_anomaly_detection_ftM_sl64_dm32_nh8_el2_df64_kaggle_test_0  
+Accuracy: 0.2411, Precision: 0.9966, Recall: 0.1911, F1-score: 0.3207
+
+
+test_VoltageTimesNet_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_quick_compare_0  
+Accuracy: 0.9116, Precision: 0.7703, Recall: 0.5712, F1-score: 0.6559
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_quick_compare_0  
+Accuracy: 0.9105, Precision: 0.7604, Recall: 0.5740, F1-score: 0.6542
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_test_0  
+Accuracy: 0.8164, Precision: 0.4449, Recall: 0.9899, F1-score: 0.6139
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_boost_0  
+Accuracy: 0.8157, Precision: 0.4439, Recall: 0.9878, F1-score: 0.6125
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_balance_0  
+Accuracy: 0.8581, Precision: 0.5137, Recall: 0.7113, F1-score: 0.5966
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_balance_0  
+Accuracy: 0.9103, Precision: 0.7598, Recall: 0.5727, F1-score: 0.6531
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_balance_0  
+Accuracy: 0.8965, Precision: 0.6669, Recall: 0.5960, F1-score: 0.6295
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_balance_0  
+Accuracy: 0.8888, Precision: 0.6128, Recall: 0.6687, F1-score: 0.6395
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_balance_0  
+Accuracy: 0.8713, Precision: 0.5520, Recall: 0.6746, F1-score: 0.6072
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl100_dm32_nh8_el2_df64_recall_balance_0  
+Accuracy: 0.8581, Precision: 0.5137, Recall: 0.7113, F1-score: 0.5966
+
+
