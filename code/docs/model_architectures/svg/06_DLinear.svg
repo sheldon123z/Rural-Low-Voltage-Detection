@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 750" width="800" height="750">
+  <defs>
+    <style>
+      .title { font: bold 24px Arial, sans-serif; fill: #1a1a2e; }
+      .subtitle { font: 14px Arial, sans-serif; fill: #666; }
+      .module-text { font: bold 14px Arial, sans-serif; fill: white; }
+      .module-text-dark { font: bold 14px Arial, sans-serif; fill: #333; }
+      .detail-text { font: 12px Arial, sans-serif; fill: #555; }
+      .innovation-label { font: bold 12px Arial, sans-serif; fill: #D84315; }
+      .formula-text { font: italic 12px Arial, sans-serif; fill: #333; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <linearGradient id="inputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50" />
+      <stop offset="100%" style="stop-color:#388E3C" />
+    </linearGradient>
+    <linearGradient id="trendGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3" />
+      <stop offset="100%" style="stop-color:#1565C0" />
+    </linearGradient>
+    <linearGradient id="seasonalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9800" />
+      <stop offset="100%" style="stop-color:#F57C00" />
+    </linearGradient>
+    <linearGradient id="decompGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9C27B0" />
+      <stop offset="100%" style="stop-color:#7B1FA2" />
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#673AB7" />
+      <stop offset="100%" style="stop-color:#512DA8" />
+    </linearGradient>
+    <linearGradient id="normGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#78909C" />
+      <stop offset="100%" style="stop-color:#546E7A" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="750" fill="#fafafa"/>
+
+  <!-- 标题 -->
+  <text x="400" y="40" text-anchor="middle" class="title">DLinear</text>
+  <text x="400" y="65" text-anchor="middle" class="subtitle">Decomposition Linear | AAAI 2023 | ~20K params (Lightweight Baseline)</text>
+
+  <!-- 输入层 -->
+  <rect x="250" y="90" width="300" height="50" rx="8" fill="url(#inputGrad)"/>
+  <text x="400" y="120" text-anchor="middle" class="module-text">Input: [B, T, C]</text>
+
+  <line x1="400" y1="140" x2="400" y2="165" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Instance Normalization -->
+  <rect x="250" y="170" width="300" height="40" rx="8" fill="url(#normGrad)"/>
+  <text x="400" y="195" text-anchor="middle" class="module-text">Instance Normalization</text>
+
+  <line x1="400" y1="210" x2="400" y2="235" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Series Decomposition -->
+  <rect x="150" y="240" width="500" height="120" rx="8" fill="#F3E5F5" stroke="#9C27B0" stroke-width="2"/>
+  <text x="170" y="265" class="innovation-label">★ Series Decomposition</text>
+
+  <rect x="170" y="280" width="460" height="65" rx="6" fill="url(#decompGrad)"/>
+  <text x="400" y="305" text-anchor="middle" class="module-text">Moving Average Filter</text>
+  <text x="400" y="325" text-anchor="middle" class="module-text" font-size="11">kernel=25, padding=12</text>
+  <text x="400" y="340" text-anchor="middle" class="formula-text" fill="white">trend = AvgPool1d(x) | seasonal = x - trend</text>
+
+  <!-- 分支点 -->
+  <line x1="400" y1="360" x2="400" y2="390" stroke="#666" stroke-width="2"/>
+  <line x1="200" y1="390" x2="600" y2="390" stroke="#666" stroke-width="2"/>
+  <line x1="200" y1="390" x2="200" y2="415" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="390" x2="600" y2="415" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Trend Branch -->
+  <rect x="100" y="420" width="200" height="170" rx="8" fill="#E3F2FD" stroke="#2196F3" stroke-width="2"/>
+  <rect x="100" y="420" width="200" height="35" rx="8" ry="0" fill="url(#trendGrad)"/>
+  <text x="200" y="443" text-anchor="middle" class="module-text">Trend Branch</text>
+
+  <rect x="120" y="465" width="160" height="35" rx="5" fill="white" stroke="#2196F3"/>
+  <text x="200" y="487" text-anchor="middle" class="module-text-dark" font-size="11">Permute [B,C,T]</text>
+
+  <rect x="120" y="510" width="160" height="40" rx="5" fill="url(#trendGrad)"/>
+  <text x="200" y="532" text-anchor="middle" class="module-text" font-size="11">Linear(T→T)</text>
+  <text x="200" y="546" text-anchor="middle" class="module-text" font-size="9">per channel</text>
+
+  <rect x="120" y="560" width="160" height="25" rx="5" fill="white" stroke="#2196F3"/>
+  <text x="200" y="577" text-anchor="middle" class="module-text-dark" font-size="10">Permute [B,T,C]</text>
+
+  <!-- Seasonal Branch -->
+  <rect x="500" y="420" width="200" height="170" rx="8" fill="#FFF3E0" stroke="#FF9800" stroke-width="2"/>
+  <rect x="500" y="420" width="200" height="35" rx="8" ry="0" fill="url(#seasonalGrad)"/>
+  <text x="600" y="443" text-anchor="middle" class="module-text">Seasonal Branch</text>
+
+  <rect x="520" y="465" width="160" height="35" rx="5" fill="white" stroke="#FF9800"/>
+  <text x="600" y="487" text-anchor="middle" class="module-text-dark" font-size="11">Permute [B,C,T]</text>
+
+  <rect x="520" y="510" width="160" height="40" rx="5" fill="url(#seasonalGrad)"/>
+  <text x="600" y="532" text-anchor="middle" class="module-text" font-size="11">Linear(T→T)</text>
+  <text x="600" y="546" text-anchor="middle" class="module-text" font-size="9">per channel</text>
+
+  <rect x="520" y="560" width="160" height="25" rx="5" fill="white" stroke="#FF9800"/>
+  <text x="600" y="577" text-anchor="middle" class="module-text-dark" font-size="10">Permute [B,T,C]</text>
+
+  <!-- 波形示意 -->
+  <rect x="320" y="430" width="160" height="70" rx="5" fill="#FAFAFA" stroke="#ddd"/>
+  <text x="400" y="448" text-anchor="middle" class="detail-text" font-weight="bold">Visualization</text>
+  <!-- Trend wave -->
+  <path d="M340,475 Q370,465 400,470 T460,475" stroke="#2196F3" stroke-width="2" fill="none"/>
+  <text x="340" y="488" class="detail-text" fill="#2196F3" font-size="9">trend</text>
+  <!-- Seasonal wave -->
+  <path d="M340,480 L350,472 L360,488 L370,472 L380,488 L390,472 L400,488 L410,472 L420,488 L430,472 L440,488 L450,472 L460,480" stroke="#FF9800" stroke-width="1.5" fill="none"/>
+  <text x="430" y="495" class="detail-text" fill="#FF9800" font-size="9">seasonal</text>
+
+  <!-- 汇聚 -->
+  <line x1="200" y1="590" x2="200" y2="620" stroke="#666" stroke-width="2"/>
+  <line x1="600" y1="590" x2="600" y2="620" stroke="#666" stroke-width="2"/>
+  <line x1="200" y1="620" x2="600" y2="620" stroke="#666" stroke-width="2"/>
+  <line x1="400" y1="620" x2="400" y2="645" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Add -->
+  <rect x="300" y="650" width="200" height="40" rx="8" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+  <text x="400" y="675" text-anchor="middle" class="module-text-dark">Add: trend + seasonal</text>
+
+  <line x1="400" y1="690" x2="400" y2="715" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- 输出 -->
+  <rect x="250" y="720" width="300" height="30" rx="8" fill="url(#outputGrad)"/>
+  <text x="400" y="740" text-anchor="middle" class="module-text">Output: [B, T, C]</text>
+
+  <!-- 图例和特点 -->
+  <rect x="650" y="90" width="130" height="160" rx="8" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="715" y="110" text-anchor="middle" class="detail-text" font-weight="bold">Features</text>
+  <text x="660" y="130" class="detail-text">✓ ~20K params</text>
+  <text x="660" y="148" class="detail-text">✓ No attention</text>
+  <text x="660" y="166" class="detail-text">✓ No convolution</text>
+  <text x="660" y="184" class="detail-text">✓ Fast inference</text>
+  <text x="660" y="202" class="detail-text">✓ Easy to train</text>
+  <line x1="660" y1="210" x2="770" y2="210" stroke="#ddd"/>
+  <text x="715" y="228" text-anchor="middle" class="detail-text" fill="#888">Baseline Model</text>
+  <text x="715" y="244" text-anchor="middle" class="detail-text" fill="#888">for comparison</text>
+
+  <!-- 复杂度对比 -->
+  <rect x="650" y="260" width="130" height="80" rx="8" fill="#FFF8E1" stroke="#FFC107" stroke-width="1"/>
+  <text x="715" y="280" text-anchor="middle" class="detail-text" font-weight="bold">Complexity</text>
+  <text x="660" y="300" class="detail-text" font-size="10">Params: O(C×T²)</text>
+  <text x="660" y="316" class="detail-text" font-size="10">Time: O(B×C×T)</text>
+  <text x="660" y="332" class="detail-text" font-size="10">vs TimesNet: 200x</text>
+</svg>

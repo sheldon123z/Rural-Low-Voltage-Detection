@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" width="900" height="1100">
+  <defs>
+    <style>
+      .title { font: bold 24px Arial, sans-serif; fill: #1a1a2e; }
+      .subtitle { font: 14px Arial, sans-serif; fill: #666; }
+      .module-text { font: bold 14px Arial, sans-serif; fill: white; }
+      .module-text-dark { font: bold 14px Arial, sans-serif; fill: #333; }
+      .detail-text { font: 12px Arial, sans-serif; fill: #555; }
+      .innovation-label { font: bold 12px Arial, sans-serif; fill: #D84315; }
+      .param-text { font: italic 11px Arial, sans-serif; fill: #777; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <linearGradient id="inputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50" />
+      <stop offset="100%" style="stop-color:#388E3C" />
+    </linearGradient>
+    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3" />
+      <stop offset="100%" style="stop-color:#1565C0" />
+    </linearGradient>
+    <linearGradient id="innovationGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9800" />
+      <stop offset="100%" style="stop-color:#F57C00" />
+    </linearGradient>
+    <linearGradient id="v2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E91E63" />
+      <stop offset="100%" style="stop-color:#C2185B" />
+    </linearGradient>
+    <linearGradient id="amplifierGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F44336" />
+      <stop offset="100%" style="stop-color:#C62828" />
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9C27B0" />
+      <stop offset="100%" style="stop-color:#7B1FA2" />
+    </linearGradient>
+    <linearGradient id="normGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#78909C" />
+      <stop offset="100%" style="stop-color:#546E7A" />
+    </linearGradient>
+    <linearGradient id="phaseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BCD4" />
+      <stop offset="100%" style="stop-color:#0097A7" />
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="1100" fill="#fafafa"/>
+
+  <!-- 标题 -->
+  <text x="450" y="40" text-anchor="middle" class="title">VoltageTimesNet_v2</text>
+  <text x="450" y="65" text-anchor="middle" class="subtitle">Learnable Weights + Sensitivity Amplifier + Recall Optimization | ~9.5M params</text>
+
+  <!-- 输入层 -->
+  <rect x="300" y="90" width="300" height="45" rx="8" fill="url(#inputGrad)"/>
+  <text x="450" y="117" text-anchor="middle" class="module-text">Input: [B, T, 16]</text>
+
+  <line x1="450" y1="135" x2="450" y2="155" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Instance Norm -->
+  <rect x="300" y="160" width="300" height="35" rx="8" fill="url(#normGrad)"/>
+  <text x="450" y="182" text-anchor="middle" class="module-text">Instance Normalization</text>
+
+  <line x1="450" y1="195" x2="450" y2="215" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Power Quality Encoder -->
+  <rect x="200" y="220" width="500" height="90" rx="8" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+  <text x="220" y="245" class="innovation-label">★ NEW: Power Quality Encoder</text>
+
+  <rect x="220" y="255" width="130" height="45" rx="5" fill="url(#inputGrad)"/>
+  <text x="285" y="275" text-anchor="middle" class="module-text" font-size="11">Voltage Encoder</text>
+  <text x="285" y="292" text-anchor="middle" class="module-text" font-size="9">Va,Vb,Vc → d/2</text>
+
+  <rect x="360" y="255" width="130" height="45" rx="5" fill="url(#phaseGrad)"/>
+  <text x="425" y="275" text-anchor="middle" class="module-text" font-size="11">THD Encoder</text>
+  <text x="425" y="292" text-anchor="middle" class="module-text" font-size="9">THD×3 → d/4</text>
+
+  <rect x="500" y="255" width="130" height="45" rx="5" fill="url(#innovationGrad)"/>
+  <text x="565" y="275" text-anchor="middle" class="module-text" font-size="11">Unbalance Enc</text>
+  <text x="565" y="292" text-anchor="middle" class="module-text" font-size="9">Unbal×2 → d/4</text>
+
+  <line x1="450" y1="310" x2="450" y2="330" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Data Embedding -->
+  <rect x="300" y="335" width="300" height="35" rx="8" fill="url(#coreGrad)"/>
+  <text x="450" y="357" text-anchor="middle" class="module-text">Data Embedding + PQ Features</text>
+
+  <line x1="450" y1="370" x2="450" y2="390" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- VoltageTimesBlock_v2 主框 -->
+  <rect x="80" y="395" width="740" height="520" rx="12" fill="none" stroke="#E91E63" stroke-width="3" stroke-dasharray="8,4"/>
+  <text x="100" y="420" class="subtitle" fill="#E91E63">VoltageTimesBlock_v2 × e_layers</text>
+
+  <!-- ★ Learnable Hybrid Period Discovery -->
+  <rect x="150" y="435" width="600" height="80" rx="8" fill="#FCE4EC" stroke="#E91E63" stroke-width="2"/>
+  <text x="170" y="458" class="innovation-label">★ Learnable Hybrid Period Discovery</text>
+
+  <rect x="170" y="468" width="170" height="38" rx="5" fill="url(#innovationGrad)"/>
+  <text x="255" y="492" text-anchor="middle" class="module-text" font-size="11">FFT: (1-α) × K</text>
+
+  <rect x="360" y="468" width="170" height="38" rx="5" fill="url(#v2Grad)"/>
+  <text x="445" y="492" text-anchor="middle" class="module-text" font-size="11">Preset: α × K</text>
+
+  <rect x="550" y="468" width="180" height="38" rx="5" fill="#FFF3E0" stroke="#FF9800"/>
+  <text x="640" y="485" text-anchor="middle" class="module-text-dark" font-size="10">α = sigmoid(θ)</text>
+  <text x="640" y="500" text-anchor="middle" class="param-text">Learnable Parameter</text>
+
+  <line x1="450" y1="515" x2="450" y2="535" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Multi-Period 2D Conv -->
+  <rect x="250" y="540" width="400" height="40" rx="8" fill="url(#coreGrad)"/>
+  <text x="450" y="565" text-anchor="middle" class="module-text">Multi-Period 2D Convolution</text>
+
+  <line x1="450" y1="580" x2="450" y2="600" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Multi-Scale Temporal Conv -->
+  <rect x="150" y="605" width="600" height="70" rx="8" fill="#E3F2FD" stroke="#2196F3" stroke-width="2"/>
+  <text x="170" y="628" class="innovation-label">★ Multi-Scale Temporal Conv</text>
+
+  <rect x="190" y="638" width="110" height="28" rx="4" fill="url(#coreGrad)"/>
+  <text x="245" y="657" text-anchor="middle" class="module-text" font-size="10">Conv k=3</text>
+
+  <rect x="320" y="638" width="110" height="28" rx="4" fill="url(#coreGrad)"/>
+  <text x="375" y="657" text-anchor="middle" class="module-text" font-size="10">Conv k=5</text>
+
+  <rect x="450" y="638" width="110" height="28" rx="4" fill="url(#coreGrad)"/>
+  <text x="505" y="657" text-anchor="middle" class="module-text" font-size="10">Conv k=7</text>
+
+  <rect x="580" y="638" width="150" height="28" rx="4" fill="#E8F5E9" stroke="#4CAF50"/>
+  <text x="655" y="657" text-anchor="middle" class="module-text-dark" font-size="10">Concat → Linear</text>
+
+  <line x1="450" y1="675" x2="450" y2="695" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Anomaly Sensitivity Amplifier -->
+  <rect x="150" y="700" width="600" height="80" rx="8" fill="#FFEBEE" stroke="#F44336" stroke-width="2"/>
+  <text x="170" y="723" class="innovation-label">★ Anomaly Sensitivity Amplifier (Recall Boost)</text>
+
+  <rect x="190" y="738" width="140" height="32" rx="4" fill="url(#amplifierGrad)"/>
+  <text x="260" y="759" text-anchor="middle" class="module-text" font-size="10">Linear(d→2d)</text>
+
+  <text x="345" y="759" text-anchor="middle" class="module-text-dark">→</text>
+
+  <rect x="360" y="738" width="80" height="32" rx="4" fill="url(#amplifierGrad)"/>
+  <text x="400" y="759" text-anchor="middle" class="module-text" font-size="10">ReLU</text>
+
+  <text x="455" y="759" text-anchor="middle" class="module-text-dark">→</text>
+
+  <rect x="470" y="738" width="140" height="32" rx="4" fill="url(#amplifierGrad)"/>
+  <text x="540" y="759" text-anchor="middle" class="module-text" font-size="10">Linear(2d→d)</text>
+
+  <text x="625" y="759" text-anchor="middle" class="module-text-dark">→</text>
+
+  <rect x="640" y="738" width="90" height="32" rx="4" fill="#FFCDD2" stroke="#F44336"/>
+  <text x="685" y="759" text-anchor="middle" class="module-text-dark" font-size="10">Sigmoid</text>
+
+  <line x1="450" y1="780" x2="450" y2="800" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Phase Constraint -->
+  <rect x="250" y="805" width="400" height="45" rx="8" fill="url(#phaseGrad)"/>
+  <text x="450" y="825" text-anchor="middle" class="module-text">★ Phase Constraint Module</text>
+  <text x="450" y="842" text-anchor="middle" class="module-text" font-size="10">Learnable phase_correlation [3×3]</text>
+
+  <line x1="450" y1="850" x2="450" y2="870" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Residual -->
+  <rect x="350" y="875" width="200" height="30" rx="6" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+  <text x="450" y="895" text-anchor="middle" class="module-text-dark">Residual</text>
+
+  <line x1="450" y1="920" x2="450" y2="945" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Output Projection -->
+  <rect x="300" y="950" width="300" height="40" rx="8" fill="url(#coreGrad)"/>
+  <text x="450" y="975" text-anchor="middle" class="module-text">Output Projection</text>
+
+  <line x1="450" y1="990" x2="450" y2="1015" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- 输出 -->
+  <rect x="300" y="1020" width="300" height="45" rx="8" fill="url(#outputGrad)"/>
+  <text x="450" y="1047" text-anchor="middle" class="module-text">Output: [B, T, 16]</text>
+
+  <!-- 图例 -->
+  <rect x="720" y="90" width="160" height="150" rx="8" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="800" y="110" text-anchor="middle" class="detail-text" font-weight="bold">v2 Innovations</text>
+  <rect x="730" y="122" width="16" height="12" rx="3" fill="url(#v2Grad)"/>
+  <text x="755" y="132" class="detail-text">Learnable α</text>
+  <rect x="730" y="142" width="16" height="12" rx="3" fill="url(#amplifierGrad)"/>
+  <text x="755" y="152" class="detail-text">Amplifier</text>
+  <rect x="730" y="162" width="16" height="12" rx="3" fill="url(#phaseGrad)"/>
+  <text x="755" y="172" class="detail-text">Phase Constraint</text>
+  <rect x="730" y="182" width="16" height="12" rx="3" fill="#E8F5E9" stroke="#4CAF50"/>
+  <text x="755" y="192" class="detail-text">PQ Encoder</text>
+  <rect x="730" y="202" width="16" height="12" rx="3" fill="#E3F2FD" stroke="#2196F3"/>
+  <text x="755" y="212" class="detail-text">Multi-Scale</text>
+  <text x="800" y="232" text-anchor="middle" class="param-text">Recall: 71%+</text>
+</svg>

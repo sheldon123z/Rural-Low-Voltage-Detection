@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 950" width="900" height="950">
+  <defs>
+    <style>
+      .title { font: bold 24px Arial, sans-serif; fill: #1a1a2e; }
+      .subtitle { font: 14px Arial, sans-serif; fill: #666; }
+      .module-text { font: bold 14px Arial, sans-serif; fill: white; }
+      .module-text-dark { font: bold 14px Arial, sans-serif; fill: #333; }
+      .detail-text { font: 12px Arial, sans-serif; fill: #555; }
+      .innovation-label { font: bold 12px Arial, sans-serif; fill: #D84315; }
+      .scale-label { font: bold 11px Arial, sans-serif; fill: white; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <linearGradient id="inputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50" />
+      <stop offset="100%" style="stop-color:#388E3C" />
+    </linearGradient>
+    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3" />
+      <stop offset="100%" style="stop-color:#1565C0" />
+    </linearGradient>
+    <linearGradient id="shortGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF5722" />
+      <stop offset="100%" style="stop-color:#E64A19" />
+    </linearGradient>
+    <linearGradient id="mediumGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9800" />
+      <stop offset="100%" style="stop-color:#F57C00" />
+    </linearGradient>
+    <linearGradient id="longGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50" />
+      <stop offset="100%" style="stop-color:#388E3C" />
+    </linearGradient>
+    <linearGradient id="fusionGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9C27B0" />
+      <stop offset="100%" style="stop-color:#7B1FA2" />
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#673AB7" />
+      <stop offset="100%" style="stop-color:#512DA8" />
+    </linearGradient>
+    <linearGradient id="normGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#78909C" />
+      <stop offset="100%" style="stop-color:#546E7A" />
+    </linearGradient>
+    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BCD4" />
+      <stop offset="100%" style="stop-color:#0097A7" />
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="950" fill="#fafafa"/>
+
+  <!-- 标题 -->
+  <text x="450" y="40" text-anchor="middle" class="title">MTSTimesNet</text>
+  <text x="450" y="65" text-anchor="middle" class="subtitle">Multi-Scale Temporal Modeling | ~6M params</text>
+
+  <!-- 输入层 -->
+  <rect x="300" y="90" width="300" height="45" rx="8" fill="url(#inputGrad)"/>
+  <text x="450" y="117" text-anchor="middle" class="module-text">Input: [B, T, C]</text>
+
+  <line x1="450" y1="135" x2="450" y2="155" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Instance Norm -->
+  <rect x="300" y="160" width="300" height="35" rx="8" fill="url(#normGrad)"/>
+  <text x="450" y="182" text-anchor="middle" class="module-text">Instance Normalization</text>
+
+  <line x1="450" y1="195" x2="450" y2="215" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Data Embedding -->
+  <rect x="300" y="220" width="300" height="35" rx="8" fill="url(#coreGrad)"/>
+  <text x="450" y="242" text-anchor="middle" class="module-text">Data Embedding</text>
+
+  <line x1="450" y1="255" x2="450" y2="280" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Multi-Scale Block 主框 -->
+  <rect x="50" y="285" width="800" height="480" rx="12" fill="none" stroke="#9C27B0" stroke-width="3" stroke-dasharray="8,4"/>
+  <text x="70" y="310" class="subtitle" fill="#9C27B0">★ Multi-Scale Parallel Branches</text>
+
+  <!-- 三个分支分叉 -->
+  <line x1="450" y1="280" x2="450" y2="320" stroke="#666" stroke-width="2"/>
+  <line x1="150" y1="320" x2="750" y2="320" stroke="#666" stroke-width="2"/>
+  <line x1="150" y1="320" x2="150" y2="345" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="450" y1="320" x2="450" y2="345" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="750" y1="320" x2="750" y2="345" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Short Scale Branch -->
+  <rect x="70" y="350" width="210" height="320" rx="8" fill="#FBE9E7" stroke="#FF5722" stroke-width="2"/>
+  <rect x="70" y="350" width="210" height="35" rx="8" ry="0" fill="url(#shortGrad)"/>
+  <text x="175" y="373" text-anchor="middle" class="module-text">Short Scale</text>
+
+  <rect x="90" y="395" width="170" height="40" rx="5" fill="url(#shortGrad)" opacity="0.9"/>
+  <text x="175" y="415" text-anchor="middle" class="scale-label">FFT: period 2-20</text>
+  <text x="175" y="430" text-anchor="middle" class="scale-label" font-size="9">瞬时波动</text>
+
+  <rect x="90" y="445" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="175" y="467" text-anchor="middle" class="module-text" font-size="11">1D→2D Reshape</text>
+
+  <rect x="90" y="490" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="175" y="512" text-anchor="middle" class="module-text" font-size="11">Inception Conv2D</text>
+
+  <rect x="90" y="535" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="175" y="557" text-anchor="middle" class="module-text" font-size="11">2D→1D Reshape</text>
+
+  <rect x="90" y="580" width="170" height="35" rx="5" fill="url(#shortGrad)" opacity="0.9"/>
+  <text x="175" y="602" text-anchor="middle" class="module-text" font-size="11">Aggregation</text>
+
+  <rect x="90" y="625" width="170" height="30" rx="5" fill="#E8F5E9" stroke="#4CAF50"/>
+  <text x="175" y="645" text-anchor="middle" class="module-text-dark" font-size="10">short_out</text>
+
+  <!-- Medium Scale Branch -->
+  <rect x="345" y="350" width="210" height="320" rx="8" fill="#FFF3E0" stroke="#FF9800" stroke-width="2"/>
+  <rect x="345" y="350" width="210" height="35" rx="8" ry="0" fill="url(#mediumGrad)"/>
+  <text x="450" y="373" text-anchor="middle" class="module-text">Medium Scale</text>
+
+  <rect x="365" y="395" width="170" height="40" rx="5" fill="url(#mediumGrad)" opacity="0.9"/>
+  <text x="450" y="415" text-anchor="middle" class="scale-label">FFT: period 20-60</text>
+  <text x="450" y="430" text-anchor="middle" class="scale-label" font-size="9">负荷变化</text>
+
+  <rect x="365" y="445" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="450" y="467" text-anchor="middle" class="module-text" font-size="11">1D→2D Reshape</text>
+
+  <rect x="365" y="490" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="450" y="512" text-anchor="middle" class="module-text" font-size="11">Inception Conv2D</text>
+
+  <rect x="365" y="535" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="450" y="557" text-anchor="middle" class="module-text" font-size="11">2D→1D Reshape</text>
+
+  <rect x="365" y="580" width="170" height="35" rx="5" fill="url(#mediumGrad)" opacity="0.9"/>
+  <text x="450" y="602" text-anchor="middle" class="module-text" font-size="11">Aggregation</text>
+
+  <rect x="365" y="625" width="170" height="30" rx="5" fill="#E8F5E9" stroke="#4CAF50"/>
+  <text x="450" y="645" text-anchor="middle" class="module-text-dark" font-size="10">medium_out</text>
+
+  <!-- Long Scale Branch -->
+  <rect x="620" y="350" width="210" height="320" rx="8" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+  <rect x="620" y="350" width="210" height="35" rx="8" ry="0" fill="url(#longGrad)"/>
+  <text x="725" y="373" text-anchor="middle" class="module-text">Long Scale</text>
+
+  <rect x="640" y="395" width="170" height="40" rx="5" fill="url(#longGrad)" opacity="0.9"/>
+  <text x="725" y="415" text-anchor="middle" class="scale-label">FFT: period 60-200</text>
+  <text x="725" y="430" text-anchor="middle" class="scale-label" font-size="9">日周期模式</text>
+
+  <rect x="640" y="445" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="725" y="467" text-anchor="middle" class="module-text" font-size="11">1D→2D Reshape</text>
+
+  <rect x="640" y="490" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="725" y="512" text-anchor="middle" class="module-text" font-size="11">Inception Conv2D</text>
+
+  <rect x="640" y="535" width="170" height="35" rx="5" fill="url(#coreGrad)"/>
+  <text x="725" y="557" text-anchor="middle" class="module-text" font-size="11">2D→1D Reshape</text>
+
+  <rect x="640" y="580" width="170" height="35" rx="5" fill="url(#longGrad)" opacity="0.9"/>
+  <text x="725" y="602" text-anchor="middle" class="module-text" font-size="11">Aggregation</text>
+
+  <rect x="640" y="625" width="170" height="30" rx="5" fill="#E8F5E9" stroke="#4CAF50"/>
+  <text x="725" y="645" text-anchor="middle" class="module-text-dark" font-size="10">long_out</text>
+
+  <!-- 汇聚连接 -->
+  <line x1="175" y1="655" x2="175" y2="685" stroke="#666" stroke-width="2"/>
+  <line x1="450" y1="655" x2="450" y2="685" stroke="#666" stroke-width="2"/>
+  <line x1="725" y1="655" x2="725" y2="685" stroke="#666" stroke-width="2"/>
+  <line x1="175" y1="685" x2="725" y2="685" stroke="#666" stroke-width="2"/>
+  <line x1="450" y1="685" x2="450" y2="705" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Cross-Scale Connection -->
+  <rect x="200" y="710" width="500" height="45" rx="8" fill="url(#crossGrad)"/>
+  <text x="450" y="737" text-anchor="middle" class="module-text">★ Cross-Scale Connection: Conv1d(3d→d) + Sum</text>
+
+  <line x1="450" y1="755" x2="450" y2="775" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Adaptive Fusion Gate -->
+  <rect x="200" y="780" width="500" height="60" rx="8" fill="url(#fusionGrad)"/>
+  <text x="450" y="805" text-anchor="middle" class="module-text">★ Adaptive Fusion Gate</text>
+  <text x="450" y="825" text-anchor="middle" class="module-text" font-size="11">gate = softmax(MLP(mean([s,m,l]))) → Σ(w × scale_out)</text>
+
+  <line x1="450" y1="850" x2="450" y2="875" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Output Projection -->
+  <rect x="300" y="880" width="300" height="35" rx="8" fill="url(#coreGrad)"/>
+  <text x="450" y="902" text-anchor="middle" class="module-text">Output Projection</text>
+
+  <line x1="450" y1="915" x2="450" y2="940" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- 输出 -->
+  <text x="450" y="960" text-anchor="middle" class="module-text-dark">Output: [B, T, C]</text>
+
+  <!-- 图例 -->
+  <rect x="730" y="90" width="150" height="120" rx="8" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="805" y="110" text-anchor="middle" class="detail-text" font-weight="bold">Scale Ranges</text>
+  <rect x="740" y="122" width="16" height="12" rx="3" fill="url(#shortGrad)"/>
+  <text x="765" y="132" class="detail-text">Short: 2-20</text>
+  <rect x="740" y="142" width="16" height="12" rx="3" fill="url(#mediumGrad)"/>
+  <text x="765" y="152" class="detail-text">Medium: 20-60</text>
+  <rect x="740" y="162" width="16" height="12" rx="3" fill="url(#longGrad)"/>
+  <text x="765" y="172" class="detail-text">Long: 60-200</text>
+  <rect x="740" y="182" width="16" height="12" rx="3" fill="url(#fusionGrad)"/>
+  <text x="765" y="192" class="detail-text">Adaptive Gate</text>
+</svg>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 1000" width="850" height="1000">
+  <defs>
+    <style>
+      .title { font: bold 24px Arial, sans-serif; fill: #1a1a2e; }
+      .subtitle { font: 14px Arial, sans-serif; fill: #666; }
+      .module-text { font: bold 14px Arial, sans-serif; fill: white; }
+      .module-text-dark { font: bold 14px Arial, sans-serif; fill: #333; }
+      .detail-text { font: 12px Arial, sans-serif; fill: #555; }
+      .innovation-label { font: bold 12px Arial, sans-serif; fill: #D84315; }
+      .matrix-text { font: 11px monospace; fill: #333; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <linearGradient id="inputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50" />
+      <stop offset="100%" style="stop-color:#388E3C" />
+    </linearGradient>
+    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3" />
+      <stop offset="100%" style="stop-color:#1565C0" />
+    </linearGradient>
+    <linearGradient id="innovationGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9800" />
+      <stop offset="100%" style="stop-color:#F57C00" />
+    </linearGradient>
+    <linearGradient id="tpaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#673AB7" />
+      <stop offset="100%" style="stop-color:#512DA8" />
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9C27B0" />
+      <stop offset="100%" style="stop-color:#7B1FA2" />
+    </linearGradient>
+    <linearGradient id="normGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#78909C" />
+      <stop offset="100%" style="stop-color:#546E7A" />
+    </linearGradient>
+    <linearGradient id="fusionGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BCD4" />
+      <stop offset="100%" style="stop-color:#0097A7" />
+    </linearGradient>
+  </defs>
+
+  <rect width="850" height="1000" fill="#fafafa"/>
+
+  <!-- 标题 -->
+  <text x="425" y="40" text-anchor="middle" class="title">TPATimesNet</text>
+  <text x="425" y="65" text-anchor="middle" class="subtitle">Three-Phase Attention Mechanism | ~5M params</text>
+
+  <!-- 输入层 -->
+  <rect x="275" y="90" width="300" height="50" rx="8" fill="url(#inputGrad)"/>
+  <text x="425" y="115" text-anchor="middle" class="module-text">Input: [B, T, 16]</text>
+  <text x="425" y="132" text-anchor="middle" class="module-text" font-size="10">Va, Vb, Vc (idx 0,1,2) + other features</text>
+
+  <line x1="425" y1="140" x2="425" y2="165" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Instance Norm -->
+  <rect x="275" y="170" width="300" height="35" rx="8" fill="url(#normGrad)"/>
+  <text x="425" y="192" text-anchor="middle" class="module-text">Instance Normalization</text>
+
+  <line x1="425" y1="205" x2="425" y2="230" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Data Embedding -->
+  <rect x="275" y="235" width="300" height="35" rx="8" fill="url(#coreGrad)"/>
+  <text x="425" y="257" text-anchor="middle" class="module-text">Data Embedding</text>
+
+  <line x1="425" y1="270" x2="425" y2="295" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- PhaseAwareTimesBlock 主框 -->
+  <rect x="80" y="300" width="690" height="530" rx="12" fill="none" stroke="#673AB7" stroke-width="3" stroke-dasharray="8,4"/>
+  <text x="100" y="325" class="subtitle" fill="#673AB7">PhaseAwareTimesBlock × e_layers</text>
+
+  <!-- FFT Period Discovery -->
+  <rect x="250" y="340" width="350" height="45" rx="8" fill="url(#innovationGrad)"/>
+  <text x="425" y="367" text-anchor="middle" class="module-text">FFT Period Discovery (Standard)</text>
+
+  <line x1="425" y1="385" x2="425" y2="410" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Multi-Period 2D Conv -->
+  <rect x="250" y="415" width="350" height="45" rx="8" fill="url(#coreGrad)"/>
+  <text x="425" y="442" text-anchor="middle" class="module-text">Multi-Period 2D Convolution</text>
+
+  <!-- 分支点 -->
+  <line x1="425" y1="460" x2="425" y2="485" stroke="#666" stroke-width="2"/>
+  <line x1="425" y1="485" x2="250" y2="485" stroke="#666" stroke-width="2"/>
+  <line x1="425" y1="485" x2="600" y2="485" stroke="#666" stroke-width="2"/>
+  <line x1="250" y1="485" x2="250" y2="510" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="485" x2="600" y2="510" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Conv Output -->
+  <rect x="150" y="515" width="200" height="40" rx="6" fill="url(#coreGrad)"/>
+  <text x="250" y="540" text-anchor="middle" class="module-text">Conv Output</text>
+
+  <!-- ★ Three-Phase Attention -->
+  <rect x="400" y="515" width="340" height="185" rx="8" fill="#EDE7F6" stroke="#673AB7" stroke-width="2"/>
+  <text x="420" y="538" class="innovation-label">★ Three-Phase Attention</text>
+
+  <!-- Q, K, V -->
+  <rect x="420" y="550" width="70" height="30" rx="4" fill="url(#tpaGrad)"/>
+  <text x="455" y="570" text-anchor="middle" class="module-text" font-size="11">Q</text>
+
+  <rect x="500" y="550" width="70" height="30" rx="4" fill="url(#tpaGrad)"/>
+  <text x="535" y="570" text-anchor="middle" class="module-text" font-size="11">K</text>
+
+  <rect x="580" y="550" width="70" height="30" rx="4" fill="url(#tpaGrad)"/>
+  <text x="615" y="570" text-anchor="middle" class="module-text" font-size="11">V</text>
+
+  <!-- Attention Score -->
+  <rect x="420" y="590" width="150" height="35" rx="4" fill="url(#tpaGrad)"/>
+  <text x="495" y="612" text-anchor="middle" class="module-text" font-size="10">Q×K^T / √d</text>
+
+  <!-- Phase Bias -->
+  <rect x="580" y="590" width="140" height="100" rx="4" fill="#FFF3E0" stroke="#FF9800" stroke-width="1"/>
+  <text x="650" y="608" text-anchor="middle" class="detail-text" font-weight="bold">Phase Bias</text>
+  <text x="650" y="625" text-anchor="middle" class="matrix-text">Va  Vb  Vc</text>
+  <text x="610" y="642" class="matrix-text">Va</text>
+  <text x="650" y="642" text-anchor="middle" class="matrix-text">1.0 0.5 0.5</text>
+  <text x="610" y="658" class="matrix-text">Vb</text>
+  <text x="650" y="658" text-anchor="middle" class="matrix-text">0.5 1.0 0.5</text>
+  <text x="610" y="674" class="matrix-text">Vc</text>
+  <text x="650" y="674" text-anchor="middle" class="matrix-text">0.5 0.5 1.0</text>
+  <text x="650" y="688" text-anchor="middle" class="detail-text" fill="#888">Learnable</text>
+
+  <!-- Add bias -->
+  <text x="575" y="610" text-anchor="middle" class="module-text-dark">+</text>
+
+  <!-- Softmax + Output -->
+  <rect x="420" y="635" width="150" height="55" rx="4" fill="url(#tpaGrad)"/>
+  <text x="495" y="658" text-anchor="middle" class="module-text" font-size="11">Softmax</text>
+  <text x="495" y="678" text-anchor="middle" class="module-text" font-size="11">× V → Attn Out</text>
+
+  <!-- 融合连接 -->
+  <line x1="250" y1="555" x2="250" y2="720" stroke="#666" stroke-width="2"/>
+  <line x1="495" y1="690" x2="495" y2="720" stroke="#666" stroke-width="2"/>
+  <line x1="250" y1="720" x2="495" y2="720" stroke="#666" stroke-width="2"/>
+  <line x1="372" y1="720" x2="372" y2="745" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ★ Fusion Gate -->
+  <rect x="200" y="750" width="450" height="50" rx="8" fill="url(#fusionGrad)"/>
+  <text x="425" y="775" text-anchor="middle" class="module-text">★ Fusion Gate</text>
+  <text x="425" y="793" text-anchor="middle" class="module-text" font-size="10">gate = σ(W·[conv; attn]) → gate×conv + (1-gate)×attn</text>
+
+  <line x1="425" y1="800" x2="425" y2="825" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Residual -->
+  <rect x="325" y="830" width="200" height="30" rx="6" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+  <text x="425" y="850" text-anchor="middle" class="module-text-dark">Residual</text>
+
+  <line x1="425" y1="865" x2="425" y2="890" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Output Projection -->
+  <rect x="275" y="895" width="300" height="40" rx="8" fill="url(#coreGrad)"/>
+  <text x="425" y="920" text-anchor="middle" class="module-text">Output Projection</text>
+
+  <line x1="425" y1="935" x2="425" y2="960" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- 输出 -->
+  <rect x="275" y="965" width="300" height="30" rx="8" fill="url(#outputGrad)"/>
+  <text x="425" y="985" text-anchor="middle" class="module-text">Output: [B, T, 16]</text>
+
+  <!-- 图例 -->
+  <rect x="670" y="90" width="160" height="130" rx="8" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="750" y="110" text-anchor="middle" class="detail-text" font-weight="bold">TPA Innovations</text>
+  <rect x="680" y="122" width="16" height="12" rx="3" fill="url(#tpaGrad)"/>
+  <text x="705" y="132" class="detail-text">3-Phase Attn</text>
+  <rect x="680" y="142" width="16" height="12" rx="3" fill="#FFF3E0" stroke="#FF9800"/>
+  <text x="705" y="152" class="detail-text">Phase Bias</text>
+  <rect x="680" y="162" width="16" height="12" rx="3" fill="url(#fusionGrad)"/>
+  <text x="705" y="172" class="detail-text">Fusion Gate</text>
+  <rect x="680" y="182" width="16" height="12" rx="3" fill="url(#coreGrad)"/>
+  <text x="705" y="192" class="detail-text">Conv Branch</text>
+  <text x="750" y="212" text-anchor="middle" class="detail-text" fill="#888">For Va,Vb,Vc</text>
+</svg>
