@@ -80,6 +80,17 @@ class ExperimentConfig:
         
         # Moving average for decomposition
         self.moving_avg = 25
+        
+        # Additional required parameters
+        self.pred_len = 0  # 0 for anomaly detection (output length = seq_len)
+        self.lradj = "type1"  # Learning rate adjustment type
+        self.label_len = 48  # Label length
+        self.output_attention = False
+        self.n_heads = 8
+        self.factor = 1
+        self.activation = "gelu"
+        self.e_layers = 2
+        self.d_layers = 1
 
 
 def create_args_from_config(config, model_name, model_id=None):
@@ -195,11 +206,18 @@ class SupplementaryExperiments:
             test_labels.append(batch_y.numpy())
         test_features = np.concatenate(test_features, axis=0)
         test_labels = np.concatenate(test_labels, axis=0)
+        
+        # Flatten features: (n_windows, seq_len, features) -> (n_windows, seq_len * features)
         test_features = test_features.reshape(test_features.shape[0], -1)
-        test_labels = test_labels.reshape(-1)
+        
+        # For labels: take max across window (if any point is anomaly, window is anomaly)
+        # test_labels shape: (n_windows, seq_len, 1) or (n_windows, seq_len)
+        if len(test_labels.shape) == 3:
+            test_labels = test_labels.squeeze(-1)  # (n_windows, seq_len)
+        test_labels_window = np.max(test_labels, axis=1)  # (n_windows,)
         
         # Convert multi-class labels to binary
-        test_labels_binary = (test_labels > 0).astype(int)
+        test_labels_binary = (test_labels_window > 0).astype(int)
         
         # Fit and predict
         contamination = self.config.anomaly_ratio / 100.0
@@ -235,8 +253,10 @@ class SupplementaryExperiments:
         predictions = model.predict(test_features)
         predictions = (predictions == -1).astype(int)  # Convert to 0/1
         
-        # Apply point adjustment
-        gt, pred = adjustment(test_labels_binary, predictions)
+        # For window-level evaluation (no point adjustment needed for sklearn models)
+        # Point adjustment is for reconstruction-based methods with per-point predictions
+        gt = test_labels_binary
+        pred = predictions
         
         # Calculate metrics
         accuracy = accuracy_score(gt, pred)

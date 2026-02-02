@@ -430,3 +430,27 @@ test_PatchTST_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_test_0
 Accuracy: 0.8418, Precision: 0.1599, Recall: 0.0123, F1-score: 0.0229
 
 
+LSTMAutoEncoder_RuralVoltage_seed42_20260202_213135  
+Accuracy: 0.7905, Precision: 0.3654, Recall: 0.5712, F1-score: 0.4457
+
+
+DLinear_RuralVoltage_seed42_20260202_213135  
+Accuracy: 0.8733, Precision: 0.5382, Recall: 0.9899, F1-score: 0.6973
+
+
+LSTMAutoEncoder_RuralVoltage_seed42_20260202_213405  
+Accuracy: 0.7905, Precision: 0.3654, Recall: 0.5712, F1-score: 0.4457
+
+
+DLinear_RuralVoltage_seed42_20260202_213405  
+Accuracy: 0.8733, Precision: 0.5382, Recall: 0.9899, F1-score: 0.6973
+
+
+LSTMAutoEncoder_RuralVoltage_seed42_20260202_213827  
+Accuracy: 0.7905, Precision: 0.3654, Recall: 0.5712, F1-score: 0.4457
+
+
+DLinear_RuralVoltage_seed42_20260202_213827  
+Accuracy: 0.8733, Precision: 0.5382, Recall: 0.9899, F1-score: 0.6973
+
+
