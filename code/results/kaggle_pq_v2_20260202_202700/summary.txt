@@ -1,1 +1,5 @@
 TimesNet: Accuracy: 0.8870, Precision: 0.9767, Recall: 0.2541, F1-score: 0.4033
+VoltageTimesNet: Accuracy: 0.8875, Precision: 0.9843, Recall: 0.2554, F1-score: 0.4055
+VoltageTimesNet_v2: Accuracy: 0.8842, Precision: 0.9448, Recall: 0.2435, F1-score: 0.3872
+DLinear: Accuracy: 0.8381, Precision: 0.0669, Recall: 0.0060, F1-score: 0.0109
+PatchTST: Accuracy: 0.8418, Precision: 0.1599, Recall: 0.0123, F1-score: 0.0229
