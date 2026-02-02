@@ -1,0 +1,1 @@
+TimesNet: Accuracy: 0.8870, Precision: 0.9767, Recall: 0.2541, F1-score: 0.4033

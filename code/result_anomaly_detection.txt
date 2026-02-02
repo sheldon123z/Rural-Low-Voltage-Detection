@@ -406,3 +406,11 @@ test_PatchTST_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_full_kaggle
 Accuracy: 0.2701, Precision: 0.9969, Recall: 0.2221, F1-score: 0.3633
 
 
+test_TimesNet_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.8854, Precision: 0.9614, Recall: 0.2474, F1-score: 0.3936
+
+
+test_TimesNet_KagglePQ_anomaly_detection_ftM_sl64_dm64_nh8_el2_df128_test_0  
+Accuracy: 0.8870, Precision: 0.9767, Recall: 0.2541, F1-score: 0.4033
+
+
