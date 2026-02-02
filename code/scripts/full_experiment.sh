@@ -1,7 +1,7 @@
 #!/bin/bash
 # Full Experiment Script for Thesis
-# Runs comprehensive model comparison on RuralVoltage and Kaggle datasets
-# Date: 2026-02-01
+# Runs comprehensive model comparison on RuralVoltage dataset
+# Date: 2026-02-02
 
 set -e
 cd /home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code
@@ -61,50 +61,11 @@ echo "RuralVoltage experiments completed!"
 echo "Results saved to: $RESULT_DIR/rural_results.txt"
 
 # ============================================
-# Part 2: Kaggle Power Quality Dataset (128 features)
+# Part 2: Threshold Sensitivity Analysis
 # ============================================
 echo ""
 echo "=============================================="
-echo "Part 2: Kaggle Power Quality Dataset Experiments"
-echo "=============================================="
-
-KAGGLE_ARGS="--data KagglePQ \
-    --root_path ./dataset/Kaggle_PowerQuality_2/ \
-    --enc_in 128 --c_out 128 \
-    --seq_len 64 \
-    --d_model 64 \
-    --d_ff 128 \
-    --e_layers 2 \
-    --top_k 5 \
-    --train_epochs $EPOCHS \
-    --batch_size 32 \
-    --patience $PATIENCE \
-    --learning_rate $LR \
-    --num_workers 0"
-
-# Models to test on Kaggle
-KAGGLE_MODELS=("TimesNet" "VoltageTimesNet" "VoltageTimesNet_v2" "DLinear" "PatchTST")
-
-for model in "${KAGGLE_MODELS[@]}"; do
-    echo ""
-    echo ">>> Training $model on KagglePQ..."
-    python -u run.py --is_training 1 --model $model $KAGGLE_ARGS --des full_kaggle 2>&1 | tee logs/full_${model}_kaggle.log
-
-    # Extract results
-    grep -E "(Accuracy|Precision|Recall|F1-score)" logs/full_${model}_kaggle.log | tail -1 >> $RESULT_DIR/kaggle_results.txt
-    echo "$model: $(grep -E 'F1-score' logs/full_${model}_kaggle.log | tail -1)" >> $RESULT_DIR/kaggle_summary.txt
-done
-
-echo ""
-echo "Kaggle experiments completed!"
-echo "Results saved to: $RESULT_DIR/kaggle_results.txt"
-
-# ============================================
-# Part 3: Threshold Sensitivity Analysis
-# ============================================
-echo ""
-echo "=============================================="
-echo "Part 3: Threshold Sensitivity Analysis"
+echo "Part 2: Threshold Sensitivity Analysis"
 echo "=============================================="
 
 echo "VoltageTimesNet_v2 Threshold Analysis on RuralVoltage:" > $RESULT_DIR/threshold_analysis.txt
@@ -126,9 +87,6 @@ echo "Results directory: $RESULT_DIR"
 echo ""
 echo "=== RuralVoltage Results ==="
 cat $RESULT_DIR/rural_summary.txt
-echo ""
-echo "=== Kaggle Results ==="
-cat $RESULT_DIR/kaggle_summary.txt
 echo ""
 echo "=== Threshold Analysis ==="
 cat $RESULT_DIR/threshold_analysis.txt

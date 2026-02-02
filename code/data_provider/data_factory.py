@@ -6,7 +6,6 @@ Standalone version - independent from main TSLib
 from torch.utils.data import DataLoader
 
 from data_provider.data_loader import (
-    KagglePQSegLoader,
     MSLSegLoader,
     PSMSegLoader,
     RuralVoltageSegLoader,
@@ -23,7 +22,6 @@ data_dict = {
     "SMD": SMDSegLoader,
     "SWAT": SWATSegLoader,
     "RuralVoltage": RuralVoltageSegLoader,
-    "KagglePQ": KagglePQSegLoader,  # Kaggle Power Quality Dataset
 }
 
 
