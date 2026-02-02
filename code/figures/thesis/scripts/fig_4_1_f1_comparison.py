@@ -3,21 +3,27 @@
 图4-1: 多模型F1分数对比柱状图
 Fig 4-1: F1-score Comparison of Multiple Models
 
-输出文件: fig_4_1_f1_comparison.pdf, fig_4_1_f1_comparison.png
+输出文件: ../chapter4_experiments/fig_4_1_f1_comparison.png
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 import matplotlib.patches as mpatches
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei', 'Noto Serif CJK JP', 'Times New Roman', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 色盲友好调色板 (Okabe-Ito)
 COLORS_TIMESNET = ['#0072B2', '#56B4E9', '#009E73', '#CC79A7']
@@ -55,8 +61,8 @@ def main():
                     fontsize=9, fontweight='bold')
 
     # 设置坐标轴
-    ax.set_xlabel('模型 (Model)', fontsize=11)
-    ax.set_ylabel('F1分数 (F1-score)', fontsize=11)
+    ax.set_xlabel('模型', fontsize=10.5)
+    ax.set_ylabel('F1分数', fontsize=10.5)
     ax.set_xticks(x)
     ax.set_xticklabels(model_labels, rotation=15, ha='right', fontsize=10)
     ax.set_ylim(0, 1.0)
@@ -69,9 +75,9 @@ def main():
     # 添加图例说明颜色含义
     legend_elements = [
         mpatches.Patch(facecolor=COLORS_TIMESNET[0], edgecolor='black',
-                       label='TimesNet系列 (TimesNet Family)'),
+                       label='TimesNet系列'),
         mpatches.Patch(facecolor=COLORS_OTHER[0], edgecolor='black',
-                       label='其他模型 (Other Models)')
+                       label='其他模型')
     ]
     ax.legend(handles=legend_elements, loc='upper right', fontsize=9, framealpha=0.9)
 
@@ -81,12 +87,11 @@ def main():
 
     plt.tight_layout()
 
-    # 保存
-    plt.savefig('fig_4_1_f1_comparison.pdf', dpi=600, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    plt.savefig('fig_4_1_f1_comparison.png', dpi=300, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    print("已生成: fig_4_1_f1_comparison.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_1_f1_comparison.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_1_f1_comparison.png")
     plt.close()
 
 

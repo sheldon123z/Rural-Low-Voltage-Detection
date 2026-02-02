@@ -3,7 +3,7 @@
 图4-11: Alpha参数消融实验
 Fig 4-11: Alpha Parameter Ablation Study
 
-输出文件: fig_4_11_alpha_ablation.pdf, fig_4_11_alpha_ablation.png
+输出文件: ../chapter4_experiments/fig_4_11_alpha_ablation.png
 """
 
 import matplotlib.pyplot as plt
@@ -13,23 +13,18 @@ import os
 import warnings
 warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
-# 论文格式配置
-try:
-    matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei', 'SimHei', 'DejaVu Sans']
-except:
-    matplotlib.rcParams['font.family'] = ['DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
-
-# 使用中文字体路径
-zh_font_path = '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'
-if os.path.exists(zh_font_path):
-    from matplotlib import font_manager
-    font_manager.fontManager.addfont(zh_font_path)
-    matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei']
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # Alpha参数消融实验数据
 alpha_values = [0.5, 0.6, 0.7, 0.8, 0.9]
@@ -58,8 +53,8 @@ def main():
                 xytext=(best_alpha+0.08, best_f1+0.002),
                 fontsize=9, color='#d62728')
 
-    ax.set_xlabel('融合权重 α (FFT权重)', fontsize=11)
-    ax.set_ylabel('F1分数 (F1-score)', fontsize=11)
+    ax.set_xlabel('融合权重 α (FFT权重)', fontsize=10.5)
+    ax.set_ylabel('F1分数', fontsize=10.5)
     ax.set_xlim(0.45, 0.95)
     ax.set_ylim(0.968, 0.974)
     ax.set_xticks(alpha_values)
@@ -75,10 +70,11 @@ def main():
 
     plt.tight_layout()
 
-    # 保存
-    plt.savefig('fig_4_11_alpha_ablation.pdf', dpi=600, bbox_inches='tight')
-    plt.savefig('fig_4_11_alpha_ablation.png', dpi=300, bbox_inches='tight')
-    print("已生成: fig_4_11_alpha_ablation.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_11_alpha_ablation.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_11_alpha_ablation.png")
     plt.close()
 
 

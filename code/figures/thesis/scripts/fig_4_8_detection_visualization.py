@@ -7,7 +7,7 @@ Fig 4-8: Anomaly Detection Results Visualization
 - 三相电压波形 (Va, Vb, Vc)
 - 检测结果对比
 
-输出文件: fig_4_8_detection_visualization.pdf, fig_4_8_detection_visualization.png
+输出文件: ../chapter4_experiments/fig_4_8_detection_visualization.png
 """
 
 import matplotlib.pyplot as plt
@@ -15,18 +15,22 @@ import matplotlib
 import numpy as np
 import pandas as pd
 import warnings
+import os
 warnings.filterwarnings('ignore')
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = 'serif'
-matplotlib.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif']
-matplotlib.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
-matplotlib.rcParams['mathtext.fontset'] = 'stix'
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 
 def main():
@@ -93,9 +97,9 @@ def main():
             ends = np.append(ends, len(anomaly_mask))
 
         for s, e in zip(starts, ends):
-            ax.axvspan(s, e, alpha=0.3, color='red', label='Anomaly Region' if s == starts[0] and ax_idx == 0 else '')
+            ax.axvspan(s, e, alpha=0.3, color='red', label='异常区域' if s == starts[0] and ax_idx == 0 else '')
 
-        ax.set_ylabel(f'{label_text} (V)', fontsize=10)
+        ax.set_ylabel(f'{label_text} (V)', fontsize=10.5)
         ax.legend(loc='upper right', fontsize=9)
         ax.grid(True, alpha=0.3, linestyle='--')
         ax.spines['top'].set_visible(False)
@@ -104,8 +108,8 @@ def main():
     # 绘制检测结果对比
     ax = axes[3]
 
-    ax.fill_between(time, labels, alpha=0.5, color='red', label='Ground Truth', step='mid')
-    ax.step(time, pred + 0.02, where='mid', color='blue', linewidth=1.5, label='Prediction')
+    ax.fill_between(time, labels, alpha=0.5, color='red', label='真实标签', step='mid')
+    ax.step(time, pred + 0.02, where='mid', color='blue', linewidth=1.5, label='预测结果')
 
     # 标记TP, FP, FN
     tp_mask = (labels == 1) & (pred == 1)
@@ -125,17 +129,17 @@ def main():
         fn_indices = fn_indices[::len(fn_indices)//5]
 
     ax.scatter(tp_indices, np.ones_like(tp_indices) * 1.3, marker='v', c='green',
-               s=40, label='TP (Correct)', zorder=5)
+               s=40, label='TP (正确检测)', zorder=5)
     ax.scatter(fp_indices_plot, np.ones_like(fp_indices_plot) * 1.3, marker='x', c='orange',
-               s=40, label='FP (False Alarm)', zorder=5)
+               s=40, label='FP (误报)', zorder=5)
     ax.scatter(fn_indices, np.ones_like(fn_indices) * 1.3, marker='o', c='red',
-               s=40, label='FN (Missed)', zorder=5, facecolors='none', linewidths=1.5)
+               s=40, label='FN (漏检)', zorder=5, facecolors='none', linewidths=1.5)
 
-    ax.set_xlabel('Time Step', fontsize=11)
-    ax.set_ylabel('Label', fontsize=10)
+    ax.set_xlabel('时间步', fontsize=10.5)
+    ax.set_ylabel('标签', fontsize=10.5)
     ax.set_ylim(-0.2, 1.6)
     ax.set_yticks([0, 1])
-    ax.set_yticklabels(['Normal', 'Anomaly'])
+    ax.set_yticklabels(['正常', '异常'])
     ax.legend(loc='upper right', fontsize=8, ncol=2)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -144,7 +148,7 @@ def main():
     # 标注异常类型
     if len(starts) > 0 and len(ends) > 0:
         anomaly_type = anomaly_names[starts[0]+1] if starts[0]+1 < len(anomaly_names) else 'Unknown'
-        axes[0].annotate(f'Anomaly: {anomaly_type}',
+        axes[0].annotate(f'异常类型: {anomaly_type}',
                         xy=((starts[0]+ends[0])/2, np.max(va[starts[0]:ends[0]])),
                         xytext=((starts[0]+ends[0])/2, np.max(va)*1.02),
                         fontsize=10, ha='center', fontweight='bold', color='red')
@@ -152,10 +156,11 @@ def main():
     plt.tight_layout()
     plt.subplots_adjust(top=0.96)
 
-    # 保存
-    plt.savefig('fig_4_8_detection_visualization.pdf', dpi=600, bbox_inches='tight')
-    plt.savefig('fig_4_8_detection_visualization.png', dpi=300, bbox_inches='tight')
-    print("已生成: fig_4_8_detection_visualization.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_8_detection_visualization.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_8_detection_visualization.png")
     plt.close()
 
 

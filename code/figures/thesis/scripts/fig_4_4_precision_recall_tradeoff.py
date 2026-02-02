@@ -3,20 +3,26 @@
 图4-4: 精确率-召回率权衡散点图
 Fig 4-4: Precision-Recall Trade-off Analysis
 
-输出文件: fig_4_4_precision_recall_tradeoff.pdf, fig_4_4_precision_recall_tradeoff.png
+输出文件: ../chapter4_experiments/fig_4_4_precision_recall_tradeoff.png
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei', 'Noto Serif CJK JP', 'Times New Roman', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 色盲友好调色板
 COLORS_TIMESNET = ['#0072B2', '#56B4E9', '#009E73', '#CC79A7']
@@ -86,8 +92,8 @@ def main():
                     fontsize=9, fontweight='bold',
                     arrowprops=dict(arrowstyle='-', color='gray', alpha=0.5, lw=0.5))
 
-    ax.set_xlabel('召回率 (Recall)', fontsize=11)
-    ax.set_ylabel('精确率 (Precision)', fontsize=11)
+    ax.set_xlabel('召回率', fontsize=10.5)
+    ax.set_ylabel('精确率', fontsize=10.5)
     ax.set_xlim([0.5, 1.05])
     ax.set_ylim([0.7, 0.85])
 
@@ -97,17 +103,16 @@ def main():
 
     legend = ax.legend(loc='upper right', fontsize=9, framealpha=0.95)
 
-    ax.text(0.98, 0.72, '虚线为F1等值线\n(Dashed lines: F1 iso-curves)',
+    ax.text(0.98, 0.72, '虚线为F1等值线',
             fontsize=8, color='gray', ha='right', style='italic')
 
     plt.tight_layout()
 
-    # 保存
-    plt.savefig('fig_4_4_precision_recall_tradeoff.pdf', dpi=600, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    plt.savefig('fig_4_4_precision_recall_tradeoff.png', dpi=300, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    print("已生成: fig_4_4_precision_recall_tradeoff.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_4_precision_recall_tradeoff.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_4_precision_recall_tradeoff.png")
     plt.close()
 
 

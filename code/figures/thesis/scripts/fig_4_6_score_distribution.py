@@ -3,23 +3,27 @@
 图4-6: 异常得分分布直方图
 Fig 4-6: Anomaly Score Distribution and Classification Regions
 
-输出文件: fig_4_6_score_distribution.pdf, fig_4_6_score_distribution.png
+输出文件: ../chapter4_experiments/fig_4_6_score_distribution.png
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = 'serif'
-matplotlib.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif']
-matplotlib.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
-matplotlib.rcParams['mathtext.fontset'] = 'stix'
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 色盲友好配色
 COLORS = {
@@ -58,13 +62,13 @@ def main():
     bins = np.linspace(0, 0.7, 50)
 
     ax.hist(normal_scores, bins=bins, alpha=0.7, color=COLORS['normal'],
-            label='Normal Samples', edgecolor='white', linewidth=0.5)
+            label='正常样本', edgecolor='white', linewidth=0.5)
     ax.hist(anomaly_scores, bins=bins, alpha=0.7, color=COLORS['anomaly'],
-            label='Anomaly Samples', edgecolor='white', linewidth=0.5)
+            label='异常样本', edgecolor='white', linewidth=0.5)
 
     # 阈值线
     ax.axvline(x=threshold, color=COLORS['threshold'], linestyle='--',
-               linewidth=2, label=f'Threshold ({threshold:.3f})')
+               linewidth=2, label=f'阈值 ({threshold:.3f})')
 
     # 标注区域
     ymax = ax.get_ylim()[1]
@@ -82,8 +86,8 @@ def main():
 
     ax.text(0.5, ymax*0.65, 'TP', fontsize=12, ha='center', fontweight='bold', color='darkblue')
 
-    ax.set_xlabel('Reconstruction Error Score', fontsize=11)
-    ax.set_ylabel('Sample Count', fontsize=11)
+    ax.set_xlabel('重构误差', fontsize=10.5)
+    ax.set_ylabel('样本数量', fontsize=10.5)
     ax.set_xlim(0, 0.7)
     ax.set_ylim(0, ymax)
 
@@ -94,10 +98,11 @@ def main():
 
     plt.tight_layout()
 
-    # 保存
-    plt.savefig('fig_4_6_score_distribution.pdf', dpi=600, bbox_inches='tight')
-    plt.savefig('fig_4_6_score_distribution.png', dpi=300, bbox_inches='tight')
-    print("已生成: fig_4_6_score_distribution.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_6_score_distribution.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_6_score_distribution.png")
     plt.close()
 
 

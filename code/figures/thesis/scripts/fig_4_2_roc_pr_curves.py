@@ -7,20 +7,26 @@ Fig 4-2: ROC and PR Curves Comparison of Multiple Models
 - (a) ROC曲线对比
 - (b) PR曲线对比
 
-输出文件: fig_4_2_roc_pr_curves.pdf, fig_4_2_roc_pr_curves.png
+输出文件: ../chapter4_experiments/fig_4_2_roc_pr_curves.png
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei', 'Noto Serif CJK JP', 'Times New Roman', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 色盲友好调色板
 COLORS_TIMESNET = ['#0072B2', '#56B4E9', '#009E73', '#CC79A7']
@@ -73,9 +79,9 @@ def main():
                  linewidth=2, label=f'{model_labels[i]} (AUC={auc:.3f})',
                  marker=markers[i], markevery=20, markersize=5)
 
-    ax1.plot([0, 1], [0, 1], 'k--', alpha=0.5, linewidth=1, label='Random')
-    ax1.set_xlabel('假阳性率 (False Positive Rate)', fontsize=10)
-    ax1.set_ylabel('真阳性率 (True Positive Rate)', fontsize=10)
+    ax1.plot([0, 1], [0, 1], 'k--', alpha=0.5, linewidth=1, label='随机分类器')
+    ax1.set_xlabel('假阳性率 (FPR)', fontsize=10.5)
+    ax1.set_ylabel('真阳性率 (TPR)', fontsize=10.5)
     ax1.text(0.02, 0.98, '(a)', transform=ax1.transAxes, fontsize=11, fontweight='bold', va='top')
     ax1.legend(loc='lower right', fontsize=8, framealpha=0.9)
     ax1.set_xlim([0, 1])
@@ -92,8 +98,8 @@ def main():
                  label=f'{model_labels[i]} (AP={ap:.3f})',
                  marker=markers[i], markevery=20, markersize=5)
 
-    ax2.set_xlabel('召回率 (Recall)', fontsize=10)
-    ax2.set_ylabel('精确率 (Precision)', fontsize=10)
+    ax2.set_xlabel('召回率', fontsize=10.5)
+    ax2.set_ylabel('精确率', fontsize=10.5)
     ax2.text(0.02, 0.98, '(b)', transform=ax2.transAxes, fontsize=11, fontweight='bold', va='top')
     ax2.legend(loc='lower left', fontsize=8, framealpha=0.9)
     ax2.set_xlim([0, 1])
@@ -104,12 +110,11 @@ def main():
 
     plt.tight_layout()
 
-    # 保存
-    plt.savefig('fig_4_2_roc_pr_curves.pdf', dpi=600, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    plt.savefig('fig_4_2_roc_pr_curves.png', dpi=300, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    print("已生成: fig_4_2_roc_pr_curves.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_2_roc_pr_curves.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_2_roc_pr_curves.png")
     plt.close()
 
 

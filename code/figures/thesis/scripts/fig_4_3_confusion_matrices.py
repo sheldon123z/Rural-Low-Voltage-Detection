@@ -5,20 +5,26 @@ Fig 4-3: Confusion Matrix Comparison of Multiple Models
 
 包含6个子图，分别展示6个模型的混淆矩阵
 
-输出文件: fig_4_3_confusion_matrices.pdf, fig_4_3_confusion_matrices.png
+输出文件: ../chapter4_experiments/fig_4_3_confusion_matrices.png
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei', 'Noto Serif CJK JP', 'Times New Roman', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 实验数据
 models = ['TimesNet', 'VoltageTimesNet', 'VoltageTimesNet_v2',
@@ -69,10 +75,10 @@ def main():
 
         ax.set_xticks([0, 1])
         ax.set_yticks([0, 1])
-        ax.set_xticklabels(['正常\n(Normal)', '异常\n(Anomaly)'], fontsize=9)
-        ax.set_yticklabels(['正常\n(Normal)', '异常\n(Anomaly)'], fontsize=9)
-        ax.set_xlabel('预测标签 (Predicted)', fontsize=9)
-        ax.set_ylabel('真实标签 (Actual)', fontsize=9)
+        ax.set_xticklabels(['正常', '异常'], fontsize=9)
+        ax.set_yticklabels(['正常', '异常'], fontsize=9)
+        ax.set_xlabel('预测标签', fontsize=9)
+        ax.set_ylabel('真实标签', fontsize=9)
 
         # 子图标签
         ax.text(0.02, 1.08, f'({chr(97+idx)}) {model_labels[idx]}',
@@ -81,16 +87,15 @@ def main():
     # 添加统一颜色条
     cbar_ax = fig.add_axes([0.92, 0.15, 0.02, 0.7])
     cbar = fig.colorbar(im, cax=cbar_ax)
-    cbar.set_label('归一化比例 (Normalized Ratio)', fontsize=9)
+    cbar.set_label('归一化比例', fontsize=9)
 
     plt.tight_layout(rect=[0, 0, 0.9, 1])
 
-    # 保存
-    plt.savefig('fig_4_3_confusion_matrices.pdf', dpi=600, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    plt.savefig('fig_4_3_confusion_matrices.png', dpi=300, bbox_inches='tight',
-                facecolor='white', edgecolor='none')
-    print("已生成: fig_4_3_confusion_matrices.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_3_confusion_matrices.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_3_confusion_matrices.png")
     plt.close()
 
 

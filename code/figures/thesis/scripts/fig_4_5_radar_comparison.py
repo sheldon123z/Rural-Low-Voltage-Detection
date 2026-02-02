@@ -3,23 +3,27 @@
 图4-5: TimesNet系列模型演进对比雷达图
 Fig 4-5: TimesNet Series Model Comparison Radar Chart
 
-输出文件: fig_4_5_radar_comparison.pdf, fig_4_5_radar_comparison.png
+输出文件: ../chapter4_experiments/fig_4_5_radar_comparison.png
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = 'serif'
-matplotlib.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif']
-matplotlib.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
-matplotlib.rcParams['mathtext.fontset'] = 'stix'
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 色盲友好配色
 COLORS = {
@@ -31,10 +35,10 @@ COLORS = {
 
 # 实验数据
 RESULTS = {
-    'TimesNet': {'Accuracy': 0.9102, 'Precision': 0.7606, 'Recall': 0.5705, 'F1': 0.6520},
-    'VoltageTimesNet': {'Accuracy': 0.9094, 'Precision': 0.7541, 'Recall': 0.5726, 'F1': 0.6509},
-    'VoltageTimesNet_v2': {'Accuracy': 0.9119, 'Precision': 0.7614, 'Recall': 0.5858, 'F1': 0.6622},
-    'TPATimesNet': {'Accuracy': 0.9090, 'Precision': 0.7524, 'Recall': 0.5710, 'F1': 0.6493},
+    'TimesNet': {'准确率': 0.9102, '精确率': 0.7606, '召回率': 0.5705, 'F1分数': 0.6520},
+    'VoltageTimesNet': {'准确率': 0.9094, '精确率': 0.7541, '召回率': 0.5726, 'F1分数': 0.6509},
+    'VoltageTimesNet_v2': {'准确率': 0.9119, '精确率': 0.7614, '召回率': 0.5858, 'F1分数': 0.6622},
+    'TPATimesNet': {'准确率': 0.9090, '精确率': 0.7524, '召回率': 0.5710, 'F1分数': 0.6493},
 }
 
 
@@ -42,7 +46,7 @@ def main():
     """主函数"""
     fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(projection='polar'))
 
-    metrics = ['Accuracy', 'Precision', 'Recall', 'F1']
+    metrics = ['准确率', '精确率', '召回率', 'F1分数']
     num_vars = len(metrics)
 
     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
@@ -53,7 +57,7 @@ def main():
     ax.set_yticklabels(['0.6', '0.7', '0.8', '0.9', '1.0'], fontsize=9)
 
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(metrics, fontsize=11, fontweight='bold')
+    ax.set_xticklabels(metrics, fontsize=10.5, fontweight='bold')
 
     models = ['TimesNet', 'VoltageTimesNet', 'VoltageTimesNet_v2', 'TPATimesNet']
     linestyles = ['-', '--', '-', '-.']
@@ -73,10 +77,11 @@ def main():
 
     plt.tight_layout()
 
-    # 保存
-    plt.savefig('fig_4_5_radar_comparison.pdf', dpi=600, bbox_inches='tight')
-    plt.savefig('fig_4_5_radar_comparison.png', dpi=300, bbox_inches='tight')
-    print("已生成: fig_4_5_radar_comparison.pdf/png")
+    # 保存到 chapter4_experiments 目录
+    output_dir = '../chapter4_experiments'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_4_5_radar_comparison.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_4_5_radar_comparison.png")
     plt.close()
 
 

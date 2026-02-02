@@ -8,7 +8,7 @@ Fig 3-1: Sliding Window Prediction Schematic
 - (b) 模型处理流程
 - (c) 重构误差与异常检测
 
-输出文件: fig_3_1_sliding_window.pdf, fig_3_1_sliding_window.png
+输出文件: ../chapter3_method/fig_3_1_sliding_window.png
 """
 
 import numpy as np
@@ -16,15 +16,21 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch
 import matplotlib
+import os
 
-# 论文格式配置
-matplotlib.rcParams['font.family'] = ['WenQuanYi Micro Hei', 'Noto Sans CJK JP', 'Times New Roman', 'DejaVu Sans']
-matplotlib.rcParams['font.size'] = 10.5
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams['axes.linewidth'] = 0.8
-matplotlib.rcParams['xtick.major.width'] = 0.8
-matplotlib.rcParams['ytick.major.width'] = 0.8
-matplotlib.rcParams['mathtext.fontset'] = 'stix'
+# ============================================================
+# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# ============================================================
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['xtick.major.width'] = 0.8
+plt.rcParams['ytick.major.width'] = 0.8
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
 
 # 配色方案（colorblind-friendly）
 COLORS = {
@@ -124,8 +130,8 @@ def main():
 
     ax1.set_xlim(0, 480)
     ax1.set_ylim(188, 240)
-    ax1.set_xlabel('时间步', fontsize=10)
-    ax1.set_ylabel('电压 (V)', fontsize=10)
+    ax1.set_xlabel('时间步', fontsize=10.5)
+    ax1.set_ylabel('电压 (V)', fontsize=10.5)
     ax1.text(-0.02, 1.05, '(a)', transform=ax1.transAxes, fontsize=11, fontweight='bold')
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
@@ -215,17 +221,18 @@ def main():
 
     ax3.set_xlim(0, 480)
     ax3.set_ylim(0, 16)
-    ax3.set_xlabel('时间步', fontsize=10)
-    ax3.set_ylabel('重构误差', fontsize=10)
+    ax3.set_xlabel('时间步', fontsize=10.5)
+    ax3.set_ylabel('重构误差', fontsize=10.5)
     ax3.text(-0.02, 1.05, '(c)', transform=ax3.transAxes, fontsize=11, fontweight='bold')
     ax3.spines['top'].set_visible(False)
     ax3.spines['right'].set_visible(False)
     ax3.legend(loc='upper right', frameon=False, fontsize=9, ncol=1)
 
-    # 保存
-    plt.savefig('fig_3_1_sliding_window.pdf', dpi=600, bbox_inches='tight')
-    plt.savefig('fig_3_1_sliding_window.png', dpi=300, bbox_inches='tight')
-    print("已生成: fig_3_1_sliding_window.pdf/png")
+    # 保存到 chapter3_method 目录
+    output_dir = '../chapter3_method'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'{output_dir}/fig_3_1_sliding_window.png', dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"已生成: {output_dir}/fig_3_1_sliding_window.png")
     plt.close()
 
 
