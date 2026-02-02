@@ -267,23 +267,6 @@ xelatex bjfuthesis-main.tex
 - **说明**: 统一的深度时序模型开发框架，支持 40+ 种 SOTA 模型
 - **任务**: 长期预测、短期预测、插补、分类、异常检测
 
-## 引用
-
-如果本项目对您的研究有帮助，请考虑引用：
-
-```bibtex
-@thesis{rural_voltage_detection,
-  title={基于深度学习的农村低压配电网电压异常检测研究},
-  author={郑晓东},
-  school={北京林业大学},
-  year={2025}
-}
-```
-
-## 许可证
-
-本项目仅供学术研究使用。
-
 ## 详细文档
 
 - **项目指南**: [CLAUDE.md](CLAUDE.md) - Claude Code 使用指南（含 Scientific Writer 配置）

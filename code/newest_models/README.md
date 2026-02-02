@@ -1,5 +1,4 @@
 ---
-license: mit
 language:
   - zh
   - en
@@ -104,11 +103,3 @@ model.load_state_dict(checkpoint)
 
 - `sl100`: seq_len=100（输入序列长度）
 - `dm64`: d_model=64（隐藏维度）
-
-## 引用
-
-如果使用本模型，请引用相关论文。
-
-## License
-
-MIT License
