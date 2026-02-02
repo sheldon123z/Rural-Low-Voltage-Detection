@@ -454,3 +454,11 @@ DLinear_RuralVoltage_seed42_20260202_213827
 Accuracy: 0.8733, Precision: 0.5382, Recall: 0.9899, F1-score: 0.6973
 
 
+LSTMAutoEncoder_RuralVoltage_seed42_20260202_215345  
+Accuracy: 0.7905, Precision: 0.3654, Recall: 0.5712, F1-score: 0.4457
+
+
+DLinear_RuralVoltage_seed42_20260202_215345  
+Accuracy: 0.8651, Precision: 0.5224, Recall: 0.9955, F1-score: 0.6852
+
+

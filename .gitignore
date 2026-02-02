@@ -51,8 +51,6 @@ data/processed/
 .DS_Store
 Thumbs.db
 
-# Thesis 独立仓库
-thesis/
 
 # Keep newest_models folder structure but ignore .pth files
 newest_models/**/*.pth

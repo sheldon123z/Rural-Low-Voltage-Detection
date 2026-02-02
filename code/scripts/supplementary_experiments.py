@@ -59,7 +59,7 @@ class ExperimentConfig:
         self.freq = "h"
         
         # Training settings
-        self.train_epochs = 10
+        self.train_epochs = 5  # Reduced for faster experiments
         self.batch_size = 128
         self.patience = 3
         self.learning_rate = 0.0001
