@@ -326,7 +326,7 @@ class SupplementaryExperiments:
         for seed in range(42, 42 + n_runs):
             self.log(f"\n--- Run {seed - 41}/{n_runs} (seed={seed}) ---")
             for model in models:
-                metrics = self.run_single_experiment(model, seed=seed, epochs=5)
+                metrics = self.run_single_experiment(model, seed=seed, epochs=3)
                 if metrics:
                     all_results[model].append(metrics["f1"])
         
