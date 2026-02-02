@@ -47,12 +47,6 @@ pipeline_tag: time-series-forecasting
 │   ├── iTransformer_sl100_dm64/
 │   ├── Transformer_sl100_dm64/
 │   └── HybridTimesNet_sl100_dm64/
-├── KagglePQ/              # Kaggle 电力质量数据集
-│   ├── TimesNet_sl64_dm64/
-│   ├── VoltageTimesNet_sl64_dm64/
-│   ├── VoltageTimesNet_v2_sl64_dm64/
-│   ├── DLinear_sl64_dm64/
-│   └── PatchTST_sl64_dm64/
 ├── MSL/                   # MSL 数据集
 │   └── TimesNet_sl100_dm64/
 ├── SMAP/                  # SMAP 数据集

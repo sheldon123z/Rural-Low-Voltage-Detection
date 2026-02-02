@@ -8,7 +8,7 @@
 - **5 种 TimesNet 变体**专门针对电压异常检测优化
 - **完全独立**：不依赖外部项目，可作为独立模块使用
 - **即插即用**：简洁的命令行接口和配置系统
-- **多数据集支持**：PSM、MSL、SMAP、SMD、SWAT、RuralVoltage、KagglePQ 等
+- **多数据集支持**：PSM、MSL、SMAP、SMD、SWAT、RuralVoltage 等
 
 ## 🚀 快速开始
 
@@ -72,7 +72,7 @@ python run.py --is_training 1 \
 ### 任务相关
 - `--task_name`: 任务类型，固定为 `anomaly_detection`
 - `--model`: 模型名称（见上表）
-- `--data`: 数据集名称 (PSM, MSL, SMAP, SMD, SWAT, RuralVoltage, KagglePQ)
+- `--data`: 数据集名称 (PSM, MSL, SMAP, SMD, SWAT, RuralVoltage)
 
 ### 数据集说明
 
@@ -80,9 +80,9 @@ python run.py --is_training 1 \
 |--------|:------:|-------:|-------:|------|
 | **PSM** | 25 | 132,481 | 87,841 | 服务器监控 |
 | **RuralVoltage** | 16 | 50,000 | 10,000 | 农村电网电压 |
-| **KagglePQ** | 128 | 2,400 | 9,598 | 电力质量波形 |
 | **MSL** | 55 | 58,317 | 73,729 | 航天器遥测 |
 | **SMAP** | 25 | 135,183 | 427,617 | 航天器遥测 |
+| **SMD** | 38 | 708,405 | 708,420 | 服务器集群 |
 
 ### 数据相关
 - `--root_path`: 数据集根目录
