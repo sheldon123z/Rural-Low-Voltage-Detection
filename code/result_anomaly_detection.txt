@@ -486,3 +486,47 @@ VoltageTimesNet_v2_RuralVoltage_seed43_20260202_221222
 Accuracy: 0.8702, Precision: 0.5411, Recall: 0.7879, F1-score: 0.6416
 
 
+VoltageTimesNet_v2_RuralVoltage_seed42_20260202_232207  
+Accuracy: 0.8629, Precision: 0.5251, Recall: 0.7372, F1-score: 0.6133
+
+
+optuna_trial0_20260202_232227  
+Accuracy: 0.8569, Precision: 0.5109, Recall: 0.7003, F1-score: 0.5908
+
+
+TimesNet_RuralVoltage_seed42_20260202_232207  
+Accuracy: 0.8572, Precision: 0.5114, Recall: 0.7028, F1-score: 0.5920
+
+
+DLinear_RuralVoltage_seed42_20260202_232207  
+Accuracy: 0.8584, Precision: 0.5101, Recall: 1.0000, F1-score: 0.6756
+
+
+optuna_trial1_20260202_232227  
+Accuracy: 0.8614, Precision: 0.5215, Recall: 0.7288, F1-score: 0.6080
+
+
+VoltageTimesNet_v2_RuralVoltage_seed43_20260202_232207  
+Accuracy: 0.8708, Precision: 0.5424, Recall: 0.7912, F1-score: 0.6436
+
+
+optuna_trial2_20260202_232227  
+Accuracy: 0.8604, Precision: 0.5191, Recall: 0.7254, F1-score: 0.6052
+
+
+TimesNet_RuralVoltage_seed43_20260202_232207  
+Accuracy: 0.8570, Precision: 0.5109, Recall: 0.7051, F1-score: 0.5925
+
+
+DLinear_RuralVoltage_seed43_20260202_232207  
+Accuracy: 0.8640, Precision: 0.5202, Recall: 0.9986, F1-score: 0.6841
+
+
+TimesNet_RuralVoltage_seed44_20260202_232207  
+Accuracy: 0.8656, Precision: 0.5311, Recall: 0.7555, F1-score: 0.6237
+
+
+DLinear_RuralVoltage_seed44_20260202_232207  
+Accuracy: 0.8590, Precision: 0.5112, Recall: 0.9998, F1-score: 0.6765
+
+
