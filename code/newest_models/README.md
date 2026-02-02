@@ -23,6 +23,11 @@ pipeline_tag: time-series-forecasting
 
 农村低压配电网电压异常检测实验模型检查点。
 
+## 🔗 相关链接
+
+- **数据集**: [Sheldon123z/rural-voltage-datasets](https://huggingface.co/datasets/Sheldon123z/rural-voltage-datasets)
+- **代码仓库**: [GitHub - Rural-Low-Voltage-Detection](https://github.com/sheldon123z/Rural-Low-Voltage-Detection)
+
 ## 目录结构
 
 ```
