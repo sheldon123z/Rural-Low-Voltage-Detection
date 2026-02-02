@@ -32,18 +32,18 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
-# 配色方案（colorblind-friendly）
+# 柔和科研配色
 COLORS = {
-    'signal': '#0072B2',
-    'window': '#E69F00',
-    'window_fill': '#E69F00',
-    'recon_error': '#009E73',
-    'threshold': '#D55E00',
-    'anomaly': '#CC79A7',
-    'model_box': '#56B4E9',
-    'arrow': '#333333',
-    'input_box': '#E8F4F8',
-    'output_box': '#F4E8E8',
+    'signal': '#4878A8',       # 柔和蓝
+    'window': '#D4A84C',       # 柔和黄
+    'window_fill': '#D4A84C',  # 柔和黄
+    'recon_error': '#72A86D',  # 柔和绿
+    'threshold': '#C4785C',    # 柔和橙
+    'anomaly': '#9B7BB8',      # 柔和紫
+    'model_box': '#5B9BD5',    # 浅蓝
+    'arrow': '#505050',        # 深灰
+    'input_box': '#E8F0F5',    # 淡蓝灰
+    'output_box': '#F5EDE8',   # 淡粉灰
 }
 
 
@@ -131,7 +131,7 @@ def main():
     ax1.set_xlim(0, 480)
     ax1.set_ylim(188, 240)
     ax1.set_xlabel('时间步', fontsize=10.5)
-    ax1.set_ylabel('电压 (V)', fontsize=10.5)
+    ax1.set_ylabel('电压/V', fontsize=10.5)
     ax1.text(-0.02, 1.05, '(a)', transform=ax1.transAxes, fontsize=11, fontweight='bold')
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)

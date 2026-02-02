@@ -24,9 +24,9 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
-# 色盲友好调色板
-COLORS_TIMESNET = ['#0072B2', '#56B4E9', '#009E73', '#CC79A7']
-COLORS_OTHER = ['#999999', '#666666']
+# 柔和科研配色
+COLORS_TIMESNET = ['#4878A8', '#5B9BD5', '#72A86D', '#9B7BB8']  # 柔和蓝系
+COLORS_OTHER = ['#808080', '#606060']  # 灰色系
 
 # 实验数据
 model_labels = ['TimesNet', 'V-TimesNet', 'V-TimesNet_v2',

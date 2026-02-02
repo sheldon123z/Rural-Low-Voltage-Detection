@@ -38,12 +38,11 @@ def main():
     """主函数"""
     fig, ax = plt.subplots(figsize=(6, 4.5))
 
-    # TimesNet系列
-    ax.plot(timesnet_seq_lens, timesnet_f1_scores, 'o-', color='#1f77b4',
+    # 柔和科研配色
+    ax.plot(timesnet_seq_lens, timesnet_f1_scores, 'o-', color='#4878A8',
             linewidth=1.5, markersize=6, label='TimesNet')
 
-    # VoltageTimesNet系列
-    ax.plot(voltage_seq_lens, voltage_f1_scores, 's-', color='#d62728',
+    ax.plot(voltage_seq_lens, voltage_f1_scores, 's-', color='#72A86D',
             linewidth=1.5, markersize=6, label='VoltageTimesNet')
 
     # 标注最优点
@@ -51,17 +50,17 @@ def main():
     ax.annotate(f'最优: {timesnet_f1_scores[best_timesnet_idx]:.4f}',
                 xy=(timesnet_seq_lens[best_timesnet_idx], timesnet_f1_scores[best_timesnet_idx]),
                 xytext=(timesnet_seq_lens[best_timesnet_idx]-80, timesnet_f1_scores[best_timesnet_idx]+0.02),
-                fontsize=9, color='#1f77b4',
-                arrowprops=dict(arrowstyle='->', color='#1f77b4', lw=0.8))
+                fontsize=9, color='#4878A8',
+                arrowprops=dict(arrowstyle='->', color='#4878A8', lw=0.8))
 
     best_voltage_idx = np.argmax(voltage_f1_scores)
     ax.annotate(f'最优: {voltage_f1_scores[best_voltage_idx]:.4f}',
                 xy=(voltage_seq_lens[best_voltage_idx], voltage_f1_scores[best_voltage_idx]),
                 xytext=(voltage_seq_lens[best_voltage_idx]-150, voltage_f1_scores[best_voltage_idx]-0.03),
-                fontsize=9, color='#d62728',
-                arrowprops=dict(arrowstyle='->', color='#d62728', lw=0.8))
+                fontsize=9, color='#72A86D',
+                arrowprops=dict(arrowstyle='->', color='#72A86D', lw=0.8))
 
-    ax.set_xlabel('序列长度 (时间步)', fontsize=10.5)
+    ax.set_xlabel('序列长度/步', fontsize=10.5)
     ax.set_ylabel('F1分数', fontsize=10.5)
     ax.set_xlim(0, 800)
     ax.set_ylim(0.74, 0.90)

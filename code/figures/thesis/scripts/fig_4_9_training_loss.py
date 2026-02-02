@@ -46,16 +46,17 @@ def main():
     """主函数"""
     fig, ax = plt.subplots(figsize=(6, 4.5))
 
-    ax.plot(epochs, timesnet_train_loss, 'o-', color='#1f77b4',
+    # 柔和科研配色
+    ax.plot(epochs, timesnet_train_loss, 'o-', color='#4878A8',
             linewidth=1.5, markersize=4, label='TimesNet')
-    ax.plot(epochs, voltage_timesnet_train_loss, 's-', color='#d62728',
+    ax.plot(epochs, voltage_timesnet_train_loss, 's-', color='#72A86D',
             linewidth=1.5, markersize=4, label='VoltageTimesNet')
-    ax.plot(epochs, dlinear_train_loss, '^-', color='#2ca02c',
+    ax.plot(epochs, dlinear_train_loss, '^-', color='#808080',
             linewidth=1.5, markersize=4, label='DLinear')
-    ax.plot(epochs, tpatimesnet_train_loss, 'd-', color='#9467bd',
+    ax.plot(epochs, tpatimesnet_train_loss, 'd-', color='#9B7BB8',
             linewidth=1.5, markersize=4, label='TPATimesNet')
 
-    ax.set_xlabel('训练轮次 (Epoch)', fontsize=10.5)
+    ax.set_xlabel('训练轮次/Epoch', fontsize=10.5)
     ax.set_ylabel('训练损失', fontsize=10.5)
     ax.set_xlim(0.5, 10.5)
     ax.set_ylim(0, 0.30)

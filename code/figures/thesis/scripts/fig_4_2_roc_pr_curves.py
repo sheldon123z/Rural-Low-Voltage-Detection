@@ -28,9 +28,9 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
-# 色盲友好调色板
-COLORS_TIMESNET = ['#0072B2', '#56B4E9', '#009E73', '#CC79A7']
-COLORS_OTHER = ['#999999', '#666666']
+# 柔和科研配色
+COLORS_TIMESNET = ['#4878A8', '#5B9BD5', '#72A86D', '#9B7BB8']  # 柔和蓝系
+COLORS_OTHER = ['#808080', '#606060']  # 灰色系
 
 # 实验数据
 models = ['TimesNet', 'VoltageTimesNet', 'VoltageTimesNet_v2',
@@ -80,8 +80,8 @@ def main():
                  marker=markers[i], markevery=20, markersize=5)
 
     ax1.plot([0, 1], [0, 1], 'k--', alpha=0.5, linewidth=1, label='随机分类器')
-    ax1.set_xlabel('假阳性率 (FPR)', fontsize=10.5)
-    ax1.set_ylabel('真阳性率 (TPR)', fontsize=10.5)
+    ax1.set_xlabel('假阳性率/FPR', fontsize=10.5)
+    ax1.set_ylabel('真阳性率/TPR', fontsize=10.5)
     ax1.text(0.02, 0.98, '(a)', transform=ax1.transAxes, fontsize=11, fontweight='bold', va='top')
     ax1.legend(loc='lower right', fontsize=8, framealpha=0.9)
     ax1.set_xlim([0, 1])

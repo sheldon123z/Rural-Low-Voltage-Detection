@@ -36,24 +36,25 @@ def main():
     """主函数"""
     fig, ax = plt.subplots(figsize=(6, 4.5))
 
-    ax.plot(alpha_values, alpha_f1_scores, 'o-', color='#d62728',
+    # 柔和科研配色
+    ax.plot(alpha_values, alpha_f1_scores, 'o-', color='#72A86D',
             linewidth=1.5, markersize=6, label='VoltageTimesNet')
 
-    ax.axhline(y=baseline_f1, color='#1f77b4', linestyle='--',
+    ax.axhline(y=baseline_f1, color='#4878A8', linestyle='--',
                linewidth=1.5, label=f'TimesNet基线 ({baseline_f1:.4f})')
 
     # 标注最优alpha
     best_idx = np.argmax(alpha_f1_scores)
     best_alpha = alpha_values[best_idx]
     best_f1 = alpha_f1_scores[best_idx]
-    ax.scatter([best_alpha], [best_f1], s=100, color='#d62728',
+    ax.scatter([best_alpha], [best_f1], s=100, color='#72A86D',
                marker='*', zorder=5, edgecolors='black', linewidths=0.5)
     ax.annotate(f'最优: α={best_alpha}, F1={best_f1:.4f}',
                 xy=(best_alpha, best_f1),
                 xytext=(best_alpha+0.08, best_f1+0.002),
-                fontsize=9, color='#d62728')
+                fontsize=9, color='#72A86D')
 
-    ax.set_xlabel('融合权重 α (FFT权重)', fontsize=10.5)
+    ax.set_xlabel('融合权重 α', fontsize=10.5)
     ax.set_ylabel('F1分数', fontsize=10.5)
     ax.set_xlim(0.45, 0.95)
     ax.set_ylim(0.968, 0.974)

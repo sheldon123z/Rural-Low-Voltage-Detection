@@ -71,10 +71,10 @@ def main():
     fig, axes = plt.subplots(4, 1, figsize=(10, 8), sharex=True,
                              gridspec_kw={'height_ratios': [3, 3, 3, 1.5]})
 
-    # 颜色定义
-    color_va = '#0072B2'
-    color_vb = '#009E73'
-    color_vc = '#D55E00'
+    # 柔和科研配色
+    color_va = '#4878A8'  # 柔和蓝
+    color_vb = '#72A86D'  # 柔和绿
+    color_vc = '#C4785C'  # 柔和橙
 
     # 找到异常区域
     anomaly_mask = labels == 1
@@ -99,7 +99,7 @@ def main():
         for s, e in zip(starts, ends):
             ax.axvspan(s, e, alpha=0.3, color='red', label='异常区域' if s == starts[0] and ax_idx == 0 else '')
 
-        ax.set_ylabel(f'{label_text} (V)', fontsize=10.5)
+        ax.set_ylabel(f'{label_text}/V', fontsize=10.5)
         ax.legend(loc='upper right', fontsize=9)
         ax.grid(True, alpha=0.3, linestyle='--')
         ax.spines['top'].set_visible(False)

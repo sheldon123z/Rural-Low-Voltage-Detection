@@ -131,23 +131,69 @@ python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparis
 
 | 图号 | 文件名 | 说明 |
 |:----:|--------|------|
-| Fig 3-1 | fig_sliding_window.pdf | 滑动窗口预测示意图 |
-| Fig 4-1 | fig_4_1_f1_comparison.pdf | 多模型 F1 分数对比 |
-| Fig 4-2 | fig_4_2_roc_pr_curves.pdf | ROC/PR 曲线对比 |
-| Fig 4-3 | fig_4_3_confusion_matrices.pdf | 混淆矩阵 |
-| Fig 4-4 | fig_4_4_precision_recall_tradeoff.pdf | 精确率-召回率权衡 |
-| Fig 4-5 | fig_4_5_radar_comparison.pdf | 雷达图多维对比 |
-| Fig 4-6 | fig_4_6_score_distribution.pdf | 异常分数分布 |
-| Fig 4-7 | fig_4_7_threshold_sensitivity.pdf | 阈值敏感性分析 |
-| Fig 4-8 | fig_4_8_detection_visualization.pdf | 检测结果可视化 |
-| Fig 4-9 | fig_4_9_training_loss.pdf | 训练损失曲线 |
-| Fig 4-10 | fig_4_10_seq_len_ablation.pdf | 序列长度消融实验 |
-| Fig 4-11 | fig_4_11_alpha_ablation.pdf | alpha 参数消融实验 |
+| Fig 3-1 | fig_3_1_sliding_window.png | 滑动窗口预测示意图 |
+| Fig 4-1 | fig_4_1_f1_comparison.png | 多模型 F1 分数对比 |
+| Fig 4-2 | fig_4_2_roc_pr_curves.png | ROC/PR 曲线对比 |
+| Fig 4-3 | fig_4_3_confusion_matrices.png | 混淆矩阵 |
+| Fig 4-4 | fig_4_4_precision_recall_tradeoff.png | 精确率-召回率权衡 |
+| Fig 4-5 | fig_4_5_radar_comparison.png | 雷达图多维对比 |
+| Fig 4-6 | fig_4_6_score_distribution.png | 异常分数分布 |
+| Fig 4-7 | fig_4_7_threshold_sensitivity.png | 阈值敏感性分析 |
+| Fig 4-8 | fig_4_8_detection_visualization.png | 检测结果可视化 |
+| Fig 4-9 | fig_4_9_training_loss.png | 训练损失曲线 |
+| Fig 4-10 | fig_4_10_seq_len_ablation.png | 序列长度消融实验 |
+| Fig 4-11 | fig_4_11_alpha_ablation.png | alpha 参数消融实验 |
 
 重新生成图表：
 ```bash
-cd code/figures/thesis
-python archived/plot_model_comparison.py  # 模型对比图
-python archived/plot_training_ablation.py  # 训练消融图
-python archived/plot_timesnet_analysis.py  # TimesNet 分析图
+cd code/figures/thesis/scripts
+for f in fig_*.py; do python "$f"; done
+```
+
+### 论文绘图规范
+
+所有论文图表必须遵循以下规范：
+
+| 项目 | 规范 |
+|------|------|
+| **格式** | 仅 PNG，300 DPI |
+| **中文字体** | 五号宋体 (10.5pt SimSun/Noto Serif CJK) |
+| **英文字体** | 五号 Times New Roman (10.5pt) |
+| **坐标轴单位** | 使用 "/" 分隔，如 `时间步/s`、`电压/V` |
+| **标题** | 无（论文中使用图注） |
+| **子图** | 禁止（一个图一个文件） |
+| **配色** | 朴素科研风格，柔和色调 |
+| **表格** | 三线表，表头宋体加粗 |
+
+**推荐配色方案**（柔和科研色）：
+```python
+THESIS_COLORS = {
+    'primary': '#4878A8',    # 柔和蓝
+    'secondary': '#72A86D',  # 柔和绿
+    'accent': '#C4785C',     # 柔和橙
+    'warning': '#D4A84C',    # 柔和黄
+    'neutral': '#808080',    # 中性灰
+    'light_gray': '#B0B0B0', # 浅灰
+}
+```
+
+**Matplotlib 配置模板**：
+```python
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# 字体配置
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+plt.rcParams['font.size'] = 10.5
+plt.rcParams['axes.unicode_minus'] = False
+
+# 图表样式
+plt.rcParams['figure.dpi'] = 300
+plt.rcParams['savefig.dpi'] = 300
+plt.rcParams['axes.spines.top'] = False
+plt.rcParams['axes.spines.right'] = False
+
+# 保存为 PNG
+fig.savefig('figure.png', dpi=300, bbox_inches='tight',
+            facecolor='white', edgecolor='none')
 ```

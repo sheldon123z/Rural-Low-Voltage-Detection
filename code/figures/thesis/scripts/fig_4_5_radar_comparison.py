@@ -25,12 +25,12 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
-# 色盲友好配色
+# 柔和科研配色
 COLORS = {
-    'TimesNet': '#0072B2',
-    'VoltageTimesNet': '#009E73',
-    'VoltageTimesNet_v2': '#D55E00',
-    'TPATimesNet': '#CC79A7',
+    'TimesNet': '#4878A8',         # 柔和蓝
+    'VoltageTimesNet': '#5B9BD5',  # 浅蓝
+    'VoltageTimesNet_v2': '#72A86D',  # 柔和绿
+    'TPATimesNet': '#9B7BB8',      # 柔和紫
 }
 
 # 实验数据

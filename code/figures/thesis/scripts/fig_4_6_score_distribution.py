@@ -25,11 +25,11 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
-# 色盲友好配色
+# 柔和科研配色
 COLORS = {
-    'normal': '#009E73',
-    'anomaly': '#D55E00',
-    'threshold': '#000000',
+    'normal': '#72A86D',     # 柔和绿
+    'anomaly': '#C4785C',    # 柔和橙红
+    'threshold': '#505050',  # 深灰
 }
 
 

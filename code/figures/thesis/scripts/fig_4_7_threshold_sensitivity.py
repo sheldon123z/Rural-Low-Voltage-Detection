@@ -25,11 +25,11 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
-# 色盲友好配色
+# 柔和科研配色
 COLORS = {
-    'precision': '#0072B2',
-    'recall': '#009E73',
-    'f1': '#D55E00',
+    'precision': '#4878A8',  # 柔和蓝
+    'recall': '#72A86D',     # 柔和绿
+    'f1': '#C4785C',         # 柔和橙
 }
 
 # 阈值敏感性数据
@@ -76,7 +76,7 @@ def main():
     ax2.set_xticklabels(THRESHOLD_DATA['percentile'], fontsize=9)
     ax2.set_xlabel('百分位阈值', fontsize=10.5, labelpad=8)
 
-    ax.set_xlabel('异常比例 (%)', fontsize=10.5)
+    ax.set_xlabel('异常比例/%', fontsize=10.5)
     ax.set_ylabel('性能指标', fontsize=10.5)
     ax.set_xlim(0.5, 5.5)
     ax.set_ylim(0.35, 0.95)
