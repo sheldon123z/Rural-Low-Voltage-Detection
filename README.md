@@ -2,13 +2,22 @@
 
 基于深度学习的农村低压配电网电压异常检测研究。本项目采用 TimesNet 及其变体模型，结合清华 Time-Series-Library 框架，实现对电压异常的精准检测。
 
+## 🔗 资源链接
+
+| 资源 | 链接 | 说明 |
+|------|------|------|
+| **🤗 模型检查点** | [Sheldon123z/rural-voltage-detection-models](https://huggingface.co/Sheldon123z/rural-voltage-detection-models) | 35 个预训练模型 (687MB) |
+| **🤗 数据集** | [Sheldon123z/rural-voltage-datasets](https://huggingface.co/datasets/Sheldon123z/rural-voltage-datasets) | RuralVoltage + PSM + KagglePQ (153MB) |
+| **📄 论文仓库** | [BJFU-thesis](https://github.com/sheldon123z/BJFU-thesis) | 北京林业大学毕业论文 |
+
 ## 项目亮点
 
 - **5 种 TimesNet 变体模型**：针对电力系统电压信号特点设计的创新模型
 - **15 种深度学习模型**：全面的模型对比基准，包括 Transformer、AutoEncoder、线性模型等
 - **完整实验框架**：基于清华 Time-Series-Library 构建，支持 5 大类时序分析任务
-- **农村电压数据集**：17 维特征，5 种异常类型（欠压、过压、电压骤降、谐波畸变、三相不平衡）
+- **农村电压数据集**：16 维特征，9 种异常类型（欠压、过压、电压暂降、谐波、三相不平衡、闪变、暂态、复合异常等）
 - **学术写作支持**：集成 Scientific Writer，支持论文撰写、文献检索、引用管理
+- **Hugging Face 集成**：模型和数据集已上传至 Hugging Face，方便下载和复现
 
 ## 项目结构
 
