@@ -1,5 +1,10 @@
 # Models module for Voltage Anomaly Detection
 from .Autoformer import Model as Autoformer
+
+# Classic baseline models for anomaly detection
+from .LSTMAutoEncoder import Model as LSTMAutoEncoder
+from .IsolationForest import Model as IsolationForest
+from .OneClassSVM import Model as OneClassSVM
 from .DLinear import Model as DLinear
 from .FiLM import Model as FiLM
 from .HybridTimesNet import Model as HybridTimesNet  # Hybrid Period Discovery TimesNet
@@ -27,6 +32,10 @@ __all__ = [
     "TimesNet",
     "Transformer",
     "DLinear",
+    # Classic baselines
+    "LSTMAutoEncoder",
+    "IsolationForest",
+    "OneClassSVM",
     "PatchTST",
     "iTransformer",
     "Autoformer",
@@ -55,6 +64,10 @@ model_dict = {
     "TimesNet": TimesNet,
     "Transformer": Transformer,
     "DLinear": DLinear,
+    # Classic baselines
+    "LSTMAutoEncoder": LSTMAutoEncoder,
+    "IsolationForest": IsolationForest,
+    "OneClassSVM": OneClassSVM,
     "PatchTST": PatchTST,
     "iTransformer": iTransformer,
     "Autoformer": Autoformer,
