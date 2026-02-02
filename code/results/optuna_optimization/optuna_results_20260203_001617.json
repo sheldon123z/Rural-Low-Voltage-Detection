@@ -1,0 +1,359 @@
+{
+  "best_f1": 0.0,
+  "best_params": {
+    "d_model": 64,
+    "e_layers": 2,
+    "d_ff": 512,
+    "top_k": 6,
+    "num_kernels": 8,
+    "lr": 0.001764971584817572,
+    "batch_size": 64,
+    "dropout": 0.09127267288786131,
+    "seq_len": 50,
+    "anomaly_ratio": 3.447411578889518
+  },
+  "n_trials": 20,
+  "timestamp": "20260203_001617",
+  "all_trials": [
+    {
+      "number": 0,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 2,
+        "d_ff": 512,
+        "top_k": 6,
+        "num_kernels": 8,
+        "lr": 0.001764971584817572,
+        "batch_size": 64,
+        "dropout": 0.09127267288786131,
+        "seq_len": 50,
+        "anomaly_ratio": 3.447411578889518
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 1,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 2,
+        "d_ff": 64,
+        "top_k": 3,
+        "num_kernels": 4,
+        "lr": 0.003639264345367793,
+        "batch_size": 64,
+        "dropout": 0.029301634201915158,
+        "seq_len": 50,
+        "anomaly_ratio": 2.9807076404450807
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 2,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 2,
+        "d_ff": 256,
+        "top_k": 7,
+        "num_kernels": 6,
+        "lr": 0.00041087915453240814,
+        "batch_size": 64,
+        "dropout": 0.01356818667316142,
+        "seq_len": 100,
+        "anomaly_ratio": 4.314950036607717
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 3,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 1,
+        "d_ff": 256,
+        "top_k": 3,
+        "num_kernels": 6,
+        "lr": 0.0009280438123997178,
+        "batch_size": 64,
+        "dropout": 0.03476071785753891,
+        "seq_len": 50,
+        "anomaly_ratio": 1.2542334011440945
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 4,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 2,
+        "d_ff": 64,
+        "top_k": 6,
+        "num_kernels": 6,
+        "lr": 0.0002575373524861559,
+        "batch_size": 64,
+        "dropout": 0.009428755706020276,
+        "seq_len": 50,
+        "anomaly_ratio": 4.6302658957043725
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 5,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 1,
+        "d_ff": 512,
+        "top_k": 7,
+        "num_kernels": 6,
+        "lr": 3.1882105359307654e-05,
+        "batch_size": 64,
+        "dropout": 0.26882738997704797,
+        "seq_len": 50,
+        "anomaly_ratio": 2.7084311545050253
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 6,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 2,
+        "d_ff": 64,
+        "top_k": 7,
+        "num_kernels": 8,
+        "lr": 9.581320979450773e-05,
+        "batch_size": 64,
+        "dropout": 0.14917455176771563,
+        "seq_len": 50,
+        "anomaly_ratio": 3.4382573359195874
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 7,
+      "value": 0.0,
+      "params": {
+        "d_model": 32,
+        "e_layers": 3,
+        "d_ff": 512,
+        "top_k": 4,
+        "num_kernels": 6,
+        "lr": 0.0009234940072815247,
+        "batch_size": 256,
+        "dropout": 0.16073240522242754,
+        "seq_len": 100,
+        "anomaly_ratio": 1.746074041599417
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 8,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 1,
+        "d_ff": 256,
+        "top_k": 6,
+        "num_kernels": 6,
+        "lr": 8.32775329517854e-05,
+        "batch_size": 128,
+        "dropout": 0.07738248831454668,
+        "seq_len": 100,
+        "anomaly_ratio": 3.118602313424026
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 9,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 3,
+        "d_ff": 512,
+        "top_k": 7,
+        "num_kernels": 4,
+        "lr": 1.6869073934881428e-05,
+        "batch_size": 128,
+        "dropout": 0.0027591154849888944,
+        "seq_len": 100,
+        "anomaly_ratio": 1.6432322056699946
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 10,
+      "value": 0.0,
+      "params": {
+        "d_model": 32,
+        "e_layers": 3,
+        "d_ff": 512,
+        "top_k": 7,
+        "num_kernels": 8,
+        "lr": 0.0010231765699499882,
+        "batch_size": 64,
+        "dropout": 0.055984345865289574,
+        "seq_len": 50,
+        "anomaly_ratio": 2.624572211292495
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 11,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 2,
+        "d_ff": 64,
+        "top_k": 3,
+        "num_kernels": 8,
+        "lr": 0.0032735971522819367,
+        "batch_size": 64,
+        "dropout": 0.06211357980489424,
+        "seq_len": 50,
+        "anomaly_ratio": 3.657222603486084
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 12,
+      "value": 0.0,
+      "params": {
+        "d_model": 128,
+        "e_layers": 2,
+        "d_ff": 64,
+        "top_k": 3,
+        "num_kernels": 4,
+        "lr": 0.002912664931857609,
+        "batch_size": 256,
+        "dropout": 0.01588922574563506,
+        "seq_len": 50,
+        "anomaly_ratio": 1.870334520507636
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 13,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 1,
+        "d_ff": 64,
+        "top_k": 5,
+        "num_kernels": 4,
+        "lr": 0.004400064779473851,
+        "batch_size": 64,
+        "dropout": 0.07660949850443893,
+        "seq_len": 50,
+        "anomaly_ratio": 2.1072132287212995
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 14,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 1,
+        "d_ff": 512,
+        "top_k": 6,
+        "num_kernels": 8,
+        "lr": 0.0012855148187994297,
+        "batch_size": 256,
+        "dropout": 0.128218979638137,
+        "seq_len": 100,
+        "anomaly_ratio": 3.2060244267226077
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 15,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 3,
+        "d_ff": 64,
+        "top_k": 3,
+        "num_kernels": 4,
+        "lr": 0.00033420752729917063,
+        "batch_size": 64,
+        "dropout": 0.00946957235398468,
+        "seq_len": 50,
+        "anomaly_ratio": 3.7214241531201804
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 16,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 2,
+        "d_ff": 512,
+        "top_k": 6,
+        "num_kernels": 8,
+        "lr": 0.0021644923628492403,
+        "batch_size": 64,
+        "dropout": 0.0573221191496036,
+        "seq_len": 50,
+        "anomaly_ratio": 3.651644073808769
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 17,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 2,
+        "d_ff": 512,
+        "top_k": 6,
+        "num_kernels": 8,
+        "lr": 0.0022680939888901843,
+        "batch_size": 128,
+        "dropout": 0.21701938498276613,
+        "seq_len": 200,
+        "anomaly_ratio": 4.601556176358148
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 18,
+      "value": 0.0,
+      "params": {
+        "d_model": 32,
+        "e_layers": 2,
+        "d_ff": 128,
+        "top_k": 4,
+        "num_kernels": 4,
+        "lr": 0.0023434026848432035,
+        "batch_size": 128,
+        "dropout": 0.004799640304704662,
+        "seq_len": 50,
+        "anomaly_ratio": 3.3561485414606556
+      },
+      "state": "TrialState.COMPLETE"
+    },
+    {
+      "number": 19,
+      "value": 0.0,
+      "params": {
+        "d_model": 64,
+        "e_layers": 2,
+        "d_ff": 512,
+        "top_k": 7,
+        "num_kernels": 8,
+        "lr": 0.0002192421868082292,
+        "batch_size": 128,
+        "dropout": 0.021178578601644127,
+        "seq_len": 200,
+        "anomaly_ratio": 2.1440832258621914
+      },
+      "state": "TrialState.COMPLETE"
+    }
+  ]
+}

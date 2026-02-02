@@ -530,3 +530,19 @@ DLinear_RuralVoltage_seed44_20260202_232207
 Accuracy: 0.8590, Precision: 0.5112, Recall: 0.9998, F1-score: 0.6765
 
 
+VoltageTimesNet_v2_RuralVoltage_trial0  
+Accuracy: 0.8907, Precision: 0.5753, Recall: 0.9759, F1-score: 0.7238
+
+
+VoltageTimesNet_v2_RuralVoltage_trial1  
+Accuracy: 0.9130, Precision: 0.6355, Recall: 0.9548, F1-score: 0.7631
+
+
+VoltageTimesNet_v2_RuralVoltage_trial2  
+Accuracy: 0.8503, Precision: 0.4962, Recall: 0.9825, F1-score: 0.6594
+
+
+test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl50_dm128_nh8_el2_df64_optuna_best_verified_0  
+Accuracy: 0.9131, Precision: 0.6343, Recall: 0.9631, F1-score: 0.7649
+
+
