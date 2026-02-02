@@ -1,3 +1,24 @@
+---
+license: mit
+language:
+  - zh
+  - en
+tags:
+  - time-series
+  - anomaly-detection
+  - voltage
+  - power-grid
+  - timesnet
+  - pytorch
+datasets:
+  - custom
+metrics:
+  - f1
+  - precision
+  - recall
+pipeline_tag: time-series-forecasting
+---
+
 # Rural Low-Voltage Detection Models
 
 农村低压配电网电压异常检测实验模型检查点。
@@ -5,7 +26,6 @@
 ## 目录结构
 
 ```
-newest_models/
 ├── RuralVoltage/          # 农村电压数据集（论文核心）
 │   ├── TimesNet_sl100_dm64/
 │   ├── VoltageTimesNet_sl100_dm64/
@@ -37,16 +57,7 @@ newest_models/
 │   └── TimesNet_sl100_dm64/
 └── ablation/              # 消融实验
     ├── seq_len/           # 序列长度消融
-    │   ├── TimesNet_sl50/
-    │   ├── TimesNet_sl100/
-    │   ├── TimesNet_sl200/
-    │   ├── TimesNet_sl500/
-    │   ├── VoltageTimesNet_sl100/
-    │   ├── VoltageTimesNet_sl360/
-    │   └── VoltageTimesNet_sl720/
     └── alpha/             # 预设权重消融
-        ├── TimesNet_baseline/
-        └── VoltageTimesNet_alpha{0.5-0.9}/
 ```
 
 ## 模型说明
@@ -60,12 +71,6 @@ newest_models/
 | **DLinear** | 轻量级基线 |
 | **PatchTST** | Patch 时序 Transformer |
 
-## 配置说明
-
-- `sl100`: seq_len=100（输入序列长度）
-- `dm64`: d_model=64（隐藏维度）
-- `dm32`: d_model=32（小模型）
-
 ## 论文最优结果
 
 | 数据集 | 模型 | F1 Score |
@@ -77,16 +82,28 @@ newest_models/
 
 ```python
 import torch
+from huggingface_hub import hf_hub_download
+
+# 下载模型
+checkpoint_path = hf_hub_download(
+    repo_id="Sheldon123z/rural-voltage-detection-models",
+    filename="RuralVoltage/VoltageTimesNet_v2_sl100_dm64/checkpoint.pth"
+)
 
 # 加载模型
-checkpoint = torch.load('RuralVoltage/VoltageTimesNet_v2_sl100_dm64/checkpoint.pth')
+checkpoint = torch.load(checkpoint_path)
 model.load_state_dict(checkpoint)
 ```
 
-## 训练日期
+## 配置说明
 
-- RuralVoltage: 2026-02-02
-- PSM: 2026-01-25
-- KagglePQ: 2026-02-02
-- 消融实验: 2026-01-28
+- `sl100`: seq_len=100（输入序列长度）
+- `dm64`: d_model=64（隐藏维度）
 
+## 引用
+
+如果使用本模型，请引用相关论文。
+
+## License
+
+MIT License
