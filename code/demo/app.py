@@ -20,6 +20,7 @@ from tabs.tab1_principle import create_principle_tab
 from tabs.tab2_innovation import create_innovation_tab
 from tabs.tab3_arena import create_arena_tab
 from tabs.tab4_detection import create_detection_tab
+from tabs.tab5_architecture import create_architecture_tab
 
 # 导入配置
 from config import GRADIO_THEME, THESIS_COLORS
@@ -53,6 +54,7 @@ def create_footer():
         | 原理演示 | FFT 周期发现 | 展示 TimesNet 核心算法原理 |
         | 创新对比 | 模型改进 | VoltageTimesNet 与 TimesNet 的差异对比 |
         | 模型竞技场 | 性能对比 | 6 个模型的多维度性能对比 |
+        | 模型结构 | 架构展示 | 6 个模型的网络结构图和详细说明 |
         | 自定义检测 | 实时推理 | 上传 CSV 进行异常检测 |
 
         **技术栈**: PyTorch + Gradio + Plotly
@@ -97,7 +99,10 @@ def create_app():
             # Tab 3: 模型竞技场
             create_arena_tab()
 
-            # Tab 4: 自定义检测
+            # Tab 4: 模型结构
+            create_architecture_tab()
+
+            # Tab 5: 自定义检测
             create_detection_tab()
 
         # 页面底部

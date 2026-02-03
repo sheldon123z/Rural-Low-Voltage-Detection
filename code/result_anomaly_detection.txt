@@ -566,3 +566,7 @@ VoltageTimesNet_v2_RuralVoltage_full_trial3
 Accuracy: 0.8641, Precision: 0.5195, Recall: 0.9782, F1-score: 0.6786
 
 
+VoltageTimesNet_v2_RuralVoltage_full_trial4  
+Accuracy: 0.8561, Precision: 0.5072, Recall: 0.8533, F1-score: 0.6362
+
+

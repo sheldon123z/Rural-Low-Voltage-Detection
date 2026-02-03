@@ -271,20 +271,27 @@ def create_hybrid_mechanism_diagram() -> go.Figure:
         x0, y0 = nodes[start]
         x1, y1 = nodes[end]
 
-        fig.add_annotation(
-            x=x1 - 0.03 * (1 if x1 > x0 else -1),
-            y=y1 - 0.03 * (1 if y1 > y0 else -1) if y1 != y0 else y1,
-            ax=x0 + 0.03 * (1 if x1 > x0 else -1),
-            ay=y0 + 0.03 * (1 if y1 > y0 else -1) if y1 != y0 else y0,
+        # 使用 shape 绘制箭头线条（兼容新版 Plotly）
+        fig.add_shape(
+            type="line",
+            x0=x0 + 0.05 * (1 if x1 > x0 else -1),
+            y0=y0 + 0.05 * (1 if y1 > y0 else -1) if y1 != y0 else y0,
+            x1=x1 - 0.05 * (1 if x1 > x0 else -1),
+            y1=y1 - 0.05 * (1 if y1 > y0 else -1) if y1 != y0 else y1,
             xref="paper",
             yref="paper",
-            axref="paper",
-            ayref="paper",
-            showarrow=True,
-            arrowhead=2,
-            arrowsize=1.5,
-            arrowwidth=2,
-            arrowcolor=THESIS_COLORS["neutral"],
+            line=dict(color=THESIS_COLORS["neutral"], width=2),
+        )
+
+        # 在终点添加箭头标记
+        fig.add_annotation(
+            x=x1 - 0.05 * (1 if x1 > x0 else -1),
+            y=y1 - 0.05 * (1 if y1 > y0 else -1) if y1 != y0 else y1,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            text="▶" if x1 > x0 else "◀",
+            font=dict(size=10, color=THESIS_COLORS["neutral"]),
         )
 
         if label:
@@ -632,14 +639,19 @@ def create_innovation_tab():
         3. **性能提升**: F1、召回率等关键指标的改进
         """)
 
+        # Gradio 6.x: choices 必须使用纯字符串，不支持 tuple 格式
+        # 创建显示名称到内部值的映射
+        innovation_choices = ["预设周期机制", "混合融合机制", "性能对比分析"]
+        innovation_mapping = {
+            "预设周期机制": "preset_period",
+            "混合融合机制": "hybrid_mechanism",
+            "性能对比分析": "performance",
+        }
+
         with gr.Row():
             innovation_selector = gr.Dropdown(
-                choices=[
-                    ("预设周期机制", "preset_period"),
-                    ("混合融合机制", "hybrid_mechanism"),
-                    ("性能对比分析", "performance"),
-                ],
-                value="preset_period",
+                choices=innovation_choices,
+                value="预设周期机制",
                 label="选择创新点",
                 info="选择要查看的创新点详情"
             )
@@ -649,7 +661,9 @@ def create_innovation_tab():
             # 左列: 可视化图表
             with gr.Column(scale=1):
                 gr.Markdown("### 对比可视化")
+                # Gradio 6.x: 使用 value 参数设置初始图表
                 comparison_plot = gr.Plot(
+                    value=create_preset_period_comparison(),
                     label="对比图表",
                     show_label=False
                 )
@@ -671,18 +685,21 @@ def create_innovation_tab():
             )
 
         # 交互逻辑
-        def update_innovation_view(innovation_type: str):
+        def update_innovation_view(innovation_label: str):
             """
             根据选择的创新点更新可视化和说明
 
             Args:
-                innovation_type: 创新点类型
+                innovation_label: 创新点显示名称 (Gradio 6.x 传递的是显示文本)
 
             Returns:
                 plot: 更新后的图表
                 description: 更新后的说明文本
                 metrics: 更新后的指标表格
             """
+            # Gradio 6.x: 将显示名称映射为内部值
+            innovation_type = innovation_mapping.get(innovation_label, "preset_period")
+
             # 获取说明文本
             description = INNOVATION_DESCRIPTIONS.get(innovation_type, "")
 
@@ -709,8 +726,7 @@ def create_innovation_tab():
             outputs=[comparison_plot, description_md, metrics_table]
         )
 
-        # 初始化显示
-        comparison_plot.value = create_preset_period_comparison()
+        # Gradio 6.x: 初始化已通过组件的 value 参数完成，无需额外设置
 
     return {
         "innovation_selector": innovation_selector,

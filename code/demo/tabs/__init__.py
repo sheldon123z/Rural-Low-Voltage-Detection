@@ -6,10 +6,12 @@ from .tab1_principle import create_principle_tab
 from .tab2_innovation import create_innovation_tab
 from .tab3_arena import create_arena_tab
 from .tab4_detection import create_detection_tab
+from .tab5_architecture import create_architecture_tab
 
 __all__ = [
     "create_principle_tab",
     "create_innovation_tab",
     "create_arena_tab",
     "create_detection_tab",
+    "create_architecture_tab",
 ]
