@@ -20,19 +20,19 @@ repos:
     hooks:
       - id: black
         language_version: python3.11
-        files: ^code/voltage_anomaly_detection/
+        files: ^code/.*\.py$
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
         name: isort
-        files: ^code/voltage_anomaly_detection/
+        files: ^code/.*\.py$
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.0.0
     hooks:
       - id: flake8
-        files: ^code/voltage_anomaly_detection/
+        files: ^code/.*\.py$
         args: ['--max-line-length=88', '--extend-ignore=E203,E266,E501,W503']
         exclude: (checkpoints|dataset|test_results)

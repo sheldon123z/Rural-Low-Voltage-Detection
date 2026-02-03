@@ -61,7 +61,7 @@ known_first_party = ["models", "layers", "data_provider", "exp", "utils", "visua
 # pytest Configuration
 # =============================================================================
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["code/tests"]
 python_files = ["test_*.py"]
 addopts = "-v --tb=short"
 
