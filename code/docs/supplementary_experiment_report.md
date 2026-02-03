@@ -1,6 +1,10 @@
 # Supplementary Experiment Report for Rural Voltage Anomaly Detection
 
-Generated: 2026-02-02
+Generated: 2026-02-02 | **Updated: 2026-02-03**
+
+> **注意**：本文档中的 VoltageTimesNet_v2 结果已过时（使用默认参数，F1=0.6135）。
+> **最新结果**：经 Optuna 超参数优化后，VoltageTimesNet_v2 F1=**0.8149**，Recall=0.9110。
+> 详见 `实验结果汇总_论文写作材料.md`。
 
 ## Executive Summary
 
@@ -95,19 +99,27 @@ While DLinear achieved the highest F1-score, VoltageTimesNet_v2 is selected as t
 - Voltage-specific domain knowledge integration
 - Novel contribution (preset period mechanism)
 
-### 3.2 Model Configuration
+### 3.2 Model Configuration (Optuna Optimized, 2026-02-03)
 
 ```json
 {
   "model": "VoltageTimesNet_v2",
-  "d_model": 64,
-  "e_layers": 2,
-  "seq_len": 100,
+  "d_model": 128,
+  "e_layers": 3,
+  "d_ff": 256,
+  "seq_len": 50,
   "enc_in": 16,
   "c_out": 16,
-  "top_k": 5,
-  "num_kernels": 6,
-  "dropout": 0.1
+  "top_k": 2,
+  "num_kernels": 8,
+  "dropout": 0.017,
+  "learning_rate": 0.004188,
+  "batch_size": 32,
+  "anomaly_ratio": 2.085,
+  "f1_score": 0.8149,
+  "recall": 0.9110,
+  "precision": 0.7371,
+  "accuracy": 0.9393
 }
 ```
 
