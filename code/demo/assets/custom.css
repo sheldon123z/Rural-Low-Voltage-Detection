@@ -1,0 +1,96 @@
+/* Gradio Demo 自定义样式 */
+
+/* 主题颜色 */
+:root {
+    --primary-color: #4878A8;
+    --secondary-color: #72A86D;
+    --accent-color: #C4785C;
+    --warning-color: #D4A84C;
+    --neutral-color: #808080;
+}
+
+/* 标签页样式 */
+.tab-nav button {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+
+.tab-nav button.selected {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* 标题样式 */
+h1, h2, h3 {
+    color: #2c3e50 !important;
+}
+
+/* 卡片样式 */
+.gr-box {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 按钮样式 */
+.gr-button-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.gr-button-primary:hover {
+    background-color: #3a6a9a !important;
+}
+
+/* 滑块样式 */
+.gr-slider input[type="range"] {
+    accent-color: var(--primary-color);
+}
+
+/* 表格样式 */
+.gr-dataframe {
+    font-size: 14px !important;
+}
+
+.gr-dataframe th {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* 图表容器 */
+.plotly-container {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 说明文字 */
+.description-text {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* 指标卡片 */
+.metric-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.metric-label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .gr-row {
+        flex-direction: column !important;
+    }
+}
