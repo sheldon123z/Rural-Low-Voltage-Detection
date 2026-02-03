@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>农村低压配电网电压异常检测</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root {
+    --primary: #4878A8;
+    --secondary: #72A86D;
+    --accent: #C4785C;
+    --warning: #D4A84C;
+    --neutral: #808080;
+    --bg: #fafbfc;
+    --card: #fff;
+    --text: #24292e;
+    --text-secondary: #586069;
+    --border: #e1e4e8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+      "Noto Sans SC", "PingFang SC", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.7;
+  }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+    color: #fff;
+    text-align: center;
+    padding: 80px 20px 60px;
+  }
+  .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
+  .hero p { font-size: 1.1rem; opacity: .9; max-width: 700px; margin: 0 auto 24px; }
+  .hero .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero .badges a {
+    display: inline-block;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: .9rem;
+    transition: background .2s;
+  }
+  .hero .badges a:hover { background: rgba(255,255,255,.3); text-decoration: none; }
+
+  /* Layout */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 56px 0; }
+  section:nth-child(even) { background: #fff; }
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .icon { font-size: 1.4rem; }
+  .section-desc { color: var(--text-secondary); margin-bottom: 28px; font-size: .95rem; }
+
+  /* Cards */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    transition: box-shadow .2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+  .card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .card p { color: var(--text-secondary); font-size: .9rem; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  th, td { padding: 12px 16px; text-align: center; }
+  th { background: #f6f8fa; font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  .best { color: var(--primary); font-weight: 700; }
+
+  /* Charts */
+  .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .chart-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .chart-row { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.6rem; }
+  }
+
+  /* Figures gallery */
+  .fig-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .fig-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .fig-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+  .fig-item img { width: 100%; display: block; }
+  .fig-item .caption {
+    padding: 12px 16px;
+    font-size: .85rem;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  /* Method steps */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 28px 0; }
+  .step {
+    text-align: center;
+    padding: 20px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    position: relative;
+  }
+  .step .num {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: .95rem;
+    margin-bottom: 10px;
+  }
+  .step h4 { font-size: .95rem; margin-bottom: 6px; }
+  .step p { font-size: .8rem; color: var(--text-secondary); }
+  @media (max-width: 768px) {
+    .steps { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-size: .85rem;
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--primary); }
+
+  /* Dataset info */
+  .dataset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .dataset-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .dataset-card h3 { margin-bottom: 12px; }
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-blue { background: #e3f0ff; color: #1a6dd4; }
+  .tag-green { background: #e6f9e6; color: #2a8a2a; }
+  .tag-orange { background: #fff3e0; color: #c06000; }
+  @media (max-width: 768px) {
+    .dataset-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>农村低压配电网电压异常检测</h1>
+  <p>基于 TimesNet 的时间序列异常检测方法研究与应用 &mdash; 北京林业大学本科毕业论文</p>
+  <div class="badges">
+    <a href="https://huggingface.co/spaces/Sheldon123z/rural-voltage-demo" target="_blank">Demo</a>
+    <a href="https://github.com/sheldon123z/Rural-Low-Voltage-Detection" target="_blank">GitHub</a>
+    <a href="https://huggingface.co/Sheldon123z/rural-voltage-detection-models" target="_blank">Models</a>
+    <a href="https://huggingface.co/datasets/Sheldon123z/rural-voltage-datasets" target="_blank">Datasets</a>
+  </div>
+</div>
+
+<!-- Overview -->
+<section>
+  <div class="container">
+    <h2><span class="icon">&#9889;</span> 项目概述</h2>
+    <p class="section-desc">针对农村低压配电网电压质量问题，提出基于 TimesNet 改进模型的异常检测方案。</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>研究背景</h3>
+        <p>农村低压配电网线路长、用户分散，电压质量监测困难。传统方法依赖阈值规则，对复杂异常模式识别能力不足。</p>
+      </div>
+      <div class="card">
+        <h3>核心方法</h3>
+        <p>基于 TimesNet 时序 2D 变换框架，提出 VoltageTimesNet 系列模型，融合电压领域先验知识（预设周期、三相特征）。</p>
+      </div>
+      <div class="card">
+        <h3>主要贡献</h3>
+        <p>设计 5 种 TimesNet 变体，构建 16 维农村电压数据集（含 9 类异常），VoltageTimesNet_v2 取得最优 F1 = 0.6622。</p>
+      </div>
+      <div class="card">
+        <h3>开源资源</h3>
+        <p>35 个预训练模型权重、多数据集支持、交互式 Gradio 演示系统，全部开源。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Method -->
+<section>
+  <div class="container">
+    <h2><span class="icon">&#128300;</span> 研究方法</h2>
+    <p class="section-desc">TimesNet 核心思想：将一维时间序列转换为二维张量，利用 2D 卷积捕获时间模式。</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>FFT 周期发现</h4>
+        <p>快速傅里叶变换自动发现时序中的主要周期成分</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>1D &rarr; 2D 重塑</h4>
+        <p>根据发现的周期将一维序列折叠为二维矩阵</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>Inception 2D 卷积</h4>
+        <p>多尺度卷积核同时捕获周期内与周期间模式</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h4>多周期融合</h4>
+        <p>加权融合多个周期的特征，输出重构结果</p>
+      </div>
+    </div>
+    <div class="fig-grid" style="grid-template-columns:1fr;">
+      <div class="fig-item">
+        <img src="figures/fig_3_1_sliding_window.png" alt="滑动窗口预测示意图" loading="lazy">
+        <div class="caption">图 3-1 滑动窗口预测示意图</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Models -->
+<section>
+  <div class="container">
+    <h2><span class="icon">&#129302;</span> 模型对比</h2>
+    <p class="section-desc">6 个模型在 RuralVoltage 和 PSM 数据集上的性能对比。</p>
+
+    <div class="dataset-grid" style="margin-bottom:28px;">
+      <div class="dataset-card">
+        <h3>RuralVoltage 数据集</h3>
+        <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:8px;">农村低压配电网电压数据</p>
+        <span class="tag tag-blue">16 维特征</span>
+        <span class="tag tag-green">50,000 训练</span>
+        <span class="tag tag-orange">9 类异常</span>
+      </div>
+      <div class="dataset-card">
+        <h3>PSM 数据集</h3>
+        <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:8px;">服务器性能监控数据 (eBay)</p>
+        <span class="tag tag-blue">25 维特征</span>
+        <span class="tag tag-green">132,481 训练</span>
+        <span class="tag tag-orange">公开基准</span>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box"><div id="radar-chart" style="height:460px;"></div></div>
+      <div class="chart-box"><div id="bar-chart" style="height:460px;"></div></div>
+    </div>
+
+    <h3 style="margin-bottom:12px;">RuralVoltage 详细指标</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>排名</th><th>模型</th><th>Precision</th><th>Recall</th><th>F1</th><th>Accuracy</th><th>AUC</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="best">VoltageTimesNet_v2</td><td>0.7614</td><td class="best">0.5858</td><td class="best">0.6622</td><td>0.9119</td><td class="best">0.8523</td></tr>
+          <tr><td>2</td><td>TimesNet</td><td class="best">0.7606</td><td>0.5705</td><td>0.6520</td><td>0.9102</td><td>0.8389</td></tr>
+          <tr><td>3</td><td>VoltageTimesNet</td><td>0.7541</td><td>0.5726</td><td>0.6509</td><td>0.9094</td><td>0.8412</td></tr>
+          <tr><td>4</td><td>TPATimesNet</td><td>0.7524</td><td>0.5710</td><td>0.6493</td><td>0.9090</td><td>0.8356</td></tr>
+          <tr><td>5</td><td>MTSTimesNet</td><td>0.7456</td><td>0.5632</td><td>0.6415</td><td>0.9067</td><td>0.8298</td></tr>
+          <tr><td>6</td><td>DLinear</td><td>0.7201</td><td>0.5123</td><td>0.5989</td><td>0.8956</td><td>0.7923</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Figures -->
+<section>
+  <div class="container">
+    <h2><span class="icon">&#128202;</span> 实验图表</h2>
+    <p class="section-desc">论文第四章实验结果可视化（点击图片可放大）。</p>
+    <div class="fig-grid">
+      <div class="fig-item">
+        <img src="figures/fig_4_1_f1_comparison.png" alt="F1 分数对比" loading="lazy">
+        <div class="caption">图 4-1 多模型 F1 分数对比</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_2_roc_pr_curves.png" alt="ROC/PR 曲线" loading="lazy">
+        <div class="caption">图 4-2 ROC / PR 曲线对比</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_3_confusion_matrices.png" alt="混淆矩阵" loading="lazy">
+        <div class="caption">图 4-3 混淆矩阵</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_5_radar_comparison.png" alt="雷达图" loading="lazy">
+        <div class="caption">图 4-5 多维雷达图对比</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_6_score_distribution.png" alt="异常分数分布" loading="lazy">
+        <div class="caption">图 4-6 异常分数分布</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_8_detection_visualization.png" alt="检测可视化" loading="lazy">
+        <div class="caption">图 4-8 检测结果可视化</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_4_precision_recall_tradeoff.png" alt="精确率-召回率" loading="lazy">
+        <div class="caption">图 4-4 精确率-召回率权衡</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_7_threshold_sensitivity.png" alt="阈值敏感性" loading="lazy">
+        <div class="caption">图 4-7 阈值敏感性分析</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_9_training_loss.png" alt="训练损失" loading="lazy">
+        <div class="caption">图 4-9 训练损失曲线</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_10_seq_len_ablation.png" alt="序列长度消融" loading="lazy">
+        <div class="caption">图 4-10 序列长度消融实验</div>
+      </div>
+      <div class="fig-item">
+        <img src="figures/fig_4_11_alpha_ablation.png" alt="Alpha 消融" loading="lazy">
+        <div class="caption">图 4-11 Alpha 参数消融实验</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section>
+  <div class="container">
+    <h2><span class="icon">&#128640;</span> 快速开始</h2>
+    <p class="section-desc">复现实验或在自己的数据上使用模型。</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>训练模型</h3>
+        <pre style="background:#f6f8fa;padding:12px;border-radius:6px;font-size:.82rem;overflow-x:auto;margin-top:8px;"><code>cd code
+python run.py --is_training 1 \
+  --model VoltageTimesNet_v2 \
+  --data RuralVoltage \
+  --root_path ./dataset/RuralVoltage/realistic_v2/ \
+  --enc_in 16 --c_out 16 \
+  --anomaly_ratio 3.0</code></pre>
+      </div>
+      <div class="card">
+        <h3>下载预训练模型</h3>
+        <pre style="background:#f6f8fa;padding:12px;border-radius:6px;font-size:.82rem;overflow-x:auto;margin-top:8px;"><code>from huggingface_hub import hf_hub_download
+
+ckpt = hf_hub_download(
+    repo_id="Sheldon123z/rural-voltage-detection-models",
+    filename="RuralVoltage/VoltageTimesNet_v2_sl100_dm64/checkpoint.pth"
+)</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>
+      <a href="https://github.com/sheldon123z/Rural-Low-Voltage-Detection">GitHub</a> &middot;
+      <a href="https://huggingface.co/spaces/Sheldon123z/rural-voltage-demo">Interactive Demo</a> &middot;
+      <a href="https://huggingface.co/Sheldon123z">Hugging Face</a>
+    </p>
+    <p style="margin-top:8px;">Rural Low-Voltage Distribution Network Voltage Anomaly Detection &copy; 2026</p>
+  </div>
+</footer>
+
+<script>
+// Radar Chart
+const models = ['VoltageTimesNet_v2','VoltageTimesNet','TimesNet','TPATimesNet','MTSTimesNet','DLinear'];
+const colors = ['#4878A8','#72A86D','#C4785C','#D4A84C','#808080','#B0B0B0'];
+const metrics = {
+  'VoltageTimesNet_v2': [0.7614,0.5858,0.6622,0.9119,0.8523],
+  'VoltageTimesNet':    [0.7541,0.5726,0.6509,0.9094,0.8412],
+  'TimesNet':           [0.7606,0.5705,0.6520,0.9102,0.8389],
+  'TPATimesNet':        [0.7524,0.5710,0.6493,0.9090,0.8356],
+  'MTSTimesNet':        [0.7456,0.5632,0.6415,0.9067,0.8298],
+  'DLinear':            [0.7201,0.5123,0.5989,0.8956,0.7923]
+};
+const cats = ['Precision','Recall','F1','Accuracy','AUC'];
+
+const radarData = models.map((m, i) => ({
+  type: 'scatterpolar',
+  r: metrics[m].concat([metrics[m][0]]),
+  theta: cats.concat([cats[0]]),
+  name: m,
+  line: {color: colors[i]},
+  fill: i === 0 ? 'toself' : 'none',
+  fillcolor: i === 0 ? 'rgba(72,120,168,0.08)' : undefined,
+  opacity: i === 0 ? 1 : 0.7
+}));
+
+Plotly.newPlot('radar-chart', radarData, {
+  polar: {radialaxis: {visible: true, range: [0.45, 1.0]}},
+  title: {text: 'RuralVoltage 多维性能对比', font: {size: 14}},
+  margin: {t: 50, b: 30, l: 60, r: 60},
+  legend: {font: {size: 11}, x: 1.05},
+  font: {family: '-apple-system, "Noto Sans SC", sans-serif'}
+}, {responsive: true});
+
+// Bar Chart - F1 sorted
+const sorted = models.map(m => ({name: m, f1: metrics[m][2]})).sort((a,b) => b.f1 - a.f1);
+Plotly.newPlot('bar-chart', [{
+  type: 'bar',
+  x: sorted.map(d => d.name),
+  y: sorted.map(d => d.f1),
+  marker: {color: sorted.map((d,i) => i === 0 ? '#4878A8' : '#a8c8e8')},
+  text: sorted.map(d => d.f1.toFixed(4)),
+  textposition: 'outside'
+}], {
+  title: {text: 'F1 分数排名 (RuralVoltage)', font: {size: 14}},
+  yaxis: {range: [0.55, 0.70], title: 'F1 Score'},
+  margin: {t: 50, b: 80, l: 60, r: 20},
+  font: {family: '-apple-system, "Noto Sans SC", sans-serif'}
+}, {responsive: true});
+</script>
+
+</body>
+</html>
