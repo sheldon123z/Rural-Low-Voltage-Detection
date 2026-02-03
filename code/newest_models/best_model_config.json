@@ -1,11 +1,21 @@
 {
   "model": "VoltageTimesNet_v2",
-  "d_model": 64,
+  "d_model": 128,
   "e_layers": 2,
-  "seq_len": 100,
+  "d_ff": 64,
+  "seq_len": 50,
   "enc_in": 16,
   "c_out": 16,
-  "top_k": 5,
-  "num_kernels": 6,
-  "dropout": 0.1
+  "top_k": 3,
+  "num_kernels": 4,
+  "dropout": 0.029,
+  "learning_rate": 0.0036,
+  "batch_size": 64,
+  "anomaly_ratio": 3.0,
+  "f1_score": 0.7649,
+  "recall": 0.9631,
+  "precision": 0.6343,
+  "accuracy": 0.9131,
+  "optimized_by": "Optuna TPE Sampler",
+  "timestamp": "20260203_011100"
 }
