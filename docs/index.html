@@ -220,7 +220,7 @@
       </div>
       <div class="card">
         <h3>主要贡献</h3>
-        <p>设计 5 种 TimesNet 变体，构建 16 维农村电压数据集（含 9 类异常），VoltageTimesNet_v2 取得最优 F1 = 0.6622。</p>
+        <p>设计 5 种 TimesNet 变体，构建 16 维农村电压数据集（含 9 类异常），Optuna 超参搜索后 VoltageTimesNet_v2 F1 = 0.8149。</p>
       </div>
       <div class="card">
         <h3>开源资源</h3>
@@ -298,15 +298,15 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>排名</th><th>模型</th><th>Precision</th><th>Recall</th><th>F1</th><th>Accuracy</th><th>AUC</th></tr>
+          <tr><th>排名</th><th>模型</th><th>Precision</th><th>Recall</th><th>F1</th><th>Accuracy</th></tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td class="best">VoltageTimesNet_v2</td><td>0.7614</td><td class="best">0.5858</td><td class="best">0.6622</td><td>0.9119</td><td class="best">0.8523</td></tr>
-          <tr><td>2</td><td>TimesNet</td><td class="best">0.7606</td><td>0.5705</td><td>0.6520</td><td>0.9102</td><td>0.8389</td></tr>
-          <tr><td>3</td><td>VoltageTimesNet</td><td>0.7541</td><td>0.5726</td><td>0.6509</td><td>0.9094</td><td>0.8412</td></tr>
-          <tr><td>4</td><td>TPATimesNet</td><td>0.7524</td><td>0.5710</td><td>0.6493</td><td>0.9090</td><td>0.8356</td></tr>
-          <tr><td>5</td><td>MTSTimesNet</td><td>0.7456</td><td>0.5632</td><td>0.6415</td><td>0.9067</td><td>0.8298</td></tr>
-          <tr><td>6</td><td>DLinear</td><td>0.7201</td><td>0.5123</td><td>0.5989</td><td>0.8956</td><td>0.7923</td></tr>
+          <tr><td>1</td><td class="best">DLinear</td><td>0.7936</td><td class="best">0.9837</td><td class="best">0.8785</td><td class="best">0.9599</td></tr>
+          <tr><td>2</td><td>VoltageTimesNet_v2</td><td>0.7371</td><td>0.9110</td><td>0.8149</td><td>0.9393</td></tr>
+          <tr><td>3</td><td>TPATimesNet</td><td class="best">0.8983</td><td>0.4723</td><td>0.6191</td><td>0.8303</td></tr>
+          <tr><td>4</td><td>TimesNet</td><td>0.8939</td><td>0.4582</td><td>0.6059</td><td>0.8259</td></tr>
+          <tr><td>5</td><td>MTSTimesNet</td><td>0.8509</td><td>0.3251</td><td>0.4705</td><td>0.7863</td></tr>
+          <tr><td>6</td><td>VoltageTimesNet</td><td>0.8636</td><td>0.1906</td><td>0.3123</td><td>0.7549</td></tr>
         </tbody>
       </table>
     </div>
@@ -409,17 +409,17 @@ ckpt = hf_hub_download(
 
 <script>
 // Radar Chart
-const models = ['VoltageTimesNet_v2','VoltageTimesNet','TimesNet','TPATimesNet','MTSTimesNet','DLinear'];
-const colors = ['#4878A8','#72A86D','#C4785C','#D4A84C','#808080','#B0B0B0'];
+const models = ['DLinear','VoltageTimesNet_v2','TPATimesNet','TimesNet','MTSTimesNet','VoltageTimesNet'];
+const colors = ['#808080','#4878A8','#D4A84C','#C4785C','#9B59B6','#72A86D'];
 const metrics = {
-  'VoltageTimesNet_v2': [0.7614,0.5858,0.6622,0.9119,0.8523],
-  'VoltageTimesNet':    [0.7541,0.5726,0.6509,0.9094,0.8412],
-  'TimesNet':           [0.7606,0.5705,0.6520,0.9102,0.8389],
-  'TPATimesNet':        [0.7524,0.5710,0.6493,0.9090,0.8356],
-  'MTSTimesNet':        [0.7456,0.5632,0.6415,0.9067,0.8298],
-  'DLinear':            [0.7201,0.5123,0.5989,0.8956,0.7923]
+  'VoltageTimesNet_v2': [0.7371,0.9110,0.8149,0.9393],
+  'DLinear':            [0.7936,0.9837,0.8785,0.9599],
+  'TPATimesNet':        [0.8983,0.4723,0.6191,0.8303],
+  'TimesNet':           [0.8939,0.4582,0.6059,0.8259],
+  'MTSTimesNet':        [0.8509,0.3251,0.4705,0.7863],
+  'VoltageTimesNet':    [0.8636,0.1906,0.3123,0.7549]
 };
-const cats = ['Precision','Recall','F1','Accuracy','AUC'];
+const cats = ['Precision','Recall','F1','Accuracy'];
 
 const radarData = models.map((m, i) => ({
   type: 'scatterpolar',
@@ -428,12 +428,12 @@ const radarData = models.map((m, i) => ({
   name: m,
   line: {color: colors[i]},
   fill: i === 0 ? 'toself' : 'none',
-  fillcolor: i === 0 ? 'rgba(72,120,168,0.08)' : undefined,
+  fillcolor: i === 0 ? 'rgba(128,128,128,0.08)' : undefined,
   opacity: i === 0 ? 1 : 0.7
 }));
 
 Plotly.newPlot('radar-chart', radarData, {
-  polar: {radialaxis: {visible: true, range: [0.45, 1.0]}},
+  polar: {radialaxis: {visible: true, range: [0.0, 1.0]}},
   title: {text: 'RuralVoltage 多维性能对比', font: {size: 14}},
   margin: {t: 50, b: 30, l: 60, r: 60},
   legend: {font: {size: 11}, x: 1.05},
@@ -451,7 +451,7 @@ Plotly.newPlot('bar-chart', [{
   textposition: 'outside'
 }], {
   title: {text: 'F1 分数排名 (RuralVoltage)', font: {size: 14}},
-  yaxis: {range: [0.55, 0.70], title: 'F1 Score'},
+  yaxis: {range: [0.0, 0.95], title: 'F1 Score'},
   margin: {t: 50, b: 80, l: 60, r: 20},
   font: {family: '-apple-system, "Noto Sans SC", sans-serif'}
 }, {responsive: true});
