@@ -18,6 +18,8 @@
   "accuracy": 0.9393,
   "optimized_by": "Optuna TPE Sampler (30-trial full search)",
   "trial_number": 10,
-  "timestamp": "20260203_144003",
-  "search_status": "running (14/30 trials completed)"
+  "total_trials": 30,
+  "search_duration": "9h 40min",
+  "timestamp": "20260203_202801",
+  "search_status": "completed"
 }
