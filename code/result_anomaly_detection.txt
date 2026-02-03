@@ -578,3 +578,23 @@ VoltageTimesNet_v2_RuralVoltage_full_trial6
 Accuracy: 0.9183, Precision: 0.6543, Recall: 0.9390, F1-score: 0.7712
 
 
+VoltageTimesNet_v2_RuralVoltage_full_trial7  
+Accuracy: 0.7914, Precision: 0.4030, Recall: 0.8323, F1-score: 0.5431
+
+
+VoltageTimesNet_v2_RuralVoltage_full_trial8  
+Accuracy: 0.9361, Precision: 0.7431, Recall: 0.8632, F1-score: 0.7987
+
+
+VoltageTimesNet_v2_RuralVoltage_full_trial9  
+Accuracy: 0.8795, Precision: 0.5501, Recall: 0.9810, F1-score: 0.7049
+
+
+VoltageTimesNet_v2_RuralVoltage_full_trial10  
+Accuracy: 0.9393, Precision: 0.7371, Recall: 0.9110, F1-score: 0.8149
+
+
+VoltageTimesNet_v2_RuralVoltage_full_trial11  
+Accuracy: 0.9139, Precision: 0.6392, Recall: 0.9484, F1-score: 0.7637
+
+
