@@ -546,3 +546,7 @@ test_VoltageTimesNet_v2_RuralVoltage_anomaly_detection_ftM_sl50_dm128_nh8_el2_df
 Accuracy: 0.9131, Precision: 0.6343, Recall: 0.9631, F1-score: 0.7649
 
 
+VoltageTimesNet_v2_RuralVoltage_agent1_trial0  
+Accuracy: 0.9304, Precision: 0.7026, Recall: 0.9114, F1-score: 0.7935
+
+
