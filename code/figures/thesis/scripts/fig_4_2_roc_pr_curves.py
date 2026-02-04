@@ -63,28 +63,34 @@ def generate_roc_curve(prec, rec, acc, n_points=200):
     """基于性能指标生成近似ROC曲线
 
     利用 precision, recall, accuracy 推算 FPR 操作点，
-    然后用 beta 分布 CDF 拟合一条经过 (0,0), (fpr_op, tpr_op), (1,1) 的平滑曲线。
+    然后用幂律 TPR = FPR^alpha 拟合平滑曲线经过操作点。
+    alpha < 1 表示曲线在对角线上方（好的分类器）。
     """
     # 异常比例
     pi = 0.146
     tpr_op = rec
     # FPR = (1 - accuracy - (1-recall)*pi) / (1 - pi)
-    fpr_op = max(0.001, (1 - acc - (1 - rec) * pi) / (1 - pi))
-    fpr_op = min(fpr_op, 0.999)
+    fpr_op = (1 - acc - (1 - rec) * pi) / (1 - pi)
+    fpr_op = np.clip(fpr_op, 0.001, 0.999)
 
-    # 用幂律拟合: TPR = FPR^(1/power)
-    # 在操作点: tpr_op = fpr_op^(1/power)
-    if fpr_op > 0 and tpr_op > 0:
-        power = np.log(fpr_op) / np.log(tpr_op)
-        power = np.clip(power, 0.1, 10)
+    # 幂律: TPR = FPR^alpha
+    # 在操作点: tpr_op = fpr_op^alpha => alpha = log(tpr_op) / log(fpr_op)
+    if 0 < fpr_op < 1 and 0 < tpr_op < 1:
+        alpha = np.log(tpr_op) / np.log(fpr_op)
+        alpha = np.clip(alpha, 0.01, 5.0)
+    elif tpr_op >= 1.0:
+        # recall=1.0: 曲线上升较快但 FPR 也大
+        # 用 fpr_op 估算: 在 fpr_op 处 tpr 趋近 1
+        alpha = np.log(0.99) / np.log(fpr_op)
+        alpha = np.clip(alpha, 0.01, 2.0)
     else:
-        power = 1.0
+        alpha = 1.0  # 对角线
 
     fpr = np.linspace(0, 1, n_points)
-    tpr = np.power(fpr, power)
+    tpr = np.power(fpr, alpha)
 
     # 计算 AUC
-    auc = np.trapz(tpr, fpr)
+    auc = np.trapezoid(tpr, fpr)
     auc = np.clip(auc, 0.5, 0.999)
 
     return fpr, tpr, auc
@@ -120,7 +126,7 @@ def generate_pr_curve(prec, rec, n_points=200):
     precision_curve = np.clip(precision_curve, baseline, 1.0)
 
     # 计算 AP (曲线下面积)
-    ap = np.trapz(precision_curve, recall_curve)
+    ap = np.trapezoid(precision_curve, recall_curve)
     ap = np.clip(ap, 0.1, 0.999)
 
     return recall_curve, precision_curve, ap

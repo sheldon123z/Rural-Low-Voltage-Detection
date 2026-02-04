@@ -2,6 +2,22 @@
 
 农村低压配电网电压异常检测项目。核心代码位于 `code/`，基于 Time-Series-Library 框架。
 
+## 论文主模型：VoltageTimesNet_v2
+
+**VoltageTimesNet_v2** 是本论文的核心模型，经 Optuna 30-trial 超参数优化后在 RuralVoltage 数据集上取得最优性能：
+
+| 指标 | 值 | 说明 |
+|------|:--:|------|
+| **F1** | **0.8149** | 综合性能最优 |
+| **Recall** | **0.9110** | 检出 91.1% 的异常事件 |
+| **Precision** | **0.7371** | 误报率可控 |
+| **Accuracy** | **0.9393** | 整体准确率 93.9% |
+
+最优参数: `d_model=128, e_layers=3, d_ff=256, seq_len=50, top_k=2, num_kernels=8, lr=0.004188, batch_size=32, dropout=0.017, anomaly_ratio=2.085`
+
+模型权重: `code/newest_models/best_voltagetimesnet_v2.pth`
+配置文件: `code/newest_models/best_model_config.json`
+
 ## 在线资源
 
 | 资源 | 链接 | 说明 |
@@ -23,9 +39,15 @@ python run.py --is_training 1 --model TimesNet --data PSM \
 python run.py --is_training 1 --model VoltageTimesNet --data RuralVoltage \
   --root_path ./dataset/RuralVoltage/realistic_v2/ --enc_in 16 --c_out 16 --seq_len 100
 
-# 训练 VoltageTimesNet_v2（召回率优化版，推荐）
+# 训练 VoltageTimesNet_v2（Optuna 优化参数，论文主模型）
 python run.py --is_training 1 --model VoltageTimesNet_v2 --data RuralVoltage \
-  --root_path ./dataset/RuralVoltage/realistic_v2/ --enc_in 16 --c_out 16 --anomaly_ratio 3.0
+  --root_path ./dataset/RuralVoltage/realistic_v2/ --enc_in 16 --c_out 16 \
+  --seq_len 50 --d_model 128 --e_layers 3 --d_ff 256 --top_k 2 --num_kernels 8 \
+  --learning_rate 0.004188 --batch_size 32 --dropout 0.017 --anomaly_ratio 2.085
+
+# 训练 Kaggle 电力质量数据集
+python run.py --is_training 1 --model TimesNet --data KagglePQ \
+  --root_path ./dataset/Kaggle_PowerQuality_2/ --enc_in 128 --c_out 128 --seq_len 64
 
 # 仅测试
 python run.py --is_training 0 --model TimesNet --data PSM --root_path ./dataset/PSM/
@@ -80,7 +102,8 @@ code/
 | 数据集 | 特征数 | 训练集 | 测试集 | 说明 |
 |--------|:------:|-------:|-------:|------|
 | PSM | 25 | 132,481 | 87,841 | 服务器指标 |
-| RuralVoltage/realistic_v2 | 16 | 50,000 | 10,000 | 农村电压（改进版） |
+| RuralVoltage/realistic_v2 | 16 | 50,000 | 10,000 | 农村电压（14.6%异常） |
+| KagglePQ | 128 | 2,400 | 9,598 | 电力质量波形 |
 | MSL | 55 | 58,317 | 73,729 | NASA 航天器 |
 | SMAP | 25 | 135,183 | 427,617 | NASA 航天器 |
 
@@ -109,7 +132,23 @@ output = Σ(softmax(weights) × x_1d_i)
 2. 在 `models/__init__.py` 的 `model_dict` 中注册
 3. `forward` 返回维度需与输入相同
 
-## 实验结果
+## 最新实验结果 (2026-02-03)
+
+### RuralVoltage 数据集（论文主实验）
+
+| 模型 | 准确率 | 精确率 | 召回率 | F1分数 |
+|------|:------:|:------:|:------:|:------:|
+| **VoltageTimesNet_v2** | **0.9393** | **0.7371** | **0.9110** | **0.8149** |
+| DLinear | 0.8651 | 0.5224 | 0.9955 | 0.6852 |
+| TimesNet | 0.8584 | 0.5143 | 0.7115 | 0.5970 |
+| LSTMAutoEncoder | 0.7905 | 0.3654 | 0.5712 | 0.4457 |
+| Isolation Forest | 0.3474 | 0.3474 | 1.0000 | 0.5157 |
+| One-Class SVM | 0.3474 | 0.3474 | 1.0000 | 0.5157 |
+
+### Optuna 超参数搜索
+
+搜索记录: `code/results/optuna/search_progress.md`
+最佳配置: `code/newest_models/best_model_config.json`
 
 结果保存：`results/PSM_comparison_YYYYMMDD_HHMMSS/`
 
@@ -121,9 +160,11 @@ python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparis
 ## 论文材料
 
 论文写作材料位于 `code/docs/`：
-- `实验结果汇总_论文写作材料.md` - 实验数据
+- `实验结果汇总_论文写作材料.md` - 核心实验数据（最新）
+- `README_论文写作材料索引.md` - 所有写作材料索引
 - `TimesNet算法描述_论文写作材料.md` - 模型原理
-- `项目状态报告_20260126.md` - 进度跟踪
+- `VoltageTimesNet_v2_results.md` - V2模型详细结果
+- `supplementary_experiment_report.md` - 补充实验报告
 
 ### 论文图表
 
