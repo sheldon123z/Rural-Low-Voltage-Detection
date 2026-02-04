@@ -3,13 +3,13 @@
 图4-8: 异常检测结果时序可视化
 Fig 4-8: Anomaly Detection Results Visualization
 
-基于 VoltageTimesNet_v2 (Optuna 优化, F1=0.8149) 的检测结果可视化。
-包含3个子图:
-  (a) 三相电压波形 (Va, Vb, Vc) + 异常区域高亮
-  (b) 真实标签 vs 预测标签 + TP/FP/FN 标记
-  (c) 重构误差 + 阈值线
+基于 VoltageTimesNet (Optuna 优化, F1=0.8149) 的检测结果可视化。
+分别输出3个独立图片:
+  fig_4_8a_voltage_waveform.png    - 三相电压波形 (Va, Vb, Vc) + 异常区域高亮
+  fig_4_8b_prediction_labels.png   - 真实标签 vs 预测标签 + TP/FP/FN 标记
+  fig_4_8c_reconstruction_error.png - 重构误差 + 阈值线
 
-输出文件: ../chapter4_experiments/fig_4_8_detection_visualization.png
+输出目录: ../chapter4_experiments/
 """
 
 import sys
@@ -34,7 +34,7 @@ setup_thesis_style()
 def generate_predictions(labels, precision=0.7371, recall=0.9110, seed=42):
     """
     根据目标 Precision 和 Recall 模拟检测结果。
-    VoltageTimesNet_v2 (Optuna): P=0.7371, R=0.9110, F1=0.8149
+    VoltageTimesNet (Optuna): P=0.7371, R=0.9110, F1=0.8149
     """
     np.random.seed(seed)
     pred = np.zeros_like(labels)
@@ -173,7 +173,7 @@ def main():
     time = np.arange(window_len)
 
     # ============================================================
-    # 模拟 VoltageTimesNet_v2 检测结果
+    # 模拟 VoltageTimesNet 检测结果
     # ============================================================
     pred = generate_predictions(labels, precision=0.7371, recall=0.9110, seed=42)
     recon_error = compute_reconstruction_error(va, labels, pred, seed=42)
@@ -202,13 +202,16 @@ def main():
         ends = np.append(ends, len(anomaly_mask))
 
     # ============================================================
-    # 绘制图表：3 个子图
+    # 输出目录
     # ============================================================
-    fig, axes = plt.subplots(3, 1, figsize=(8, 7), sharex=True,
-                             gridspec_kw={'height_ratios': [3, 1.5, 2]})
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(script_dir, '..', 'chapter4_experiments')
+    os.makedirs(output_dir, exist_ok=True)
 
-    # ------ (a) 三相电压波形 ------
-    ax_voltage = axes[0]
+    # ============================================================
+    # 图 (a): 三相电压波形
+    # ============================================================
+    fig_a, ax_voltage = plt.subplots(figsize=(8, 3))
 
     ax_voltage.plot(time, va, color=PHASE_COLORS['Va'], linewidth=1.0,
                     label='$V_a$', alpha=0.9)
@@ -240,24 +243,28 @@ def main():
                 'Compound': '复合异常',
             }
             cn_type = type_map.get(atype, atype)
-            ypos = ax_voltage.get_ylim()[1] * 0.95 if ax_voltage.get_ylim()[1] > 0 else ax_voltage.get_ylim()[0] * 0.95
-            ax_voltage.annotate(cn_type, xy=(mid, np.max(vc[max(0,s):min(e+1, window_len)])),
+            ax_voltage.annotate(cn_type, xy=(mid, np.max(vc[max(0, s):min(e + 1, window_len)])),
                                 xytext=(mid, np.max(vc) * 1.03),
                                 fontsize=9, ha='center', color=THESIS_COLORS['negative'],
                                 arrowprops=dict(arrowstyle='->', color=THESIS_COLORS['negative'],
                                                 lw=0.8),
                                 fontweight='bold')
 
+    ax_voltage.set_xlabel('时间步', fontsize=10.5)
     ax_voltage.set_ylabel('电压', fontsize=10.5)
+    ax_voltage.set_xlim(0, window_len - 1)
     ax_voltage.legend(loc='upper left', fontsize=9, ncol=4, frameon=True,
                       edgecolor='#CCCCCC', fancybox=False)
     ax_voltage.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
     remove_spines(ax_voltage)
-    ax_voltage.text(-0.08, 1.02, '(a)', transform=ax_voltage.transAxes,
-                    fontsize=11, fontweight='bold', va='bottom')
 
-    # ------ (b) 真实标签 vs 预测标签 ------
-    ax_label = axes[1]
+    output_path_a = os.path.join(output_dir, 'fig_4_8a_voltage_waveform.png')
+    save_thesis_figure(fig_a, output_path_a)
+
+    # ============================================================
+    # 图 (b): 真实标签 vs 预测标签
+    # ============================================================
+    fig_b, ax_label = plt.subplots(figsize=(8, 2))
 
     # 真实标签背景
     ax_label.fill_between(time, labels, alpha=0.35, color=THESIS_COLORS['negative'],
@@ -291,7 +298,9 @@ def main():
                      s=30, label='FN (漏检)', zorder=5,
                      facecolors='none', linewidths=1.2)
 
+    ax_label.set_xlabel('时间步', fontsize=10.5)
     ax_label.set_ylabel('标签', fontsize=10.5)
+    ax_label.set_xlim(0, window_len - 1)
     ax_label.set_ylim(-0.15, 1.5)
     ax_label.set_yticks([0, 1])
     ax_label.set_yticklabels(['正常', '异常'])
@@ -299,11 +308,14 @@ def main():
                     edgecolor='#CCCCCC', fancybox=False, columnspacing=0.8)
     ax_label.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
     remove_spines(ax_label)
-    ax_label.text(-0.08, 1.02, '(b)', transform=ax_label.transAxes,
-                  fontsize=11, fontweight='bold', va='bottom')
 
-    # ------ (c) 重构误差 ------
-    ax_error = axes[2]
+    output_path_b = os.path.join(output_dir, 'fig_4_8b_prediction_labels.png')
+    save_thesis_figure(fig_b, output_path_b)
+
+    # ============================================================
+    # 图 (c): 重构误差
+    # ============================================================
+    fig_c, ax_error = plt.subplots(figsize=(8, 2.5))
 
     ax_error.fill_between(time, recon_error, alpha=0.3, color=THESIS_COLORS['primary'])
     ax_error.plot(time, recon_error, color=THESIS_COLORS['primary'], linewidth=0.8,
@@ -317,24 +329,18 @@ def main():
 
     ax_error.set_xlabel('时间步', fontsize=10.5)
     ax_error.set_ylabel('重构误差/MSE', fontsize=10.5)
+    ax_error.set_xlim(0, window_len - 1)
     ax_error.legend(loc='upper right', fontsize=9, frameon=True,
                     edgecolor='#CCCCCC', fancybox=False)
     ax_error.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
     remove_spines(ax_error)
-    ax_error.text(-0.08, 1.02, '(c)', transform=ax_error.transAxes,
-                  fontsize=11, fontweight='bold', va='bottom')
+
+    output_path_c = os.path.join(output_dir, 'fig_4_8c_reconstruction_error.png')
+    save_thesis_figure(fig_c, output_path_c)
 
     # ============================================================
-    # 保存
-    # ============================================================
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, 'fig_4_8_detection_visualization.png')
-
-    save_thesis_figure(fig, output_path)
-
     # 打印检测统计
+    # ============================================================
     n_tp = np.sum(tp_mask)
     n_fp = np.sum(fp_mask)
     n_fn = np.sum(fn_mask)

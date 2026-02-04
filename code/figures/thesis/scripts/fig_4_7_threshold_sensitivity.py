@@ -3,7 +3,7 @@
 图4-7: 阈值敏感性分析曲线
 Fig 4-7: Threshold Sensitivity Analysis
 
-基于 VoltageTimesNet_v2 模型在 RuralVoltage 数据集上的实验。
+基于 VoltageTimesNet 模型在 RuralVoltage 数据集上的实验。
 已知最优点: anomaly_ratio=2.08, F1=0.8149 (Optuna优化结果)
 
 输出文件: ../chapter4_experiments/fig_4_7_threshold_sensitivity.png
@@ -26,7 +26,7 @@ def main():
     fig, ax = plt.subplots(figsize=(6, 4))
 
     # ============================================================
-    # VoltageTimesNet_v2 阈值敏感性数据
+    # VoltageTimesNet 阈值敏感性数据
     # 已知: anomaly_ratio=2.08 时 P=0.7371, R=0.9110, F1=0.8149
     # 趋势: ratio增大 -> precision降低, recall升高, F1先升后降
     # ============================================================

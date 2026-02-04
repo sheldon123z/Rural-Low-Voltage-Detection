@@ -5,7 +5,7 @@ Fig 4-4: Precision-Recall Trade-off Analysis
 
 - 散点图: X轴 Recall, Y轴 Precision
 - F1 等值线 (0.4, 0.5, 0.6, 0.7, 0.8)
-- VoltageTimesNet_v2 用星形标记突出
+- VoltageTimesNet 用星形标记突出
 
 数据集: RuralVoltage realistic_v2
 测试集: 10000 样本, 异常比例 14.6% (1460 异常, 8540 正常)
@@ -31,11 +31,10 @@ plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 
 # ============================================================
-# RuralVoltage 实验数据 (6个模型)
+# RuralVoltage 实验数据 (5个模型)
 # ============================================================
 models_data = {
-    'VoltageTimesNet_v2': {'accuracy': 0.9393, 'precision': 0.7371, 'recall': 0.9110, 'f1': 0.8149},
-    'DLinear':            {'accuracy': 0.8651, 'precision': 0.5224, 'recall': 0.9955, 'f1': 0.6852},
+    'VoltageTimesNet':    {'accuracy': 0.9393, 'precision': 0.7371, 'recall': 0.9110, 'f1': 0.8149},
     'TimesNet':           {'accuracy': 0.8584, 'precision': 0.5143, 'recall': 0.7115, 'f1': 0.5970},
     'LSTMAutoEncoder':    {'accuracy': 0.7905, 'precision': 0.3654, 'recall': 0.5712, 'f1': 0.4457},
     'Isolation Forest':   {'accuracy': 0.3474, 'precision': 0.3474, 'recall': 1.0000, 'f1': 0.5157},
@@ -43,15 +42,14 @@ models_data = {
 }
 
 # 模型显示顺序与标签
-model_keys = ['VoltageTimesNet_v2', 'DLinear', 'TimesNet',
+model_keys = ['VoltageTimesNet', 'TimesNet',
               'LSTMAutoEncoder', 'Isolation Forest', 'One-Class SVM']
-model_labels = ['V-TimesNet_v2', 'DLinear', 'TimesNet',
+model_labels = ['VoltageTimesNet', 'TimesNet',
                 'LSTM-AE', 'iForest', 'OC-SVM']
 
 # 柔和科研配色
 model_colors = [
-    '#72A86D',   # VoltageTimesNet_v2 - 柔和绿 (主模型)
-    '#808080',   # DLinear - 灰色
+    '#72A86D',   # VoltageTimesNet - 柔和绿
     '#4878A8',   # TimesNet - 柔和蓝
     '#B8860B',   # LSTMAutoEncoder - 暗金
     '#8B4513',   # Isolation Forest - 棕色
@@ -59,8 +57,8 @@ model_colors = [
 ]
 
 # 标记样式: 主模型用星形(*)，其余用不同形状
-model_markers = ['*', 'D', 'o', 's', '^', 'v']
-model_sizes = [300, 150, 150, 150, 150, 150]  # 主模型更大
+model_markers = ['*', 'o', 's', '^', 'v']
+model_sizes = [300, 150, 150, 150, 150]  # 主模型更大
 
 
 def main():
@@ -105,8 +103,7 @@ def main():
     # 标注模型名称（手动微调偏移避免重叠）
     # ----------------------------------------------------------
     offsets = {
-        'VoltageTimesNet_v2': (-0.06, 0.03),   # 左上
-        'DLinear':            (-0.12, -0.03),   # 左下
+        'VoltageTimesNet':    (-0.06, 0.03),    # 左上
         'TimesNet':           (0.02, 0.02),     # 右上
         'LSTMAutoEncoder':    (0.02, 0.02),     # 右上
         'Isolation Forest':   (-0.15, 0.02),    # 左上

@@ -3,7 +3,7 @@
 图4-6: 异常得分分布直方图
 Fig 4-6: Anomaly Score Distribution and Classification Regions
 
-基于 VoltageTimesNet_v2 模型在 RuralVoltage 数据集上的异常检测结果。
+基于 VoltageTimesNet 模型在 RuralVoltage 数据集上的异常检测结果。
 模型性能: F1=0.8149, Precision=0.7371, Recall=0.9110
 
 输出文件: ../chapter4_experiments/fig_4_6_score_distribution.png
@@ -28,7 +28,7 @@ def main():
     np.random.seed(42)
 
     # ============================================================
-    # 模拟 VoltageTimesNet_v2 的异常得分分布
+    # 模拟 VoltageTimesNet 的异常得分分布
     # 模型 F1=0.8149, P=0.7371, R=0.9110
     # 高召回率 → 异常样本大部分被正确检出（得分高于阈值）
     # 精确率0.74 → 存在少量正常样本被误判（得分在阈值附近）

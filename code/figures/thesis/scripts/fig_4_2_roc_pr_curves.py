@@ -1,62 +1,52 @@
 #!/usr/bin/env python3
 """
-图4-2: ROC曲线与PR曲线对比（双子图）
-Fig 4-2: ROC and PR Curves Comparison of Multiple Models
+图4-2: ROC曲线与PR曲线（分别输出两个独立图片）
+Fig 4-2: ROC Curve and PR Curve of Multiple Models
 
-包含两个子图:
-- (a) ROC曲线对比
-- (b) PR曲线对比
+输出文件:
+- ../chapter4_experiments/fig_4_2a_roc_curve.png   - ROC曲线
+- ../chapter4_experiments/fig_4_2b_pr_curve.png     - PR曲线
 
 数据集: RuralVoltage realistic_v2
 测试集: 10000 样本, 异常比例 14.6% (1460 异常, 8540 正常)
-
-输出文件: ../chapter4_experiments/fig_4_2_roc_pr_curves.png
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# ============================================================
-# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
-# ============================================================
-plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
-plt.rcParams['font.size'] = 10.5
-plt.rcParams['axes.unicode_minus'] = False
-plt.rcParams['axes.linewidth'] = 0.8
-plt.rcParams['xtick.major.width'] = 0.8
-plt.rcParams['ytick.major.width'] = 0.8
-plt.rcParams['figure.facecolor'] = 'white'
-plt.rcParams['axes.facecolor'] = 'white'
-plt.rcParams['savefig.facecolor'] = 'white'
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines
 
 # ============================================================
-# RuralVoltage 实验数据 (6个模型)
+# RuralVoltage 实验数据 (5个模型)
 # ============================================================
 models_data = {
-    'VoltageTimesNet_v2': {'accuracy': 0.9393, 'precision': 0.7371, 'recall': 0.9110, 'f1': 0.8149},
-    'DLinear':            {'accuracy': 0.8651, 'precision': 0.5224, 'recall': 0.9955, 'f1': 0.6852},
-    'TimesNet':           {'accuracy': 0.8584, 'precision': 0.5143, 'recall': 0.7115, 'f1': 0.5970},
-    'LSTMAutoEncoder':    {'accuracy': 0.7905, 'precision': 0.3654, 'recall': 0.5712, 'f1': 0.4457},
-    'Isolation Forest':   {'accuracy': 0.3474, 'precision': 0.3474, 'recall': 1.0000, 'f1': 0.5157},
-    'One-Class SVM':      {'accuracy': 0.3474, 'precision': 0.3474, 'recall': 1.0000, 'f1': 0.5157},
+    'VoltageTimesNet':  {'accuracy': 0.9393, 'precision': 0.7371, 'recall': 0.9110, 'f1': 0.8149},
+    'TimesNet':         {'accuracy': 0.8584, 'precision': 0.5143, 'recall': 0.7115, 'f1': 0.5970},
+    'LSTMAutoEncoder':  {'accuracy': 0.7905, 'precision': 0.3654, 'recall': 0.5712, 'f1': 0.4457},
+    'Isolation Forest': {'accuracy': 0.3474, 'precision': 0.3474, 'recall': 1.0000, 'f1': 0.5157},
+    'One-Class SVM':    {'accuracy': 0.3474, 'precision': 0.3474, 'recall': 1.0000, 'f1': 0.5157},
 }
 
 # 模型显示顺序与标签
-model_keys = ['VoltageTimesNet_v2', 'DLinear', 'TimesNet',
-              'LSTMAutoEncoder', 'Isolation Forest', 'One-Class SVM']
-model_labels = ['V-TimesNet_v2', 'DLinear', 'TimesNet',
-                'LSTM-AE', 'iForest', 'OC-SVM']
+model_keys = ['VoltageTimesNet', 'TimesNet', 'LSTMAutoEncoder',
+              'Isolation Forest', 'One-Class SVM']
+model_labels = ['VoltageTimesNet', 'TimesNet', 'LSTM-AE',
+                'iForest', 'OC-SVM']
 
-# 柔和科研配色
+# 柔和科研配色 (5个模型)
 model_colors = [
-    '#72A86D',   # VoltageTimesNet_v2 - 柔和绿 (主模型，突出)
-    '#808080',   # DLinear - 灰色
+    '#72A86D',   # VoltageTimesNet - 柔和绿 (主模型，突出)
     '#4878A8',   # TimesNet - 柔和蓝
     '#B8860B',   # LSTMAutoEncoder - 暗金
     '#8B4513',   # Isolation Forest - 棕色
     '#CD853F',   # One-Class SVM - 秘鲁色
 ]
+
+# 线型、标记、线宽 (5项)
+line_styles = ['-', '--', '-.', ':', '-']
+markers = ['*', 'o', 's', '^', 'v']
+linewidths = [2.5, 1.8, 1.8, 1.5, 1.5]
 
 
 def generate_roc_curve(prec, rec, acc, n_points=200):
@@ -132,68 +122,68 @@ def generate_pr_curve(prec, rec, n_points=200):
     return recall_curve, precision_curve, ap
 
 
-def main():
-    """主函数"""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+def plot_roc_curve(output_dir):
+    """绘制 ROC 曲线并保存为独立图片"""
+    fig, ax = plt.subplots(figsize=(6, 5))
 
-    line_styles = ['-', '--', '-.', ':', '-', '--']
-    markers = ['*', 'D', 'o', 's', '^', 'v']
-    linewidths = [2.5, 1.8, 1.8, 1.8, 1.5, 1.5]
-
-    # (a) ROC曲线
     for i, key in enumerate(model_keys):
         d = models_data[key]
         fpr, tpr, auc = generate_roc_curve(d['precision'], d['recall'], d['accuracy'])
-        ax1.plot(fpr, tpr, color=model_colors[i], linestyle=line_styles[i],
-                 linewidth=linewidths[i],
-                 label=f'{model_labels[i]} (AUC={auc:.3f})',
-                 marker=markers[i], markevery=40, markersize=6 if i == 0 else 5)
+        ax.plot(fpr, tpr, color=model_colors[i], linestyle=line_styles[i],
+                linewidth=linewidths[i],
+                label=f'{model_labels[i]} (AUC={auc:.3f})',
+                marker=markers[i], markevery=40, markersize=6 if i == 0 else 5)
 
-    ax1.plot([0, 1], [0, 1], 'k--', alpha=0.4, linewidth=1, label='随机分类器')
-    ax1.set_xlabel('假阳性率/FPR', fontsize=10.5)
-    ax1.set_ylabel('真阳性率/TPR', fontsize=10.5)
-    ax1.text(0.02, 0.98, '(a)', transform=ax1.transAxes, fontsize=11,
-             fontweight='bold', va='top')
-    ax1.legend(loc='lower right', fontsize=8, framealpha=0.9)
-    ax1.set_xlim([0, 1])
-    ax1.set_ylim([0, 1])
-    ax1.grid(True, linestyle='--', alpha=0.4)
-    ax1.spines['top'].set_visible(False)
-    ax1.spines['right'].set_visible(False)
+    ax.plot([0, 1], [0, 1], 'k--', alpha=0.4, linewidth=1, label='随机分类器')
+    ax.set_xlabel('假阳性率/FPR', fontsize=10.5)
+    ax.set_ylabel('真阳性率/TPR', fontsize=10.5)
+    ax.legend(loc='lower right', fontsize=8, framealpha=0.9)
+    ax.set_xlim([0, 1])
+    ax.set_ylim([0, 1])
+    ax.grid(True, linestyle='--', alpha=0.4)
+    remove_spines(ax)
 
-    # (b) PR曲线
+    output_path = os.path.join(output_dir, 'fig_4_2a_roc_curve.png')
+    save_thesis_figure(fig, output_path)
+
+
+def plot_pr_curve(output_dir):
+    """绘制 PR 曲线并保存为独立图片"""
+    fig, ax = plt.subplots(figsize=(6, 5))
+
     for i, key in enumerate(model_keys):
         d = models_data[key]
         recall_curve, precision_curve, ap = generate_pr_curve(d['precision'], d['recall'])
-        ax2.plot(recall_curve, precision_curve, color=model_colors[i],
-                 linestyle=line_styles[i], linewidth=linewidths[i],
-                 label=f'{model_labels[i]} (AP={ap:.3f})',
-                 marker=markers[i], markevery=40, markersize=6 if i == 0 else 5)
+        ax.plot(recall_curve, precision_curve, color=model_colors[i],
+                linestyle=line_styles[i], linewidth=linewidths[i],
+                label=f'{model_labels[i]} (AP={ap:.3f})',
+                marker=markers[i], markevery=40, markersize=6 if i == 0 else 5)
 
     # 基线: 随机分类器的精确率 = 正类比例
-    ax2.axhline(y=0.146, color='k', linestyle='--', alpha=0.4, linewidth=1,
-                label='随机分类器')
+    ax.axhline(y=0.146, color='k', linestyle='--', alpha=0.4, linewidth=1,
+               label='随机分类器')
 
-    ax2.set_xlabel('召回率', fontsize=10.5)
-    ax2.set_ylabel('精确率', fontsize=10.5)
-    ax2.text(0.02, 0.98, '(b)', transform=ax2.transAxes, fontsize=11,
-             fontweight='bold', va='top')
-    ax2.legend(loc='upper right', fontsize=8, framealpha=0.9)
-    ax2.set_xlim([0, 1])
-    ax2.set_ylim([0, 1])
-    ax2.grid(True, linestyle='--', alpha=0.4)
-    ax2.spines['top'].set_visible(False)
-    ax2.spines['right'].set_visible(False)
+    ax.set_xlabel('召回率', fontsize=10.5)
+    ax.set_ylabel('精确率', fontsize=10.5)
+    ax.legend(loc='upper right', fontsize=8, framealpha=0.9)
+    ax.set_xlim([0, 1])
+    ax.set_ylim([0, 1])
+    ax.grid(True, linestyle='--', alpha=0.4)
+    remove_spines(ax)
 
-    plt.tight_layout()
+    output_path = os.path.join(output_dir, 'fig_4_2b_pr_curve.png')
+    save_thesis_figure(fig, output_path)
 
-    # 保存到 chapter4_experiments 目录
+
+def main():
+    """主函数"""
+    setup_thesis_style()
+
     output_dir = os.path.join(os.path.dirname(__file__), '..', 'chapter4_experiments')
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, 'fig_4_2_roc_pr_curves.png')
-    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
-    print(f"已生成: {output_path}")
-    plt.close()
+
+    plot_roc_curve(output_dir)
+    plot_pr_curve(output_dir)
 
 
 if __name__ == '__main__':

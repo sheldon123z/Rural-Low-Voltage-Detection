@@ -58,6 +58,7 @@ TIMESNET_COLORS = [
     '#4878A8',   # TimesNet - 柔和蓝
     '#72A86D',   # VoltageTimesNet - 柔和绿
     '#9B7BB8',   # TPATimesNet - 柔和紫
+    '#C4785C',   # MTSTimesNet - 柔和橙
 ]
 
 # 其他模型配色
@@ -104,6 +105,8 @@ def get_model_colors(models):
             colors.append(TIMESNET_COLORS[1])
         elif 'TPATimesNet' in model or 'TPA-TimesNet' in model:
             colors.append(TIMESNET_COLORS[2])
+        elif 'MTSTimesNet' in model or 'MTS-TimesNet' in model:
+            colors.append(TIMESNET_COLORS[3])
         elif 'TimesNet' in model:
             colors.append(TIMESNET_COLORS[0])
         elif 'PatchTST' in model:

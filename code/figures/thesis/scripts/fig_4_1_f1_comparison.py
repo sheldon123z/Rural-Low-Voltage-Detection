@@ -82,9 +82,9 @@ def main():
     legend_elements = [
         mpatches.Patch(facecolor=TIMESNET_COLORS[0], edgecolor='black',
                        label='TimesNet系列'),
-        mpatches.Patch(facecolor=OTHER_COLORS[0], edgecolor='black',
+        mpatches.Patch(facecolor=OTHER_COLORS[1], edgecolor='black',
                        label='其他深度学习模型'),
-        mpatches.Patch(facecolor=OTHER_COLORS[3], edgecolor='black',
+        mpatches.Patch(facecolor=OTHER_COLORS[2], edgecolor='black',
                        label='传统机器学习模型'),
     ]
     ax.legend(handles=legend_elements, loc='upper right', fontsize=9, framealpha=0.9)

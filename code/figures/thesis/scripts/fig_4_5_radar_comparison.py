@@ -25,16 +25,16 @@ setup_thesis_style()
 # ============================================================
 COLORS = {
     'TimesNet': TIMESNET_COLORS[0],         # 柔和蓝
-    'VoltageTimesNet': TIMESNET_COLORS[1],   # 浅蓝
-    'VoltageTimesNet_v2': TIMESNET_COLORS[2],  # 柔和绿
-    'TPATimesNet': TIMESNET_COLORS[3],       # 柔和紫
+    'VoltageTimesNet': TIMESNET_COLORS[1],   # 柔和绿
+    'TPATimesNet': TIMESNET_COLORS[2],       # 柔和紫
+    'MTSTimesNet': TIMESNET_COLORS[3],       # 柔和橙
 }
 
 RESULTS = {
-    'VoltageTimesNet_v2': {'准确率': 0.9393, '精确率': 0.7371, '召回率': 0.9110, 'F1分数': 0.8149},
+    'VoltageTimesNet': {'准确率': 0.9393, '精确率': 0.7371, '召回率': 0.9110, 'F1分数': 0.8149},
     'TPATimesNet': {'准确率': 0.8303, '精确率': 0.8983, '召回率': 0.4723, 'F1分数': 0.6191},
     'TimesNet': {'准确率': 0.8259, '精确率': 0.8939, '召回率': 0.4582, 'F1分数': 0.6059},
-    'VoltageTimesNet': {'准确率': 0.7549, '精确率': 0.8636, '召回率': 0.1906, 'F1分数': 0.3123},
+    'MTSTimesNet': {'准确率': 0.7863, '精确率': 0.8509, '召回率': 0.3251, 'F1分数': 0.4705},
 }
 
 
@@ -56,10 +56,10 @@ def main():
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(metrics, fontsize=10.5, fontweight='bold')
 
-    # 绘制顺序：VoltageTimesNet_v2 在最后绘制以突出显示
-    models = ['VoltageTimesNet', 'TimesNet', 'TPATimesNet', 'VoltageTimesNet_v2']
-    linestyles = ['--', '-', '-.', '-']
-    markers = ['s', 'o', '^', 'D']
+    # 绘制顺序：VoltageTimesNet 在最后绘制以突出显示
+    models = ['TimesNet', 'MTSTimesNet', 'TPATimesNet', 'VoltageTimesNet']
+    linestyles = ['-', '--', '-.', '-']
+    markers = ['o', 'd', '^', 'D']
     linewidths = [1.5, 1.5, 1.5, 2.5]
     alphas = [0.05, 0.05, 0.05, 0.15]
 
