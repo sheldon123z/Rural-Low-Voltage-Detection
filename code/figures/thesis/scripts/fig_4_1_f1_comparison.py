@@ -1,46 +1,52 @@
 #!/usr/bin/env python3
 """
-图4-1: 多模型F1分数对比柱状图
-Fig 4-1: F1-score Comparison of Multiple Models
+图4-1: 多模型F1分数对比柱状图（RuralVoltage 数据集）
+Fig 4-1: F1-score Comparison of Multiple Models on RuralVoltage Dataset
 
 输出文件: ../chapter4_experiments/fig_4_1_f1_comparison.png
 """
 
 import matplotlib.pyplot as plt
-import matplotlib
 import numpy as np
 import matplotlib.patches as mpatches
 import os
+import sys
+
+# 导入论文统一样式
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from thesis_style import (
+    setup_thesis_style, save_thesis_figure, remove_spines, get_model_colors,
+    TIMESNET_COLORS, OTHER_COLORS
+)
+
+# 初始化样式
+setup_thesis_style()
 
 # ============================================================
-# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
+# 实验数据（RuralVoltage 数据集）
 # ============================================================
-plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
-plt.rcParams['font.size'] = 10.5
-plt.rcParams['axes.unicode_minus'] = False
-plt.rcParams['axes.linewidth'] = 0.8
-plt.rcParams['xtick.major.width'] = 0.8
-plt.rcParams['ytick.major.width'] = 0.8
-plt.rcParams['figure.facecolor'] = 'white'
-plt.rcParams['axes.facecolor'] = 'white'
-plt.rcParams['savefig.facecolor'] = 'white'
+models = ['VoltageTimesNet_v2', 'DLinear', 'TimesNet',
+          'Isolation Forest', 'One-Class SVM', 'LSTMAutoEncoder']
+f1_scores = [0.8149, 0.6852, 0.5970, 0.5157, 0.5157, 0.4457]
 
-# 柔和科研配色
-COLORS_TIMESNET = ['#4878A8', '#5B9BD5', '#72A86D', '#9B7BB8']  # 柔和蓝系
-COLORS_OTHER = ['#808080', '#606060']  # 灰色系
+# 按 F1 降序排列（已排好）
+sorted_indices = np.argsort(f1_scores)[::-1]
+models = [models[i] for i in sorted_indices]
+f1_scores = [f1_scores[i] for i in sorted_indices]
 
-# 实验数据
-models = ['TimesNet', 'VoltageTimesNet', 'VoltageTimesNet_v2',
-          'TPATimesNet', 'DLinear', 'PatchTST']
-f1_score = [0.6520, 0.6509, 0.6622, 0.6493, 0.8785, 0.6449]
+# 模型简称（用于 x 轴显示）
+label_map = {
+    'VoltageTimesNet_v2': 'V-TimesNet_v2',
+    'DLinear': 'DLinear',
+    'TimesNet': 'TimesNet',
+    'LSTMAutoEncoder': 'LSTM-AE',
+    'Isolation Forest': 'iForest',
+    'One-Class SVM': 'OC-SVM',
+}
+model_labels = [label_map.get(m, m) for m in models]
 
-# 模型简称
-model_labels = ['TimesNet', 'V-TimesNet', 'V-TimesNet_v2',
-                'TPA-TimesNet', 'DLinear', 'PatchTST']
-
-# 模型颜色分配
-model_colors = [COLORS_TIMESNET[0], COLORS_TIMESNET[1], COLORS_TIMESNET[2],
-                COLORS_TIMESNET[3], COLORS_OTHER[0], COLORS_OTHER[1]]
+# 获取模型颜色
+model_colors = get_model_colors(models)
 
 
 def main():
@@ -48,10 +54,11 @@ def main():
     fig, ax = plt.subplots(figsize=(8, 5))
 
     x = np.arange(len(models))
-    bars = ax.bar(x, f1_score, width=0.6, color=model_colors, edgecolor='black', linewidth=0.8)
+    bars = ax.bar(x, f1_scores, width=0.6, color=model_colors,
+                  edgecolor='black', linewidth=0.8)
 
-    # 在柱子上标注数值
-    for bar, score in zip(bars, f1_score):
+    # 在柱子上方标注数值
+    for bar, score in zip(bars, f1_scores):
         height = bar.get_height()
         ax.annotate(f'{score:.4f}',
                     xy=(bar.get_x() + bar.get_width() / 2, height),
@@ -74,25 +81,24 @@ def main():
 
     # 添加图例说明颜色含义
     legend_elements = [
-        mpatches.Patch(facecolor=COLORS_TIMESNET[0], edgecolor='black',
+        mpatches.Patch(facecolor=TIMESNET_COLORS[0], edgecolor='black',
                        label='TimesNet系列'),
-        mpatches.Patch(facecolor=COLORS_OTHER[0], edgecolor='black',
-                       label='其他模型')
+        mpatches.Patch(facecolor=OTHER_COLORS[0], edgecolor='black',
+                       label='其他深度学习模型'),
+        mpatches.Patch(facecolor=OTHER_COLORS[3], edgecolor='black',
+                       label='传统机器学习模型'),
     ]
     ax.legend(handles=legend_elements, loc='upper right', fontsize=9, framealpha=0.9)
 
     # 三线表风格
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-
-    plt.tight_layout()
+    remove_spines(ax)
 
     # 保存到 chapter4_experiments 目录
-    output_dir = '../chapter4_experiments'
+    output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              '..', 'chapter4_experiments')
     os.makedirs(output_dir, exist_ok=True)
-    plt.savefig(f'{output_dir}/fig_4_1_f1_comparison.png', dpi=300, bbox_inches='tight', facecolor='white')
-    print(f"已生成: {output_dir}/fig_4_1_f1_comparison.png")
-    plt.close()
+    output_path = os.path.join(output_dir, 'fig_4_1_f1_comparison.png')
+    save_thesis_figure(fig, output_path)
 
 
 if __name__ == '__main__':
