@@ -163,8 +163,8 @@ def plot_pr_curve(output_dir):
     ax.axhline(y=0.146, color='k', linestyle='--', alpha=0.4, linewidth=1,
                label='随机分类器')
 
-    ax.set_xlabel('召回率', fontsize=10.5)
-    ax.set_ylabel('精确率', fontsize=10.5)
+    ax.set_xlabel('召回率/Recall', fontsize=10.5)
+    ax.set_ylabel('精确率/Precision', fontsize=10.5)
     ax.legend(loc='upper right', fontsize=8, framealpha=0.9)
     ax.set_xlim([0, 1])
     ax.set_ylim([0, 1])

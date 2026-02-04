@@ -16,19 +16,13 @@ Fig 4-4: Precision-Recall Trade-off Analysis
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
 
-# ============================================================
-# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
-# ============================================================
-plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
-plt.rcParams['font.size'] = 10.5
-plt.rcParams['axes.unicode_minus'] = False
-plt.rcParams['axes.linewidth'] = 0.8
-plt.rcParams['xtick.major.width'] = 0.8
-plt.rcParams['ytick.major.width'] = 0.8
-plt.rcParams['figure.facecolor'] = 'white'
-plt.rcParams['axes.facecolor'] = 'white'
-plt.rcParams['savefig.facecolor'] = 'white'
+# 导入论文统一样式
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines
+
+setup_thesis_style()
 
 # ============================================================
 # RuralVoltage 实验数据 (5个模型)
@@ -123,8 +117,8 @@ def main():
     # ----------------------------------------------------------
     # 坐标轴与网格
     # ----------------------------------------------------------
-    ax.set_xlabel('召回率', fontsize=10.5)
-    ax.set_ylabel('精确率', fontsize=10.5)
+    ax.set_xlabel('召回率/Recall', fontsize=10.5)
+    ax.set_ylabel('精确率/Precision', fontsize=10.5)
 
     # 根据数据范围调整轴范围
     # Recall: 0.5712 ~ 1.0, Precision: 0.3474 ~ 0.7371
@@ -143,15 +137,13 @@ def main():
             fontsize=8, color='gray', ha='right', va='bottom',
             style='italic')
 
-    plt.tight_layout()
+    remove_spines(ax)
 
     # 保存到 chapter4_experiments 目录
     output_dir = os.path.join(os.path.dirname(__file__), '..', 'chapter4_experiments')
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'fig_4_4_precision_recall_tradeoff.png')
-    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
-    print(f"已生成: {output_path}")
-    plt.close()
+    save_thesis_figure(fig, output_path)
 
 
 if __name__ == '__main__':

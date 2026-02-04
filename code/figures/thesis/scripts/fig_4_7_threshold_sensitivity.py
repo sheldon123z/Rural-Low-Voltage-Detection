@@ -62,10 +62,10 @@ def main():
     ax2.set_xlim(ax.get_xlim())
     ax2.set_xticks(anomaly_ratios)
     ax2.set_xticklabels(percentiles, fontsize=9)
-    ax2.set_xlabel('百分位阈值', fontsize=10.5, labelpad=8)
+    ax2.set_xlabel('百分位阈值/Percentile', fontsize=10.5, labelpad=8)
 
     ax.set_xlabel('异常比例/%', fontsize=10.5)
-    ax.set_ylabel('性能指标', fontsize=10.5)
+    ax.set_ylabel('性能指标/Score', fontsize=10.5)
     ax.set_xlim(0.5, 5.5)
     ax.set_ylim(0.35, 1.05)
     ax.set_yticks([0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])

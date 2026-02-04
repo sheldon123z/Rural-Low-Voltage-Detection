@@ -92,8 +92,8 @@ def main():
                 arrowprops=dict(arrowstyle='->', color='#8a6a2a', lw=1.2),
                 xytext=(threshold + 0.10, ymax * 0.45))
 
-    ax.set_xlabel('重构误差', fontsize=10.5)
-    ax.set_ylabel('样本数量', fontsize=10.5)
+    ax.set_xlabel('重构误差/Error', fontsize=10.5)
+    ax.set_ylabel('样本数量/Count', fontsize=10.5)
     ax.set_xlim(0, 0.70)
     ax.set_ylim(0, ymax)
 

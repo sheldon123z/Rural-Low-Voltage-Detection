@@ -67,8 +67,8 @@ def main():
                     fontsize=9, fontweight='bold')
 
     # 设置坐标轴
-    ax.set_xlabel('模型', fontsize=10.5)
-    ax.set_ylabel('F1分数', fontsize=10.5)
+    ax.set_xlabel('模型/Model', fontsize=10.5)
+    ax.set_ylabel('F1分数/F1-Score', fontsize=10.5)
     ax.set_xticks(x)
     ax.set_xticklabels(model_labels, rotation=15, ha='right', fontsize=10)
     ax.set_ylim(0, 1.0)

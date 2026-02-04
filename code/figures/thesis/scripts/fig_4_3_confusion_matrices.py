@@ -111,8 +111,8 @@ def plot_single_confusion_matrix(model_key, output_path):
     ax.set_yticks([0, 1])
     ax.set_xticklabels(['正常', '异常'], fontsize=9)
     ax.set_yticklabels(['正常', '异常'], fontsize=9)
-    ax.set_xlabel('预测标签', fontsize=9)
-    ax.set_ylabel('真实标签', fontsize=9)
+    ax.set_xlabel('预测标签/Predicted', fontsize=10.5)
+    ax.set_ylabel('真实标签/Actual', fontsize=10.5)
 
     # 颜色条
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)

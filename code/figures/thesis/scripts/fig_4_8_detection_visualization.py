@@ -250,8 +250,8 @@ def main():
                                                 lw=0.8),
                                 fontweight='bold')
 
-    ax_voltage.set_xlabel('时间步', fontsize=10.5)
-    ax_voltage.set_ylabel('电压', fontsize=10.5)
+    ax_voltage.set_xlabel('时间步/Step', fontsize=10.5)
+    ax_voltage.set_ylabel('电压/V', fontsize=10.5)
     ax_voltage.set_xlim(0, window_len - 1)
     ax_voltage.legend(loc='upper left', fontsize=9, ncol=4, frameon=True,
                       edgecolor='#CCCCCC', fancybox=False)
