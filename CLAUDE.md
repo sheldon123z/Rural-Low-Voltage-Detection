@@ -2,9 +2,17 @@
 
 农村低压配电网电压异常检测项目。核心代码位于 `code/`，基于 Time-Series-Library 框架。
 
-## 论文主模型：VoltageTimesNet_v2
+## 论文命名规范
 
-**VoltageTimesNet_v2** 是本论文的核心模型，经 Optuna 30-trial 超参数优化后在 RuralVoltage 数据集上取得最优性能：
+**重要**：论文中统一使用以下命名：
+- 代码中的 `VoltageTimesNet_v2` 在论文中统一称为 **VoltageTimesNet**
+- **不要提及** DLinear 模型（论文对比实验不包含）
+- **不要提及** 旧版 VoltageTimesNet（代码中的 `VoltageTimesNet.py`，论文中不存在 v1/v2 区分）
+- 对比模型仅包含：VoltageTimesNet、TimesNet、LSTMAutoEncoder、Isolation Forest、One-Class SVM
+
+## 论文主模型：VoltageTimesNet
+
+**VoltageTimesNet**（代码中为 VoltageTimesNet_v2）是本论文的核心模型，经 Optuna 30-trial 超参数优化后在 RuralVoltage 数据集上取得最优性能：
 
 | 指标 | 值 | 说明 |
 |------|:--:|------|
@@ -138,8 +146,7 @@ output = Σ(softmax(weights) × x_1d_i)
 
 | 模型 | 准确率 | 精确率 | 召回率 | F1分数 |
 |------|:------:|:------:|:------:|:------:|
-| **VoltageTimesNet_v2** | **0.9393** | **0.7371** | **0.9110** | **0.8149** |
-| DLinear | 0.8651 | 0.5224 | 0.9955 | 0.6852 |
+| **VoltageTimesNet** | **0.9393** | **0.7371** | **0.9110** | **0.8149** |
 | TimesNet | 0.8584 | 0.5143 | 0.7115 | 0.5970 |
 | LSTMAutoEncoder | 0.7905 | 0.3654 | 0.5712 | 0.4457 |
 | Isolation Forest | 0.3474 | 0.3474 | 1.0000 | 0.5157 |

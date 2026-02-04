@@ -56,14 +56,12 @@ THESIS_COLORS = {
 # TimesNet 系列模型配色
 TIMESNET_COLORS = [
     '#4878A8',   # TimesNet - 柔和蓝
-    '#5B9BD5',   # VoltageTimesNet - 浅蓝
-    '#72A86D',   # VoltageTimesNet_v2 - 柔和绿
+    '#72A86D',   # VoltageTimesNet - 柔和绿
     '#9B7BB8',   # TPATimesNet - 柔和紫
 ]
 
 # 其他模型配色
 OTHER_COLORS = [
-    '#808080',   # DLinear - 灰色
     '#606060',   # PatchTST - 深灰
     '#B8860B',   # LSTMAutoEncoder - 暗金
     '#8B4513',   # Isolation Forest - 棕色
@@ -102,24 +100,20 @@ def get_model_colors(models):
     """根据模型列表返回对应颜色"""
     colors = []
     for model in models:
-        if 'VoltageTimesNet_v2' in model or 'V-TimesNet_v2' in model:
-            colors.append(TIMESNET_COLORS[2])
-        elif 'VoltageTimesNet' in model or 'V-TimesNet' in model:
+        if 'VoltageTimesNet' in model or 'V-TimesNet' in model:
             colors.append(TIMESNET_COLORS[1])
         elif 'TPATimesNet' in model or 'TPA-TimesNet' in model:
-            colors.append(TIMESNET_COLORS[3])
+            colors.append(TIMESNET_COLORS[2])
         elif 'TimesNet' in model:
             colors.append(TIMESNET_COLORS[0])
-        elif 'DLinear' in model:
-            colors.append(OTHER_COLORS[0])
         elif 'PatchTST' in model:
-            colors.append(OTHER_COLORS[1])
+            colors.append(OTHER_COLORS[0])
         elif 'LSTMAutoEncoder' in model or 'LSTM' in model:
-            colors.append(OTHER_COLORS[2])
+            colors.append(OTHER_COLORS[1])
         elif 'Isolation Forest' in model or 'IsolationForest' in model:
-            colors.append(OTHER_COLORS[3])
+            colors.append(OTHER_COLORS[2])
         elif 'One-Class SVM' in model or 'OCSVM' in model:
-            colors.append(OTHER_COLORS[4])
+            colors.append(OTHER_COLORS[3])
         else:
             colors.append(THESIS_COLORS['neutral'])
     return colors

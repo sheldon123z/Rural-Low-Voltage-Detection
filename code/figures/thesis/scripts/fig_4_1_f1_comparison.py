@@ -25,9 +25,9 @@ setup_thesis_style()
 # ============================================================
 # 实验数据（RuralVoltage 数据集）
 # ============================================================
-models = ['VoltageTimesNet_v2', 'DLinear', 'TimesNet',
+models = ['VoltageTimesNet', 'TimesNet',
           'Isolation Forest', 'One-Class SVM', 'LSTMAutoEncoder']
-f1_scores = [0.8149, 0.6852, 0.5970, 0.5157, 0.5157, 0.4457]
+f1_scores = [0.8149, 0.5970, 0.5157, 0.5157, 0.4457]
 
 # 按 F1 降序排列（已排好）
 sorted_indices = np.argsort(f1_scores)[::-1]
@@ -36,8 +36,7 @@ f1_scores = [f1_scores[i] for i in sorted_indices]
 
 # 模型简称（用于 x 轴显示）
 label_map = {
-    'VoltageTimesNet_v2': 'V-TimesNet_v2',
-    'DLinear': 'DLinear',
+    'VoltageTimesNet': 'VoltageTimesNet',
     'TimesNet': 'TimesNet',
     'LSTMAutoEncoder': 'LSTM-AE',
     'Isolation Forest': 'iForest',
