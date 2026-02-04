@@ -66,8 +66,8 @@ def main():
                 fontsize=8.5, color=THESIS_COLORS['dark_gray'],
                 ha='center')
 
-    ax.set_xlabel('融合权重 $\\alpha$', fontsize=10.5)
-    ax.set_ylabel('F1分数', fontsize=10.5)
+    ax.set_xlabel('融合权重/$\\alpha$', fontsize=10.5)
+    ax.set_ylabel('F1分数/F1-Score', fontsize=10.5)
     ax.set_xlim(0.45, 0.95)
     ax.set_ylim(0.9695, 0.9720)
     ax.set_xticks(alpha_values)

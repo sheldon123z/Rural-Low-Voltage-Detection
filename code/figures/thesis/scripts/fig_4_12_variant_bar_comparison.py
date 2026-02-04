@@ -68,7 +68,7 @@ def main():
     ax.set_xticks(x)
     ax.set_xticklabels(METRICS, fontsize=10.5, fontweight='bold')
     ax.set_ylim(0, 1.12)
-    ax.set_ylabel('指标值', fontsize=10.5)
+    ax.set_ylabel('指标值/Value', fontsize=10.5)
 
     remove_spines(ax)
     ax.legend(loc='upper right', fontsize=9, frameon=True)

@@ -17,20 +17,13 @@ import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch
 import matplotlib
 import os
+import sys
 
-# ============================================================
-# 论文格式配置：中文宋体 + 英文 Times New Roman，五号字 (10.5pt)
-# ============================================================
-plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
-plt.rcParams['font.size'] = 10.5
-plt.rcParams['axes.unicode_minus'] = False
-plt.rcParams['axes.linewidth'] = 0.8
-plt.rcParams['xtick.major.width'] = 0.8
-plt.rcParams['ytick.major.width'] = 0.8
-plt.rcParams['mathtext.fontset'] = 'stix'
-plt.rcParams['figure.facecolor'] = 'white'
-plt.rcParams['axes.facecolor'] = 'white'
-plt.rcParams['savefig.facecolor'] = 'white'
+# 导入论文统一样式
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines
+
+setup_thesis_style()
 
 # 柔和科研配色
 COLORS = {
@@ -130,7 +123,7 @@ def main():
 
     ax1.set_xlim(0, 480)
     ax1.set_ylim(188, 240)
-    ax1.set_xlabel('时间步', fontsize=10.5)
+    ax1.set_xlabel('时间步/Step', fontsize=10.5)
     ax1.set_ylabel('电压/V', fontsize=10.5)
     ax1.text(-0.02, 1.05, '(a)', transform=ax1.transAxes, fontsize=11, fontweight='bold')
     ax1.spines['top'].set_visible(False)
@@ -221,19 +214,19 @@ def main():
 
     ax3.set_xlim(0, 480)
     ax3.set_ylim(0, 16)
-    ax3.set_xlabel('时间步', fontsize=10.5)
-    ax3.set_ylabel('重构误差', fontsize=10.5)
+    ax3.set_xlabel('时间步/Step', fontsize=10.5)
+    ax3.set_ylabel('重构误差/Error', fontsize=10.5)
     ax3.text(-0.02, 1.05, '(c)', transform=ax3.transAxes, fontsize=11, fontweight='bold')
     ax3.spines['top'].set_visible(False)
     ax3.spines['right'].set_visible(False)
     ax3.legend(loc='upper right', frameon=False, fontsize=9, ncol=1)
 
     # 保存到 chapter3_method 目录
-    output_dir = '../chapter3_method'
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(script_dir, '..', 'chapter3_method')
     os.makedirs(output_dir, exist_ok=True)
-    plt.savefig(f'{output_dir}/fig_3_1_sliding_window.png', dpi=300, bbox_inches='tight', facecolor='white')
-    print(f"已生成: {output_dir}/fig_3_1_sliding_window.png")
-    plt.close()
+    output_path = os.path.join(output_dir, 'fig_3_1_sliding_window.png')
+    save_thesis_figure(fig, output_path)
 
 
 if __name__ == '__main__':

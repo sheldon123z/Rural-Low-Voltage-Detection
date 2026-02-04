@@ -298,8 +298,8 @@ def main():
                      s=30, label='FN (漏检)', zorder=5,
                      facecolors='none', linewidths=1.2)
 
-    ax_label.set_xlabel('时间步', fontsize=10.5)
-    ax_label.set_ylabel('标签', fontsize=10.5)
+    ax_label.set_xlabel('时间步/Step', fontsize=10.5)
+    ax_label.set_ylabel('标签/Label', fontsize=10.5)
     ax_label.set_xlim(0, window_len - 1)
     ax_label.set_ylim(-0.15, 1.5)
     ax_label.set_yticks([0, 1])
@@ -327,7 +327,7 @@ def main():
     for s, e in zip(starts, ends):
         ax_error.axvspan(s, e, alpha=0.1, color=THESIS_COLORS['negative'])
 
-    ax_error.set_xlabel('时间步', fontsize=10.5)
+    ax_error.set_xlabel('时间步/Step', fontsize=10.5)
     ax_error.set_ylabel('重构误差/MSE', fontsize=10.5)
     ax_error.set_xlim(0, window_len - 1)
     ax_error.legend(loc='upper right', fontsize=9, frameon=True,

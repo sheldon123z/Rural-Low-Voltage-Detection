@@ -70,7 +70,7 @@ def main():
                 fontsize=7.5, ha='center', color='gray')
 
     ax.set_xlabel('序列长度/步', fontsize=10.5)
-    ax.set_ylabel('最优F1分数', fontsize=10.5)
+    ax.set_ylabel('最优F1分数/F1-Score', fontsize=10.5)
     ax.set_xlim(20, 230)
     ax.set_ylim(0.60, 0.88)
     ax.set_xticks(seq_lens)

@@ -126,8 +126,7 @@ def main():
     ax.set_ylim([0.25, 0.85])
 
     ax.grid(True, linestyle='--', alpha=0.4)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
+    remove_spines(ax)
 
     ax.legend(loc='upper left', fontsize=9, framealpha=0.95)
 
@@ -136,8 +135,6 @@ def main():
             transform=ax.transAxes,
             fontsize=8, color='gray', ha='right', va='bottom',
             style='italic')
-
-    remove_spines(ax)
 
     # 保存到 chapter4_experiments 目录
     output_dir = os.path.join(os.path.dirname(__file__), '..', 'chapter4_experiments')

@@ -114,7 +114,7 @@ def plot_scale_detection(output_dir):
 
     # 颜色条
     cbar = fig.colorbar(im, ax=ax, shrink=0.85, pad=0.08)
-    cbar.set_label('F1分数', fontsize=10)
+    cbar.set_label('F1分数', fontsize=10.5)
     cbar.ax.tick_params(labelsize=9)
 
     # 移除多余边框
