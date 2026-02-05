@@ -175,11 +175,46 @@ python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparis
 
 ### 论文图表
 
-图表位置：`code/figures/thesis/`
+**统一图表管理**：所有图表脚本位于 `code/figures/scripts/`，输出到 `code/figures/output/chapX/`
 
+#### 目录结构
+```
+code/figures/
+├── scripts/              # 所有图表生成脚本
+│   ├── thesis_style.py   # 统一样式配置
+│   ├── fig_X_X_*.py      # 各章节图表脚本
+│   ├── generate_all_figures.py  # 批量生成
+│   └── sync_to_thesis.py # 同步到论文项目
+├── output/               # 生成的图片
+│   ├── chap2/           # 第2章：数据采集
+│   ├── chap3/           # 第3章：模型方法
+│   └── chap4/           # 第4章：实验结果
+└── architecture/         # draw.io 架构图源文件
+```
+
+#### 图表清单
+
+**第2章：数据采集与预处理**
+| 图号 | 文件名 | 说明 |
+|:----:|--------|------|
+| Fig 2-1 | fig_2_1_data_collection_architecture.png | 数据采集分层架构 |
+| Fig 2-2 | fig_2_2_voltage_anomaly_types.png | 电压异常类型示意 |
+
+**第3章：模型方法**
 | 图号 | 文件名 | 说明 |
 |:----:|--------|------|
 | Fig 3-1 | fig_3_1_sliding_window.png | 滑动窗口预测示意图 |
+| Fig 3-2 | fig_3_2_1d_to_2d_conversion.png | 1D→2D 时序转换 |
+| Fig 3-3 | fig_3_3_voltage_timesnet_comparison.png | VoltageTimesNet 与 TimesNet 对比 |
+| Fig 3-7 | fig_3_7_anomaly_detection_framework.png | 异常检测框架流程 |
+| - | fig_timesnet_architecture.png | TimesNet 架构图 (draw.io) |
+| - | fig_voltagetimesnet_architecture.png | VoltageTimesNet 架构图 (draw.io) |
+| - | fig_fft_period_discovery.png | FFT 周期发现示意 (draw.io) |
+| - | fig_2d_conv_inception.png | 2D 卷积 Inception 模块 (draw.io) |
+
+**第4章：实验结果**
+| 图号 | 文件名 | 说明 |
+|:----:|--------|------|
 | Fig 4-1 | fig_4_1_f1_comparison.png | 多模型 F1 分数对比 |
 | Fig 4-2 | fig_4_2_roc_pr_curves.png | ROC/PR 曲线对比 |
 | Fig 4-3 | fig_4_3_confusion_matrices.png | 混淆矩阵 |
@@ -191,11 +226,39 @@ python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparis
 | Fig 4-9 | fig_4_9_training_loss.png | 训练损失曲线 |
 | Fig 4-10 | fig_4_10_seq_len_ablation.png | 序列长度消融实验 |
 | Fig 4-11 | fig_4_11_alpha_ablation.png | alpha 参数消融实验 |
+| Fig 4-12 | fig_4_12_variant_bar_comparison.png | 模型变体对比 |
+| Fig 4-13 | fig_4_13_variant_training_loss.png | 变体训练损失 |
+| Fig 4-14 | fig_4_14_phase_attention_heatmap.png | 相位注意力热图 |
+| Fig 4-15 | fig_4_15_multiscale_contribution.png | 多尺度贡献分析 |
 
-重新生成图表：
+#### 图表生成工作流
+
 ```bash
-cd code/figures/thesis/scripts
-for f in fig_*.py; do python "$f"; done
+cd code/figures/scripts
+
+# 生成所有章节图表
+python generate_all_figures.py
+
+# 生成单个章节 (2, 3, 4)
+python generate_all_figures.py 4
+
+# 生成单个图表
+python fig_4_1_f1_comparison.py
+
+# 同步到论文项目 (自动检测更新)
+python sync_to_thesis.py
+
+# 预览同步 (不实际复制)
+python sync_to_thesis.py --dry-run
+```
+
+#### 架构图渲染 (draw.io)
+
+架构图源文件位于 `code/figures/architecture/*.drawio`，通过 Playwright 渲染为 PNG：
+
+```bash
+cd code/figures/architecture
+python render_architecture_figures.py
 ```
 
 ### 论文绘图规范
