@@ -4,13 +4,12 @@
 农村电网数据采集分层架构图
 用于论文第二章：数据采集与预处理
 
-IEEE风格，中文标签，300 DPI
+优化版本：紧凑布局，避免重叠
 """
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle, Circle, Polygon
-from matplotlib.font_manager import FontProperties
+from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, ConnectionPatch
 import numpy as np
 import os
 import sys
@@ -20,101 +19,78 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 from thesis_style import get_output_dir
 
-# 设置中文字体（与 thesis_style.py 一致）
+# 设置中文字体
 plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
-plt.rcParams['font.size'] = 11
+plt.rcParams['font.size'] = 10
 plt.rcParams['figure.facecolor'] = 'white'
-plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['savefig.facecolor'] = 'white'
 plt.rcParams['savefig.dpi'] = 300
 
-# IEEE 风格配色方案
+# 配色方案（柔和学术风格）
 COLORS = {
-    'perception': '#16A085',      # 感知层 - 深青绿色
-    'perception_light': '#E8F8F5',
+    'perception': '#16A085',
+    'perception_light': '#E8F6F3',
     'perception_border': '#1ABC9C',
-    'network': '#E67E22',          # 网络层 - 橙色
-    'network_light': '#FEF5E7',
-    'network_border': '#F39C12',
-    'platform': '#8E44AD',         # 平台层 - 紫色
+    'network': '#D68910',
+    'network_light': '#FEF9E7',
+    'network_border': '#F5B041',
+    'platform': '#7D3C98',
     'platform_light': '#F5EEF8',
-    'platform_border': '#9B59B6',
-    'arrow_up': '#27AE60',         # 上行箭头 - 绿色
-    'arrow_down': '#3498DB',       # 下行箭头 - 蓝色
-    'text': '#2C3E50',             # 文字颜色
-    'text_light': '#7F8C8D',       # 浅色文字
-    'bg': '#FFFFFF',               # 背景色
+    'platform_border': '#AF7AC5',
+    'arrow': '#5D6D7E',
+    'text': '#2C3E50',
+    'text_light': '#7F8C8D',
 }
 
 
-def draw_layer_box(ax, x, y, width, height, color, light_color, border_color):
+def draw_layer(ax, y_center, height, color, light_color, border_color,
+               title_cn, title_en, width=0.82, x_start=0.09):
     """绘制层级背景框"""
     box = FancyBboxPatch(
-        (x, y), width, height,
-        boxstyle="round,pad=0.01,rounding_size=0.02",
+        (x_start, y_center - height/2), width, height,
+        boxstyle="round,pad=0.01,rounding_size=0.015",
         facecolor=light_color,
         edgecolor=border_color,
-        linewidth=2.5,
-        alpha=0.95
+        linewidth=2,
+        alpha=0.9
     )
     ax.add_patch(box)
 
+    # 层级标题（左上角）
+    ax.text(x_start + 0.02, y_center + height/2 - 0.025, title_cn,
+            fontsize=12, fontweight='bold', color=color, va='top')
+    ax.text(x_start + 0.02, y_center + height/2 - 0.055, title_en,
+            fontsize=8, color=color, style='italic', va='top')
 
-def draw_component_box(ax, x, y, width, height, color, label_cn, label_en):
+
+def draw_component(ax, x_center, y_center, width, height, color,
+                   label_cn, label_en):
     """绘制组件框"""
     box = FancyBboxPatch(
-        (x, y), width, height,
-        boxstyle="round,pad=0.008,rounding_size=0.015",
+        (x_center - width/2, y_center - height/2), width, height,
+        boxstyle="round,pad=0.005,rounding_size=0.01",
         facecolor='white',
         edgecolor=color,
-        linewidth=2,
+        linewidth=1.5,
         alpha=0.98
     )
     ax.add_patch(box)
 
     # 中文标签
-    ax.text(x + width/2, y + height/2 + 0.018, label_cn,
+    ax.text(x_center, y_center + 0.012, label_cn,
             ha='center', va='center',
-            fontsize=12, fontweight='bold',
-            color=COLORS['text'])
+            fontsize=9, fontweight='bold', color=COLORS['text'])
     # 英文标签
-    ax.text(x + width/2, y + height/2 - 0.018, label_en,
+    ax.text(x_center, y_center - 0.012, label_en,
             ha='center', va='center',
-            fontsize=9, color=COLORS['text_light'],
-            style='italic')
+            fontsize=7, color=COLORS['text_light'], style='italic')
 
 
-def draw_arrow_with_label(ax, x, y_start, y_end, color, label, side='left'):
-    """绘制带标签的垂直箭头"""
+def draw_vertical_arrow(ax, x, y_start, y_end, color, label=None, label_side='right'):
+    """绘制垂直箭头（带可选标签）"""
     arrow = FancyArrowPatch(
         (x, y_start), (x, y_end),
-        arrowstyle='-|>',
-        mutation_scale=18,
-        color=color,
-        linewidth=3,
-        connectionstyle='arc3,rad=0'
-    )
-    ax.add_patch(arrow)
-
-    # 标签位置
-    mid_y = (y_start + y_end) / 2
-    if side == 'left':
-        ax.text(x - 0.03, mid_y, label,
-                ha='right', va='center',
-                fontsize=10, color=color,
-                fontweight='bold', rotation=90)
-    else:
-        ax.text(x + 0.03, mid_y, label,
-                ha='left', va='center',
-                fontsize=10, color=color,
-                fontweight='bold', rotation=90)
-
-
-def draw_horizontal_arrow(ax, x_start, x_end, y, color):
-    """绘制水平箭头"""
-    arrow = FancyArrowPatch(
-        (x_start, y), (x_end, y),
         arrowstyle='-|>',
         mutation_scale=12,
         color=color,
@@ -123,210 +99,162 @@ def draw_horizontal_arrow(ax, x_start, x_end, y, color):
     )
     ax.add_patch(arrow)
 
+    if label:
+        mid_y = (y_start + y_end) / 2
+        offset = 0.025 if label_side == 'right' else -0.025
+        ha = 'left' if label_side == 'right' else 'right'
+        ax.text(x + offset, mid_y, label,
+                ha=ha, va='center',
+                fontsize=8, color=color)
 
-def draw_icon_meter(ax, x, y, size=0.025):
-    """绘制电表图标"""
-    # 外框
-    rect = FancyBboxPatch(
-        (x - size, y - size*0.7), size*2, size*1.4,
-        boxstyle="round,pad=0.002,rounding_size=0.005",
-        facecolor='#ECF0F1',
-        edgecolor=COLORS['perception'],
+
+def draw_horizontal_arrow(ax, x_start, x_end, y, color):
+    """绘制水平箭头"""
+    arrow = FancyArrowPatch(
+        (x_start, y), (x_end, y),
+        arrowstyle='-|>',
+        mutation_scale=10,
+        color=color,
         linewidth=1.5
     )
-    ax.add_patch(rect)
-    # 显示屏
-    screen = Rectangle((x - size*0.7, y - size*0.2), size*1.4, size*0.5,
-                       facecolor='#A8E6CF', edgecolor=COLORS['perception'], linewidth=0.8)
-    ax.add_patch(screen)
-
-
-def draw_icon_antenna(ax, x, y, size=0.025):
-    """绘制无线信号图标"""
-    for i, r in enumerate([size*0.5, size*0.8, size*1.1]):
-        arc = mpatches.Arc((x, y - size*0.3), r*2, r*2, angle=0,
-                          theta1=40, theta2=140,
-                          color=COLORS['network'],
-                          linewidth=2.5 - i*0.5)
-        ax.add_patch(arc)
-    # 信号发射点
-    circle = Circle((x, y - size*0.3), size*0.15,
-                   facecolor=COLORS['network'], edgecolor='none')
-    ax.add_patch(circle)
-
-
-def draw_icon_database(ax, x, y, size=0.025):
-    """绘制数据库图标"""
-    from matplotlib.patches import Ellipse
-    # 圆柱体
-    rect = Rectangle((x - size, y - size*0.5), size*2, size*1.0,
-                    facecolor='#D7BDE2', edgecolor=COLORS['platform'], linewidth=1.5)
-    ax.add_patch(rect)
-    # 顶部椭圆
-    ellipse = Ellipse((x, y + size*0.5), size*2, size*0.5,
-                     facecolor='#E8DAEF', edgecolor=COLORS['platform'], linewidth=1.5)
-    ax.add_patch(ellipse)
-    # 底部椭圆
-    ellipse_bottom = Ellipse((x, y - size*0.5), size*2, size*0.5,
-                            facecolor='#D7BDE2', edgecolor=COLORS['platform'], linewidth=1.5)
-    ax.add_patch(ellipse_bottom)
+    ax.add_patch(arrow)
 
 
 def main():
-    # 创建图形 - 调整为横向布局
-    fig, ax = plt.subplots(1, 1, figsize=(14, 10), dpi=300)
+    # 创建图形 - 紧凑尺寸
+    fig, ax = plt.subplots(figsize=(10, 7), dpi=300)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_aspect('equal')
     ax.axis('off')
-    fig.patch.set_facecolor(COLORS['bg'])
 
-    # ==================== 层级定义 ====================
-    layer_width = 0.85
-    layer_height = 0.23
-    layer_x = 0.075
-    gap = 0.06
+    # ==================== 层级参数 ====================
+    layer_width = 0.82
+    layer_height = 0.22
+    layer_x = 0.09
 
-    # 平台层 (最上层)
-    platform_y = 0.70
-    # 网络层 (中间层)
-    network_y = 0.41
-    # 感知层 (最下层)
-    perception_y = 0.12
+    # 三层的中心 Y 坐标（从上到下：平台层、网络层、感知层）
+    platform_y = 0.78
+    network_y = 0.50
+    perception_y = 0.22
 
-    # ==================== 绘制三个主层级框 ====================
+    # ==================== 绘制三个层级 ====================
 
     # 平台层
-    draw_layer_box(ax, layer_x, platform_y, layer_width, layer_height,
-                  COLORS['platform'], COLORS['platform_light'], COLORS['platform_border'])
-    ax.text(layer_x + 0.025, platform_y + layer_height - 0.035, '平台层',
-            fontsize=16, fontweight='bold', color=COLORS['platform'])
-    ax.text(layer_x + 0.025, platform_y + layer_height - 0.065, 'Platform Layer',
-            fontsize=10, color=COLORS['platform'], style='italic')
+    draw_layer(ax, platform_y, layer_height,
+               COLORS['platform'], COLORS['platform_light'], COLORS['platform_border'],
+               '平台层', 'Platform Layer')
 
     # 网络层
-    draw_layer_box(ax, layer_x, network_y, layer_width, layer_height,
-                  COLORS['network'], COLORS['network_light'], COLORS['network_border'])
-    ax.text(layer_x + 0.025, network_y + layer_height - 0.035, '网络层',
-            fontsize=16, fontweight='bold', color=COLORS['network'])
-    ax.text(layer_x + 0.025, network_y + layer_height - 0.065, 'Network Layer',
-            fontsize=10, color=COLORS['network'], style='italic')
+    draw_layer(ax, network_y, layer_height,
+               COLORS['network'], COLORS['network_light'], COLORS['network_border'],
+               '网络层', 'Network Layer')
 
     # 感知层
-    draw_layer_box(ax, layer_x, perception_y, layer_width, layer_height,
-                  COLORS['perception'], COLORS['perception_light'], COLORS['perception_border'])
-    ax.text(layer_x + 0.025, perception_y + layer_height - 0.035, '感知层',
-            fontsize=16, fontweight='bold', color=COLORS['perception'])
-    ax.text(layer_x + 0.025, perception_y + layer_height - 0.065, 'Perception Layer',
-            fontsize=10, color=COLORS['perception'], style='italic')
+    draw_layer(ax, perception_y, layer_height,
+               COLORS['perception'], COLORS['perception_light'], COLORS['perception_border'],
+               '感知层', 'Perception Layer')
 
     # ==================== 感知层组件 ====================
-    comp_width = 0.18
-    comp_height = 0.10
-    comp_y = perception_y + 0.035
-    comp_start_x = layer_x + 0.12
+    comp_h = 0.07
+    comp_w = 0.16
+    comp_y = perception_y - 0.015
 
-    # 智能电表
-    draw_component_box(ax, comp_start_x, comp_y, comp_width, comp_height,
-                      COLORS['perception'], '智能电表', 'Smart Meter')
+    # 三个组件均匀分布
+    comp_positions = [0.25, 0.50, 0.75]
 
-    # 配电自动化终端
-    draw_component_box(ax, comp_start_x + comp_width + 0.06, comp_y, comp_width + 0.04, comp_height,
-                      COLORS['perception'], '配电自动化终端', 'DTU/FTU')
-
-    # 环境传感器
-    draw_component_box(ax, comp_start_x + 2*comp_width + 0.14, comp_y, comp_width, comp_height,
-                      COLORS['perception'], '环境传感器', 'Sensors')
+    draw_component(ax, comp_positions[0], comp_y, comp_w, comp_h,
+                   COLORS['perception'], '智能电表', 'Smart Meter')
+    draw_component(ax, comp_positions[1], comp_y, comp_w + 0.02, comp_h,
+                   COLORS['perception'], '配电自动化终端', 'DTU/FTU')
+    draw_component(ax, comp_positions[2], comp_y, comp_w, comp_h,
+                   COLORS['perception'], '环境传感器', 'Sensors')
 
     # ==================== 网络层组件 ====================
-    net_comp_y = network_y + 0.035
-    net_comp_width = 0.24
+    net_comp_y = network_y - 0.015
+    net_comp_w = 0.20
 
-    # 4G/5G无线网络
-    net1_x = layer_x + 0.15
-    draw_component_box(ax, net1_x, net_comp_y, net_comp_width, comp_height,
-                      COLORS['network'], '4G/5G无线网络', 'Wireless Network')
-
-    # 电力载波通信
-    net2_x = net1_x + net_comp_width + 0.12
-    draw_component_box(ax, net2_x, net_comp_y, net_comp_width + 0.04, comp_height,
-                      COLORS['network'], '电力载波通信(PLC)', 'Power Line Comm.')
+    draw_component(ax, 0.33, net_comp_y, net_comp_w, comp_h,
+                   COLORS['network'], '4G/5G无线网络', 'Wireless Network')
+    draw_component(ax, 0.67, net_comp_y, net_comp_w + 0.02, comp_h,
+                   COLORS['network'], '电力载波通信', 'PLC')
 
     # ==================== 平台层组件 ====================
-    plat_comp_y = platform_y + 0.035
-    plat_comp_width = 0.17
+    plat_comp_y = platform_y - 0.015
+    plat_comp_w = 0.16
 
-    # 时序数据库
-    plat1_x = layer_x + 0.12
-    draw_component_box(ax, plat1_x, plat_comp_y, plat_comp_width, comp_height,
-                      COLORS['platform'], '时序数据库', 'TSDB')
+    plat_x1, plat_x2, plat_x3 = 0.25, 0.50, 0.75
 
-    # 数据处理
-    plat2_x = plat1_x + plat_comp_width + 0.06
-    draw_component_box(ax, plat2_x, plat_comp_y, plat_comp_width, comp_height,
-                      COLORS['platform'], '数据处理', 'Processing')
+    draw_component(ax, plat_x1, plat_comp_y, plat_comp_w, comp_h,
+                   COLORS['platform'], '时序数据库', 'TSDB')
+    draw_component(ax, plat_x2, plat_comp_y, plat_comp_w, comp_h,
+                   COLORS['platform'], '数据处理', 'Processing')
+    draw_component(ax, plat_x3, plat_comp_y, plat_comp_w + 0.02, comp_h,
+                   COLORS['platform'], '异常检测算法', 'Anomaly Detection')
 
-    # 异常检测算法
-    plat3_x = plat2_x + plat_comp_width + 0.06
-    draw_component_box(ax, plat3_x, plat_comp_y, plat_comp_width + 0.06, comp_height,
-                      COLORS['platform'], '异常检测算法', 'Anomaly Detection')
+    # 平台层内部箭头
+    draw_horizontal_arrow(ax, plat_x1 + plat_comp_w/2 + 0.01,
+                         plat_x2 - plat_comp_w/2 - 0.01, plat_comp_y, COLORS['platform'])
+    draw_horizontal_arrow(ax, plat_x2 + plat_comp_w/2 + 0.01,
+                         plat_x3 - (plat_comp_w + 0.02)/2 - 0.01, plat_comp_y, COLORS['platform'])
 
-    # ==================== 绘制层间连接箭头 ====================
+    # ==================== 层间连接箭头 ====================
 
-    # 感知层 → 网络层 (左侧)
-    draw_arrow_with_label(ax, 0.28, perception_y + layer_height + 0.015,
-                         network_y - 0.015, COLORS['arrow_up'], '数据上传', 'left')
+    # 感知层 → 网络层
+    arrow_gap = 0.015
+    perception_top = perception_y + layer_height/2
+    network_bottom = network_y - layer_height/2
 
-    # 感知层 → 网络层 (右侧)
-    draw_arrow_with_label(ax, 0.72, perception_y + layer_height + 0.015,
-                         network_y - 0.015, COLORS['arrow_up'], '数据上传', 'right')
+    draw_vertical_arrow(ax, 0.33, perception_top + arrow_gap,
+                       network_bottom - arrow_gap, COLORS['arrow'],
+                       '数据上传', 'right')
+    draw_vertical_arrow(ax, 0.67, perception_top + arrow_gap,
+                       network_bottom - arrow_gap, COLORS['arrow'])
 
-    # 网络层 → 平台层 (中间)
-    draw_arrow_with_label(ax, 0.50, network_y + layer_height + 0.015,
-                         platform_y - 0.015, COLORS['arrow_down'], '数据汇聚', 'left')
+    # 网络层 → 平台层
+    network_top = network_y + layer_height/2
+    platform_bottom = platform_y - layer_height/2
 
-    # 平台层内部数据流向
-    draw_horizontal_arrow(ax, plat1_x + plat_comp_width + 0.01,
-                         plat2_x - 0.01, plat_comp_y + comp_height/2, COLORS['platform'])
-    draw_horizontal_arrow(ax, plat2_x + plat_comp_width + 0.01,
-                         plat3_x - 0.01, plat_comp_y + comp_height/2, COLORS['platform'])
+    draw_vertical_arrow(ax, 0.50, network_top + arrow_gap,
+                       platform_bottom - arrow_gap, COLORS['arrow'],
+                       '数据汇聚', 'right')
 
-    # ==================== 添加说明标注框 ====================
+    # ==================== 底部说明文字 ====================
+    ax.text(0.50, 0.05, '采集数据：电压、电流、功率、谐波失真率、频率等实时数据',
+            ha='center', va='center', fontsize=9, color=COLORS['text_light'])
 
-    # 感知层数据说明
-    ax.text(0.5, perception_y - 0.045, '采集数据：电压、电流、功率、谐波失真率、频率等实时数据',
-            ha='center', va='center', fontsize=10, color=COLORS['text_light'])
+    # ==================== 右侧参数说明 ====================
+    # 使用更紧凑的位置
+    param_x = 0.94
+    param_fontsize = 7
 
-    # 右侧说明框
     # 感知层参数
-    bbox_props = dict(boxstyle='round,pad=0.4', facecolor='white',
-                     edgecolor=COLORS['perception'], linewidth=1.5, alpha=0.95)
-    ax.text(0.93, perception_y + 0.08, '采样频率\n1次/分钟',
-            ha='center', va='center', fontsize=9,
+    ax.text(param_x, perception_y, '采样: 1次/分钟',
+            ha='center', va='center', fontsize=param_fontsize,
             color=COLORS['perception'], fontweight='bold',
-            bbox=bbox_props)
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
+                     edgecolor=COLORS['perception'], linewidth=1, alpha=0.95))
 
     # 网络层参数
-    bbox_props['edgecolor'] = COLORS['network']
-    ax.text(0.93, network_y + 0.08, '传输带宽\n4G: 100Mbps\nPLC: 2Mbps',
-            ha='center', va='center', fontsize=9,
+    ax.text(param_x, network_y, '4G: 100Mbps\nPLC: 2Mbps',
+            ha='center', va='center', fontsize=param_fontsize,
             color=COLORS['network'], fontweight='bold',
-            bbox=bbox_props)
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
+                     edgecolor=COLORS['network'], linewidth=1, alpha=0.95))
 
     # 平台层参数
-    bbox_props['edgecolor'] = COLORS['platform']
-    ax.text(0.93, platform_y + 0.08, '处理能力\n>10万点/秒',
-            ha='center', va='center', fontsize=9,
+    ax.text(param_x, platform_y, '处理: >10万点/秒',
+            ha='center', va='center', fontsize=param_fontsize,
             color=COLORS['platform'], fontweight='bold',
-            bbox=bbox_props)
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
+                     edgecolor=COLORS['platform'], linewidth=1, alpha=0.95))
 
     # ==================== 保存图片 ====================
     output_dir = get_output_dir(2)
     output_path = os.path.join(output_dir, 'fig_2_1_data_collection_architecture.png')
-    plt.tight_layout()
+
     plt.savefig(output_path, dpi=300, bbox_inches='tight',
-                facecolor=COLORS['bg'], edgecolor='none',
-                pad_inches=0.15)
+                facecolor='white', edgecolor='none', pad_inches=0.1)
     plt.close()
 
     print(f"图片已保存: {output_path}")
