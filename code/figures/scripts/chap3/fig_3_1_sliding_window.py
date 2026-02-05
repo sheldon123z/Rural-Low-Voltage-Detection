@@ -164,8 +164,8 @@ def main():
                                boxstyle="round,pad=0.05,rounding_size=0.15",
                                facecolor=COLORS['model_box'], edgecolor='#0066AA', linewidth=1.8)
     ax2.add_patch(model_box)
-    ax2.text(model_x + (box_width_large + 0.2)/2, box_y + 0.18, 'VoltageTimesNet',
-             ha='center', va='center', fontsize=11, fontweight='bold', color='#003366')
+    ax2.text(model_x + (box_width_large + 0.2)/2, box_y + 0.18, '时序异常检测模型',
+             ha='center', va='center', fontsize=10, fontweight='bold', color='#003366')
     ax2.text(model_x + (box_width_large + 0.2)/2, box_y - 0.25, '编码器-解码器',
              ha='center', va='center', fontsize=10, color='#444444')
 
