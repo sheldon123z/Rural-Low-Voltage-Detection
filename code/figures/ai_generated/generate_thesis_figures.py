@@ -29,11 +29,12 @@ import re
 env_path = Path(__file__).parent.parent.parent.parent / ".env"
 load_dotenv(env_path)
 
+# API 配置
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-if not OPENROUTER_API_KEY:
-    raise ValueError("未找到 OPENROUTER_API_KEY 环境变量")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or "AIzaSyBTIQLM1WClyvwCTRwvgjrGNa81HHdDBtQ"
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+GOOGLE_API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 
 # Clash 代理配置
 PROXY_CONFIG = {
@@ -41,9 +42,18 @@ PROXY_CONFIG = {
     "https": "http://127.0.0.1:7890",
 }
 
-# 图像生成模型（仅使用 gemini-3-pro-image-preview）
-IMAGE_MODELS = [
-    "google/gemini-3-pro-image-preview",  # Nano Banana Pro 模型
+# API 提供商选择: "google" 或 "openrouter"
+API_PROVIDER = "google"
+
+# Google AI Studio 图像生成模型
+GOOGLE_IMAGE_MODELS = [
+    "gemini-2.0-flash-exp-image-generation",  # Gemini 2.0 图像生成
+    "imagen-3.0-generate-002",  # Imagen 3
+]
+
+# OpenRouter 图像生成模型
+OPENROUTER_IMAGE_MODELS = [
+    "google/gemini-2.5-flash-image",
 ]
 
 # ============================================================
@@ -324,6 +334,135 @@ SEPARATOR: Vertical dashed line in center dividing left/right
 }
 
 
+def call_google_api(prompt: str, model: str = "gemini-2.0-flash-exp-image-generation") -> Optional[bytes]:
+    """
+    直接调用 Google AI Studio API 生成图像
+    """
+    # 构建 API URL
+    api_url = f"{GOOGLE_API_BASE_URL}/models/{model}:generateContent?key={GOOGLE_API_KEY}"
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    # Google API 请求格式
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ],
+        "generationConfig": {
+            "responseModalities": ["TEXT", "IMAGE"],
+            "temperature": 0.7,
+        }
+    }
+
+    try:
+        print(f"    调用 Google API: {model}")
+        response = requests.post(
+            api_url,
+            headers=headers,
+            json=data,
+            timeout=180,
+            proxies=PROXY_CONFIG
+        )
+
+        if response.status_code == 200:
+            result = response.json()
+
+            # 解析 Google API 响应
+            candidates = result.get("candidates", [])
+            if candidates:
+                content = candidates[0].get("content", {})
+                parts = content.get("parts", [])
+
+                for part in parts:
+                    # 检查是否有图像数据
+                    if "inlineData" in part:
+                        inline_data = part["inlineData"]
+                        mime_type = inline_data.get("mimeType", "")
+                        data_b64 = inline_data.get("data", "")
+
+                        if "image" in mime_type and data_b64:
+                            print(f"    ✓ 成功获取 Google API 图像 (长度: {len(data_b64)} 字符)")
+                            return base64.b64decode(data_b64)
+
+                # 如果没有图像，检查是否有文本响应
+                for part in parts:
+                    if "text" in part:
+                        print(f"    ℹ Google API 仅返回文本: {part['text'][:100]}...")
+
+            return None
+
+        else:
+            error_text = response.text[:500]
+            print(f"    ✗ Google API HTTP {response.status_code}: {error_text}")
+            return None
+
+    except Exception as e:
+        print(f"    ✗ Google API 请求错误: {e}")
+        return None
+
+
+def call_imagen_api(prompt: str) -> Optional[bytes]:
+    """
+    调用 Google Imagen 3 API 生成图像
+    """
+    model = "imagen-3.0-generate-002"
+    api_url = f"{GOOGLE_API_BASE_URL}/models/{model}:predict?key={GOOGLE_API_KEY}"
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    # Imagen API 请求格式
+    data = {
+        "instances": [
+            {"prompt": prompt}
+        ],
+        "parameters": {
+            "sampleCount": 1,
+            "aspectRatio": "16:9",
+            "personGeneration": "dont_allow",
+            "safetySetting": "block_few",
+        }
+    }
+
+    try:
+        print(f"    调用 Imagen 3 API...")
+        response = requests.post(
+            api_url,
+            headers=headers,
+            json=data,
+            timeout=180,
+            proxies=PROXY_CONFIG
+        )
+
+        if response.status_code == 200:
+            result = response.json()
+            predictions = result.get("predictions", [])
+
+            if predictions:
+                for pred in predictions:
+                    if "bytesBase64Encoded" in pred:
+                        data_b64 = pred["bytesBase64Encoded"]
+                        print(f"    ✓ 成功获取 Imagen 3 图像 (长度: {len(data_b64)} 字符)")
+                        return base64.b64decode(data_b64)
+
+            return None
+        else:
+            error_text = response.text[:500]
+            print(f"    ✗ Imagen API HTTP {response.status_code}: {error_text}")
+            return None
+
+    except Exception as e:
+        print(f"    ✗ Imagen API 请求错误: {e}")
+        return None
+
+
 def call_image_generation_api(prompt: str, model: str, size: str = "1792x1024") -> Optional[bytes]:
     """
     调用 OpenRouter 图像生成 API
@@ -458,7 +597,7 @@ def call_image_generation_api(prompt: str, model: str, size: str = "1792x1024") 
         return None
 
 
-def generate_figure(figure_key: str, output_dir: Path, models: List[str] = None) -> Dict[str, Any]:
+def generate_figure(figure_key: str, output_dir: Path, models: List[str] = None, provider: str = None) -> Dict[str, Any]:
     """
     生成单个图表
     """
@@ -467,12 +606,13 @@ def generate_figure(figure_key: str, output_dir: Path, models: List[str] = None)
         return {"success": False, "error": "Unknown figure key"}
 
     config = THESIS_FIGURES[figure_key]
-    models = models or IMAGE_MODELS
+    provider = provider or API_PROVIDER
 
     print(f"\n{'='*60}")
     print(f"正在生成: {config['title']}")
     print(f"章节: 第{config['chapter']}章")
     print(f"描述: {config['description']}")
+    print(f"API 提供商: {provider}")
     print(f"{'='*60}")
 
     result = {
@@ -485,19 +625,21 @@ def generate_figure(figure_key: str, output_dir: Path, models: List[str] = None)
         "timestamp": datetime.now().isoformat()
     }
 
-    for model in models:
-        print(f"  尝试模型: {model}")
+    response = None
 
-        response = call_image_generation_api(
-            config["prompt"],
-            model,
-            config.get("size", "1800x1200")
-        )
+    if provider == "google":
+        # 使用 Google AI Studio API
+        models_to_try = models or GOOGLE_IMAGE_MODELS
 
-        if response:
-            # 确定输出文件
-            if isinstance(response, bytes) and len(response) > 1000:
-                # 可能是图像数据
+        for model in models_to_try:
+            print(f"  尝试模型: {model}")
+
+            if "imagen" in model.lower():
+                response = call_imagen_api(config["prompt"])
+            else:
+                response = call_google_api(config["prompt"], model)
+
+            if response and isinstance(response, bytes) and len(response) > 1000:
                 output_path = output_dir / f"{figure_key}.png"
                 with open(output_path, "wb") as f:
                     f.write(response)
@@ -507,20 +649,42 @@ def generate_figure(figure_key: str, output_dir: Path, models: List[str] = None)
                 result["output_path"] = str(output_path)
                 result["file_size"] = len(response)
                 return result
-            else:
-                # 文本响应
-                text_path = output_dir / f"{figure_key}_response.txt"
-                if isinstance(response, bytes):
-                    response = response.decode("utf-8", errors="ignore")
-                with open(text_path, "w", encoding="utf-8") as f:
-                    f.write(f"Model: {model}\n\n{response}")
-                print(f"  ℹ 模型返回文本响应: {text_path}")
-                result["model_used"] = model
-                result["output_path"] = str(text_path)
-                result["response_type"] = "text"
-                # 继续尝试其他模型
 
-        time.sleep(3)  # 避免速率限制
+            time.sleep(2)
+
+    else:
+        # 使用 OpenRouter API
+        models_to_try = models or OPENROUTER_IMAGE_MODELS
+
+        for model in models_to_try:
+            print(f"  尝试模型: {model}")
+
+            response = call_image_generation_api(
+                config["prompt"],
+                model,
+                config.get("size", "1800x1200")
+            )
+
+            if response:
+                if isinstance(response, bytes) and len(response) > 1000:
+                    output_path = output_dir / f"{figure_key}.png"
+                    with open(output_path, "wb") as f:
+                        f.write(response)
+                    print(f"  ✓ 图像已保存: {output_path}")
+                    result["success"] = True
+                    result["model_used"] = model
+                    result["output_path"] = str(output_path)
+                    result["file_size"] = len(response)
+                    return result
+                else:
+                    text_path = output_dir / f"{figure_key}_response.txt"
+                    if isinstance(response, bytes):
+                        response = response.decode("utf-8", errors="ignore")
+                    with open(text_path, "w", encoding="utf-8") as f:
+                        f.write(f"Model: {model}\n\n{response}")
+                    print(f"  ℹ 模型返回文本响应: {text_path}")
+
+            time.sleep(3)
 
     if not result["success"]:
         print(f"  ✗ 所有模型均未能生成图像")
@@ -541,7 +705,11 @@ def generate_all_figures(output_dir: Optional[Path] = None, chapters: List[int] 
     print("论文图表批量生成")
     print("=" * 70)
     print(f"输出目录: {output_dir}")
-    print(f"图像模型: {IMAGE_MODELS[0]}")
+    print(f"API 提供商: {API_PROVIDER}")
+    if API_PROVIDER == "google":
+        print(f"图像模型: {GOOGLE_IMAGE_MODELS}")
+    else:
+        print(f"图像模型: {OPENROUTER_IMAGE_MODELS}")
     if chapters:
         print(f"生成章节: {chapters}")
     print("=" * 70)
