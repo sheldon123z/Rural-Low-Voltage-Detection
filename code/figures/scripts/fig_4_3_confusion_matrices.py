@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-from thesis_style import setup_thesis_style, save_thesis_figure
+from thesis_style import setup_thesis_style, save_thesis_figure, get_output_dir
 
 # ============================================================
 # 初始化论文样式
@@ -123,8 +123,7 @@ def plot_single_confusion_matrix(model_key, output_path):
 
 def main():
     """主函数：为每个模型生成独立的混淆矩阵图片"""
-    output_dir = os.path.join(os.path.dirname(__file__), '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = get_output_dir(4)
 
     for model_key, filename in model_output:
         output_path = os.path.join(output_dir, filename)

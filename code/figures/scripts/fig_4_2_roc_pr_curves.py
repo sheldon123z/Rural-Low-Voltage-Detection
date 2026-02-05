@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines, get_output_dir
 
 # ============================================================
 # RuralVoltage 实验数据 (5个模型)
@@ -179,9 +179,7 @@ def main():
     """主函数"""
     setup_thesis_style()
 
-    output_dir = os.path.join(os.path.dirname(__file__), '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
-
+    output_dir = get_output_dir(4)
     plot_roc_curve(output_dir)
     plot_pr_curve(output_dir)
 

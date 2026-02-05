@@ -122,8 +122,26 @@ def get_model_colors(models):
     return colors
 
 
+def get_output_dir(chapter):
+    """获取指定章节的输出目录
+
+    Args:
+        chapter: 章节号 (2, 3, 4 等)
+
+    Returns:
+        输出目录的绝对路径
+    """
+    import os
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(script_dir, '..', 'output', f'chap{chapter}')
+    os.makedirs(output_dir, exist_ok=True)
+    return output_dir
+
+
 def save_thesis_figure(fig, output_path, tight=True):
     """保存论文格式的图表（仅 PNG）"""
+    import os
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     if tight:
         fig.tight_layout()
     fig.savefig(output_path, dpi=300, bbox_inches='tight',

@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines, get_output_dir
 
 # ============================================================
 # 多尺度分支数据
@@ -130,8 +130,8 @@ def main():
     setup_thesis_style()
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = get_output_dir(4)
+    
 
     plot_scale_weights(output_dir)
     plot_scale_detection(output_dir)

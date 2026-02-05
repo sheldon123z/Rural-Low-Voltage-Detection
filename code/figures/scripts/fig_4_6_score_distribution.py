@@ -12,11 +12,10 @@ Fig 4-6: Anomaly Score Distribution and Classification Regions
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines, get_output_dir, THESIS_COLORS, CLASSIFICATION_COLORS
 
 import matplotlib.pyplot as plt
 import numpy as np
-from thesis_style import setup_thesis_style, THESIS_COLORS, CLASSIFICATION_COLORS, \
-    save_thesis_figure, remove_spines
 
 
 def main():
@@ -102,8 +101,8 @@ def main():
     remove_spines(ax)
 
     # 保存到 chapter4_experiments 目录
-    output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = get_output_dir(4)
+    
     output_path = os.path.join(output_dir, 'fig_4_6_score_distribution.png')
     save_thesis_figure(fig, output_path)
 

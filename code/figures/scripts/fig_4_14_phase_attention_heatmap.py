@@ -19,10 +19,7 @@ import numpy as np
 
 # 导入论文统一样式
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from thesis_style import (
-    setup_thesis_style, save_thesis_figure, remove_spines,
-    TIMESNET_COLORS
-)
+from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines, get_output_dir, TIMESNET_COLORS
 
 setup_thesis_style()
 
@@ -81,8 +78,8 @@ def main():
     # 保存
     # ============================================================
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = get_output_dir(4)
+    
     output_path = os.path.join(output_dir, 'fig_4_14_phase_attention_heatmap.png')
 
     save_thesis_figure(fig, output_path)

@@ -24,10 +24,9 @@ import pandas as pd
 # 导入论文统一样式
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from thesis_style import (
-    setup_thesis_style, save_thesis_figure, remove_spines,
-    PHASE_COLORS, CLASSIFICATION_COLORS, THESIS_COLORS
+    setup_thesis_style, save_thesis_figure, remove_spines, get_output_dir,
+    THESIS_COLORS, CLASSIFICATION_COLORS, PHASE_COLORS
 )
-
 setup_thesis_style()
 
 
@@ -205,8 +204,8 @@ def main():
     # 输出目录
     # ============================================================
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'chapter4_experiments')
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = get_output_dir(4)
+    
 
     # ============================================================
     # 图 (a): 三相电压波形
