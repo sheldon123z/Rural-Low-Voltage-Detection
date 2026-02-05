@@ -89,19 +89,41 @@ THESIS_STYLE_REQUIREMENTS = """
 """
 
 # ============================================================
-# 论文图表提示词（简化英文版，适合 Gemini 图像生成）
+# 论文图表提示词（Nano Banana Pro 优化版）
+# 基于 Nano Banana Pro 库的模板风格，针对 IEEE 学术图表定制
 # ============================================================
+
+# 统一风格参数（基于 Nano Banana Pro 模板优化）
+NANO_BANANA_STYLE = """
+Style: Flat UI, Vector, Modern Minimalist, IEEE academic diagram.
+Color Palette: Primary blue (#0076A8), accent orange (#E07020), dark gray (#333333), pure white background (#FFFFFF).
+Lines: Orthogonal/Elbow lines with right-angle corners, 2px thickness, solid arrowheads.
+Shapes: Rounded rectangles (corner radius 8-12px), clean borders.
+Layout: Balanced spacing, center aligned, generous negative space.
+Quality: High resolution, print-ready, 300 DPI equivalent.
+Constraints: NO text labels, NO annotations, pure visual diagram only.
+"""
+
 THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
 
     # --------------------------------------------------------
-    # 第2章：数据采集与预处理
+    # 第2章：数据采集与预处理（架构图类型）
     # --------------------------------------------------------
 
     "fig_2_1_data_collection_architecture": {
         "title": "数据采集分层架构图",
         "chapter": 2,
         "description": "农村低压配电网数据采集系统三层架构",
-        "prompt": "Technical diagram: Three-layer IoT architecture. Top layer: cloud server with database icon. Middle layer: 3 wireless gateways connected horizontally. Bottom layer: 6 houses with smart meters, power lines, transformer in center. Vertical arrows between layers showing data flow upward. Clean flat design, blue (#0076A8) color scheme, white background, no text labels, vector style, professional academic diagram.",
+        "prompt": f"""Generate a technical three-layer IoT architecture diagram.
+
+STRUCTURE (top to bottom):
+- Layer 1 (top): Single cloud icon with database cylinder, centered
+- Layer 2 (middle): Three gateway boxes with antenna symbols, connected horizontally
+- Layer 3 (bottom): Six house icons with small meter circles, power line connecting all, transformer symbol in center
+
+CONNECTIONS: Vertical arrows pointing upward between layers (data flow direction)
+
+{NANO_BANANA_STYLE}""",
         "size": "1800x1400"
     },
 
@@ -109,7 +131,17 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "电压异常类型示意图",
         "chapter": 2,
         "description": "四种典型电压异常波形对比",
-        "prompt": "Technical diagram: 2x2 grid showing 4 voltage waveform anomalies. Top-left: sine wave with voltage sag (70% dip). Top-right: sine wave with voltage swell (120% rise). Bottom-left: sine wave with amplitude modulation (flicker). Bottom-right: sine wave with interruption gap. Each panel has X-Y axes, blue waveform, orange highlight on anomaly region. Clean flat design, white background, no text, academic style.",
+        "prompt": f"""Generate a 2x2 grid technical diagram showing four voltage waveform anomalies.
+
+LAYOUT (2x2 grid):
+- Top-left panel: Sine wave with middle section amplitude dropped to 70% (voltage sag)
+- Top-right panel: Sine wave with middle section amplitude raised to 120% (voltage swell)
+- Bottom-left panel: Sine wave with envelope modulation showing amplitude variation (flicker)
+- Bottom-right panel: Sine wave with gap of zero amplitude in middle (interruption)
+
+EACH PANEL: Simple X-Y coordinate axes, blue (#0076A8) waveform line, orange (#E07020) semi-transparent highlight on anomaly region, thin gray grid lines.
+
+{NANO_BANANA_STYLE}""",
         "size": "1800x1400"
     },
 
@@ -121,7 +153,17 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "滑动窗口预测示意图",
         "chapter": 3,
         "description": "时间序列滑动窗口机制可视化",
-        "prompt": "Technical diagram: Sliding window mechanism for time series. Horizontal wavy signal line spanning full width. Three blue rectangular window frames at left, center, right positions with semi-transparent fill. Horizontal arrow below showing sliding direction. Bracket under center window with arrow pointing to output dot. Clean flat design, blue (#0076A8), white background, no text, academic style.",
+        "prompt": f"""Generate a sliding window mechanism diagram for time series analysis.
+
+ELEMENTS:
+1. Horizontal wavy signal line spanning full width (periodic voltage waveform)
+2. Three rectangular window frames at left, center, right positions
+   - Blue (#0076A8) border, semi-transparent light blue fill
+   - Equal size, evenly spaced
+3. Large horizontal arrow below windows pointing right (sliding direction)
+4. Small bracket under center window with arrow pointing to a dot on the right (input→output)
+
+{NANO_BANANA_STYLE}""",
         "size": "1800x1000"
     },
 
@@ -129,7 +171,15 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "一维到二维时序转换示意图",
         "chapter": 3,
         "description": "时间序列从一维到二维的变换过程",
-        "prompt": "Technical diagram: 1D to 2D transformation in 3 stages. Left: horizontal wavy line (1D signal). Middle: vertical bar chart (frequency spectrum, 5-6 bars). Right: 8x8 grid matrix with blue gradient heatmap. Large arrows connecting stages. Clean flat design, blue (#0076A8), white background, horizontal layout, no text, academic style.",
+        "prompt": f"""Generate a three-stage transformation diagram (horizontal layout, left to right).
+
+STAGE 1 (left): Horizontal wavy line representing 1D time series signal
+STAGE 2 (middle): Vertical bar chart with 5-6 bars of different heights (frequency spectrum), tallest 2-3 bars in blue, others in gray
+STAGE 3 (right): 8x8 square grid matrix with blue gradient color fill showing 2D representation
+
+CONNECTIONS: Large bold arrows between stages
+
+{NANO_BANANA_STYLE}""",
         "size": "1800x1000"
     },
 
@@ -137,7 +187,20 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "异常检测框架流程图",
         "chapter": 3,
         "description": "端到端异常检测系统流程",
-        "prompt": "Technical flowchart: Anomaly detection pipeline with 6 connected rounded rectangles. Left to right: waveform icon, filter icon, neural network layers icon, decoder icon, comparison symbol, alert icon. Horizontal arrows between blocks. Blue (#0076A8) borders, white/light blue fill, white background. Clean flat design, no text, professional academic style.",
+        "prompt": f"""Generate a horizontal flowchart with 6 processing modules.
+
+MODULES (left to right, rounded rectangles):
+1. Waveform icon inside (input data)
+2. Filter/funnel icon inside (preprocessing)
+3. Three stacked rectangles icon (neural network encoder)
+4. Expanding layers icon (decoder)
+5. Minus/comparison symbol (anomaly scoring)
+6. Bell/alert icon (detection output)
+
+CONNECTIONS: Horizontal arrows between each module
+STYLE: Blue (#0076A8) borders, white or light blue fill
+
+{NANO_BANANA_STYLE}""",
         "size": "2000x800"
     },
 
@@ -145,7 +208,26 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "TimesNet网络架构图",
         "chapter": 3,
         "description": "TimesNet神经网络结构详图",
-        "prompt": "Technical diagram: Vertical neural network architecture. Top: input rectangle. Main module with dashed border containing: FFT block, reshape icon (1D to 2D), four parallel paths (Inception style with different sizes), merge point, normalization block. Curved skip connection arrow on side. Output rectangle at bottom. Blue (#0076A8) color scheme, white background, no text, academic style.",
+        "prompt": f"""Generate a vertical neural network architecture diagram.
+
+STRUCTURE (top to bottom):
+1. INPUT: Rectangle at top
+2. MAIN MODULE (dashed border box containing):
+   - FFT block (small rectangle)
+   - Arrow down
+   - Reshape icon (1D→2D transformation symbol)
+   - Arrow down
+   - INCEPTION: Four parallel vertical paths side by side
+     * Path 1: Single small square
+     * Path 2: Small square → medium square
+     * Path 3: Small square → large square
+     * Path 4: Grid pattern → small square
+   - All paths merge into one wide rectangle
+   - Normalization block
+3. OUTPUT: Rectangle at bottom
+4. SKIP CONNECTION: Curved arrow on the side from input to output of main module
+
+{NANO_BANANA_STYLE}""",
         "size": "1400x2000"
     },
 
@@ -153,7 +235,23 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "VoltageTimesNet网络架构图",
         "chapter": 3,
         "description": "VoltageTimesNet架构与增强模块",
-        "prompt": "Technical diagram: Side-by-side comparison of two architectures. Left column: TimesNet with input, FFT, 2D conv, output blocks in blue. Right column: VoltageTimesNet with same blocks plus two orange highlighted enhancement modules. Skip connections on both sides. Vertical dashed line separating columns. Blue (#0076A8) for base, orange for enhancements, white background, no text.",
+        "prompt": f"""Generate a side-by-side architecture comparison diagram.
+
+LEFT COLUMN (TimesNet baseline):
+- Vertical flow: Input → FFT → 2D Conv → Output
+- All blocks in blue (#0076A8)
+- Skip connection curve on left side
+
+RIGHT COLUMN (VoltageTimesNet - enhanced):
+- Same vertical flow as left
+- Two additional orange (#E07020) highlighted blocks:
+  * After FFT: "Domain Prior" enhancement block
+  * Before Output: "Period Weighting" enhancement block
+- Skip connection curve on right side
+
+SEPARATOR: Vertical dashed line between columns
+
+{NANO_BANANA_STYLE}""",
         "size": "1800x1600"
     },
 
@@ -161,7 +259,23 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "快速傅里叶变换周期发现示意图",
         "chapter": 3,
         "description": "FFT周期检测原理图",
-        "prompt": "Technical diagram: Two-panel FFT analysis. Top panel: continuous wavy signal showing periodic pattern with X-Y axes. Bottom panel: bar chart showing frequency spectrum with 2-3 tall blue bars (dominant frequencies) and shorter gray bars. Large downward arrow between panels labeled FFT. Blue (#0076A8) waveform and bars, white background, no text labels, academic style.",
+        "prompt": f"""Generate a two-panel FFT analysis diagram (vertical stack).
+
+TOP PANEL (Time Domain):
+- Continuous wavy signal line showing clear periodic pattern
+- Multiple peaks and valleys visible
+- Simple X-Y coordinate axes
+- Blue (#0076A8) waveform
+
+BOTTOM PANEL (Frequency Domain):
+- Bar chart style frequency spectrum
+- 2-3 tall prominent bars in blue (#0076A8) representing dominant frequencies
+- Remaining shorter bars in light gray
+- Simple X-Y coordinate axes
+
+BETWEEN PANELS: Large downward arrow
+
+{NANO_BANANA_STYLE}""",
         "size": "1600x1400"
     },
 
@@ -169,7 +283,22 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "二维卷积Inception模块示意图",
         "chapter": 3,
         "description": "Inception风格的多尺度卷积结构",
-        "prompt": "Technical diagram: Inception module structure. Top: input rectangle. Middle: 4 parallel vertical paths - path 1: small square; path 2: small then medium square; path 3: small then large square; path 4: grid pattern then small square. All paths merge into wide rectangle. Bottom: output rectangle. Arrows showing data flow, blue (#0076A8) fill, white background, no text, academic style.",
+        "prompt": f"""Generate an Inception module structure diagram (vertical layout).
+
+STRUCTURE:
+1. TOP: Single input rectangle
+2. MIDDLE: Four parallel vertical paths arranged horizontally:
+   - Path 1: Single small square (1x1 conv)
+   - Path 2: Small square → Medium square (1x1 → 3x3 conv)
+   - Path 3: Small square → Large square (1x1 → 5x5 conv)
+   - Path 4: Grid pattern → Small square (pooling → 1x1 conv)
+3. MERGE: All four paths connect to one wide rectangle (concatenation)
+4. BOTTOM: Single output rectangle
+
+VISUAL: Different square sizes represent different receptive fields
+ARROWS: Show data flow direction downward
+
+{NANO_BANANA_STYLE}""",
         "size": "1600x1800"
     },
 
@@ -177,7 +306,19 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "VoltageTimesNet与TimesNet周期检测对比",
         "chapter": 3,
         "description": "两种模型周期检测机制的对比",
-        "prompt": "Technical diagram: 2x2 comparison grid. Top row shows frequency spectrums: left has FFT peaks only (blue/gray), right has FFT peaks plus preset period markers (blue/orange). Bottom row shows weight bars: left has equal height bars, right has varying height bars with attention weights. Vertical dashed line in center. Blue (#0076A8) and orange accents, white background, no text, academic style.",
+        "prompt": f"""Generate a 2x2 comparison grid diagram.
+
+TOP ROW (Period Detection):
+- Left cell: FFT spectrum with only detected peaks (blue/gray bars)
+- Right cell: FFT spectrum with detected peaks PLUS preset period markers in orange (#E07020)
+
+BOTTOM ROW (Period Weighting):
+- Left cell: Bar chart with all bars equal height (uniform weights)
+- Right cell: Bar chart with varying bar heights (adaptive attention weights), important periods taller
+
+SEPARATOR: Vertical dashed line in center dividing left/right
+
+{NANO_BANANA_STYLE}""",
         "size": "1800x1400"
     },
 }

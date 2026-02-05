@@ -1,109 +1,109 @@
 {
-  "timestamp": "2026-02-05T16:42:57.604435",
+  "timestamp": "2026-02-05T16:56:05.256509",
   "total_figures": 10,
-  "successful": 10,
-  "failed": 0,
+  "successful": 0,
+  "failed": 10,
   "output_directory": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures",
   "results": [
     {
       "key": "fig_2_1_data_collection_architecture",
       "title": "数据采集分层架构图",
       "chapter": 2,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_2_1_data_collection_architecture.png",
-      "timestamp": "2026-02-05T16:40:36.605425",
-      "file_size": 670919
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:50:02.040604",
+      "error": "All models failed"
     },
     {
       "key": "fig_2_2_voltage_anomaly_types",
       "title": "电压异常类型示意图",
       "chapter": 2,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_2_2_voltage_anomaly_types.png",
-      "timestamp": "2026-02-05T16:40:52.460789",
-      "file_size": 704596
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:51:43.980827",
+      "error": "All models failed"
     },
     {
       "key": "fig_3_1_sliding_window",
       "title": "滑动窗口预测示意图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_3_1_sliding_window.png",
-      "timestamp": "2026-02-05T16:41:05.657276",
-      "file_size": 650587
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:52:51.454268",
+      "error": "All models failed"
     },
     {
       "key": "fig_3_2_1d_to_2d_conversion",
       "title": "一维到二维时序转换示意图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_3_2_1d_to_2d_conversion.png",
-      "timestamp": "2026-02-05T16:41:18.593041",
-      "file_size": 384455
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:53:01.658595",
+      "error": "All models failed"
     },
     {
       "key": "fig_3_7_anomaly_detection_framework",
       "title": "异常检测框架流程图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_3_7_anomaly_detection_framework.png",
-      "timestamp": "2026-02-05T16:41:31.032571",
-      "file_size": 236381
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:53:12.474548",
+      "error": "All models failed"
     },
     {
       "key": "fig_timesnet_architecture",
       "title": "TimesNet网络架构图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_timesnet_architecture.png",
-      "timestamp": "2026-02-05T16:41:43.111057",
-      "file_size": 388457
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:54:15.840176",
+      "error": "All models failed"
     },
     {
       "key": "fig_voltagetimesnet_architecture",
       "title": "VoltageTimesNet网络架构图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_voltagetimesnet_architecture.png",
-      "timestamp": "2026-02-05T16:41:56.818672",
-      "file_size": 764133
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:54:26.046207",
+      "error": "All models failed"
     },
     {
       "key": "fig_fft_period_discovery",
       "title": "快速傅里叶变换周期发现示意图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_fft_period_discovery.png",
-      "timestamp": "2026-02-05T16:42:14.162262",
-      "file_size": 749716
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:54:36.285288",
+      "error": "All models failed"
     },
     {
       "key": "fig_2d_conv_inception",
       "title": "二维卷积Inception模块示意图",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_2d_conv_inception.png",
-      "timestamp": "2026-02-05T16:42:30.849657",
-      "file_size": 674680
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:55:36.766982",
+      "error": "All models failed"
     },
     {
       "key": "fig_3_3_voltage_timesnet_comparison",
       "title": "VoltageTimesNet与TimesNet周期检测对比",
       "chapter": 3,
-      "success": true,
-      "model_used": "google/gemini-2.5-flash-image",
-      "output_path": "/home/zhengxiaodong/exps/Rural-Low-Voltage-Detection/code/figures/ai_generated/output/thesis_figures/fig_3_3_voltage_timesnet_comparison.png",
-      "timestamp": "2026-02-05T16:42:44.353364",
-      "file_size": 681632
+      "success": false,
+      "model_used": null,
+      "output_path": null,
+      "timestamp": "2026-02-05T16:55:54.775667",
+      "error": "All models failed"
     }
   ]
 }
