@@ -41,9 +41,9 @@ PROXY_CONFIG = {
     "https": "http://127.0.0.1:7890",
 }
 
-# 图像生成模型优先级（gemini-2.5-flash-image 可用）
+# 图像生成模型（仅使用 gemini-3-pro-image-preview）
 IMAGE_MODELS = [
-    "google/gemini-2.5-flash-image",  # 可用，返回 base64 图像
+    "google/gemini-3-pro-image-preview",  # Nano Banana Pro 模型
 ]
 
 # ============================================================
