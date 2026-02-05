@@ -1,0 +1,74 @@
+[
+  {
+    "name": "fig_2_1_data_collection_architecture",
+    "title": "数据采集分层架构图",
+    "description": "三层数据采集架构：现场层、通信层、平台层",
+    "prompt": "Create a professional 3-layer architecture diagram for rural power distribution monitoring.\n\nVISUAL STRUCTURE (top to bottom):\nLayer 1 (Bottom - Field Layer):\n- Row of 5-6 simple house icons representing rural households\n- Connected by horizontal power line\n- Small meter symbols at each house\n- Distribution transformer symbol in center\n\nLayer 2 (Middle - Communication Layer):\n- 2-3 data concentrator boxes\n- Wireless antenna symbols\n- Vertical lines connecting to Layer 1\n\nLayer 3 (Top - Platform Layer):\n- Central server/cloud icon\n- Database cylinder icon\n- Processing module rectangle\n- All connected horizontally\n\nCONNECTIONS:\n- Vertical arrows between layers showing data flow upward\n- Use IEEE blue for data flow arrows\n- Gray for infrastructure lines\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nOutput: Clean technical diagram, white background, no text",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_2_2_voltage_anomaly_types",
+    "title": "电压异常类型示意图",
+    "description": "四种典型电压异常波形：骤降、骤升、闪变、中断",
+    "prompt": "Create a 2x2 grid showing 4 voltage anomaly waveforms.\n\nGRID LAYOUT:\nTop-Left: VOLTAGE SAG\n- Sine wave with sudden dip (amplitude drops to ~70%)\n- Dip region lightly shaded in orange\n\nTop-Right: VOLTAGE SWELL\n- Sine wave with elevated section (amplitude rises to ~120%)\n- Swell region lightly shaded in orange\n\nBottom-Left: VOLTAGE FLICKER\n- Sine wave with oscillating envelope\n- Amplitude varies periodically\n\nBottom-Right: VOLTAGE INTERRUPTION\n- Sine wave with gap (zero voltage section)\n- Interruption region clearly visible\n\nEACH PANEL:\n- Clean X-Y axes (no labels needed)\n- Horizontal dashed line for nominal voltage reference\n- IEEE blue for normal waveform\n- Orange tint for anomaly regions\n- Light gray grid lines\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nOutput: 2x2 grid, white background, professional waveform plots",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_3_1_sliding_window",
+    "title": "滑动窗口预测示意图",
+    "description": "时间序列滑动窗口机制可视化",
+    "prompt": "Create a diagram showing sliding window mechanism on time series.\n\nVISUAL ELEMENTS:\n1. Long horizontal waveform (continuous voltage-like signal)\n   - Spanning full width\n   - Blue line with some variation/oscillation\n\n2. Three window frames at different positions:\n   - Rectangular boxes with IEEE blue border\n   - Semi-transparent blue fill\n   - Positioned: left (past), center (current), right (future)\n   - Equal spacing between windows\n\n3. Directional arrow:\n   - Large horizontal arrow below windows\n   - Points left to right (sliding direction)\n\n4. Input-Output indication:\n   - Bracket under center window (input)\n   - Small arrow pointing to single dot (output prediction)\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nLayout: Horizontal, clean, minimal",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_3_2_1d_to_2d_conversion",
+    "title": "1D到2D时序转换示意图",
+    "description": "时间序列从一维到二维的变换过程",
+    "prompt": "Create a 3-stage transformation diagram (left to right).\n\nSTAGE 1 (Left): 1D TIME SERIES\n- Horizontal waveform/signal\n- Continuous line with oscillations\n- IEEE blue color\n\nSTAGE 2 (Middle): FREQUENCY SPECTRUM\n- Vertical bar chart\n- 5-6 bars of varying heights\n- Tallest bars (dominant frequencies) in IEEE blue\n- Shorter bars in gray\n\nSTAGE 3 (Right): 2D MATRIX\n- Grid/matrix representation (8x8 or similar)\n- Cells colored as heatmap (blue to white gradient)\n- Shows periodic pattern after reshaping\n\nCONNECTIONS:\n- Arrow from Stage 1 to Stage 2 (FFT transform)\n- Arrow from Stage 2 to Stage 3 (Reshape)\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nLayout: Horizontal flow, 3 distinct sections",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_3_7_anomaly_detection_framework",
+    "title": "异常检测框架流程图",
+    "description": "端到端异常检测流程",
+    "prompt": "Create a horizontal flowchart for anomaly detection pipeline.\n\nBLOCKS (left to right, 6 rounded rectangles):\n1. Input: Waveform icon inside box\n2. Preprocess: Filter/cleaning icon\n3. Feature Extract: Neural network layers icon (3 stacked rectangles)\n4. Reconstruct: Decoder shape (expanding layers)\n5. Score: Comparison/subtraction symbol\n6. Output: Checkmark/alert icon\n\nCONNECTIONS:\n- Horizontal arrows connecting each block\n- All arrows in IEEE blue\n- Blocks have light gray fill, blue border\n\nLAYOUT:\n- Single horizontal row\n- Equal spacing between blocks\n- Clean, minimal design\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_timesnet_architecture",
+    "title": "TimesNet 网络架构图",
+    "description": "TimesNet 神经网络结构",
+    "prompt": "Create a neural network architecture diagram (vertical flow).\n\nSTRUCTURE (top to bottom):\nINPUT BLOCK:\n- Rectangle at top\n\nTIMESBLOCK MODULE (main component, shown in detail):\n- FFT sub-block (small rectangle)\n- Down arrow\n- Reshape icon (1D to 2D transformation symbol)\n- Down arrow\n- 2D CONV block with 4 parallel paths (Inception style):\n  * 4 vertical paths side by side\n  * Different sizes representing different kernel sizes\n  * Merge at bottom\n- Skip connection: curved arrow from input to output of block\n- LayerNorm block\n\nREPETITION INDICATION:\n- Dotted line suggesting \"×N layers\"\n\nOUTPUT BLOCK:\n- Rectangle at bottom\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nColor: IEEE blue for main flow, gray for skip connections",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_voltagetimesnet_architecture",
+    "title": "VoltageTimesNet 网络架构图",
+    "description": "VoltageTimesNet 架构（带领域增强）",
+    "prompt": "Create a side-by-side architecture comparison diagram.\n\nLEFT SIDE: STANDARD BLOCK\n- Simple vertical flow\n- FFT → Reshape → Conv → Output\n- All in IEEE blue/gray\n\nRIGHT SIDE: ENHANCED BLOCK\n- Same structure as left\n- PLUS two highlighted modules in ORANGE:\n  * \"Domain Prior\" module after FFT\n  * \"Enhanced Weighting\" module before output\n- Orange boxes stand out from blue/gray\n\nVISUAL COMPARISON:\n- Vertical dashed line separating left and right\n- Right side slightly larger/emphasized\n- Arrows showing enhancement locations\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nHighlight: Orange (#E07020) for enhancements",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_fft_period_discovery",
+    "title": "FFT 周期发现示意图",
+    "description": "快速傅里叶变换周期检测",
+    "prompt": "Create a two-panel FFT visualization (top and bottom).\n\nTOP PANEL: TIME DOMAIN\n- Continuous waveform with visible periodic pattern\n- X-axis represents time\n- Y-axis represents amplitude\n- IEEE blue line\n\nBOTTOM PANEL: FREQUENCY DOMAIN\n- Bar chart / spectrum plot\n- X-axis represents frequency\n- Y-axis represents magnitude\n- 2-3 prominent peaks in IEEE blue (dominant frequencies)\n- Other frequencies in light gray\n- Clear peak-to-background contrast\n\nCONNECTION:\n- Large arrow between panels\n- Arrow points downward (time → frequency)\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nLayout: Vertical stack, two panels",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  },
+  {
+    "name": "fig_2d_conv_inception",
+    "title": "2D卷积 Inception 模块示意图",
+    "description": "Inception 风格的多尺度卷积模块",
+    "prompt": "Create an Inception module diagram.\n\nSTRUCTURE (top to bottom):\nINPUT:\n- Single rectangle at top\n\nFOUR PARALLEL BRANCHES:\nBranch 1: Single small square (1x1 conv)\nBranch 2: Small square → Medium square (1x1 → 3x3)\nBranch 3: Small square → Large square (1x1 → 5x5)\nBranch 4: Grid pattern → Small square (pooling → 1x1)\n\nAll branches start from input and run vertically downward\n\nCONCATENATION:\n- All 4 branches merge into single wide rectangle\n\nOUTPUT:\n- Single rectangle at bottom\n\nVISUAL STYLE:\n- Different sizes represent different kernel sizes\n- Light blue fill for all conv blocks\n- Arrows showing data flow\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nLayout: Vertical with parallel horizontal branches",
+    "style": "IEEE academic, power systems, technical diagram",
+    "negative_prompt": "cartoon, 3D realistic, photorealistic, text labels, Chinese characters, decorative elements"
+  }
+]

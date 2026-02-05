@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-02-05T16:13:19.883292",
+  "total_figures": 9,
+  "generated": 9,
+  "figures": [
+    {
+      "key": "fig_2_1_data_collection_architecture",
+      "title": "数据采集分层架构图"
+    },
+    {
+      "key": "fig_2_2_voltage_anomaly_types",
+      "title": "电压异常类型示意图"
+    },
+    {
+      "key": "fig_3_1_sliding_window",
+      "title": "滑动窗口预测示意图"
+    },
+    {
+      "key": "fig_3_2_1d_to_2d_conversion",
+      "title": "1D到2D时序转换示意图"
+    },
+    {
+      "key": "fig_3_7_anomaly_detection_framework",
+      "title": "异常检测框架流程图"
+    },
+    {
+      "key": "fig_timesnet_architecture",
+      "title": "TimesNet 网络架构图"
+    },
+    {
+      "key": "fig_voltagetimesnet_architecture",
+      "title": "VoltageTimesNet 网络架构图"
+    },
+    {
+      "key": "fig_fft_period_discovery",
+      "title": "FFT 周期发现示意图"
+    },
+    {
+      "key": "fig_2d_conv_inception",
+      "title": "2D卷积 Inception 模块示意图"
+    }
+  ]
+}

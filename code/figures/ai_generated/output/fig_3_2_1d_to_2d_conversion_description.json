@@ -1,0 +1,8 @@
+{
+  "key": "fig_3_2_1d_to_2d_conversion",
+  "title": "1D到2D时序转换示意图",
+  "description": "时间序列从一维到二维的变换过程",
+  "prompt": "\nCreate a 3-stage transformation diagram (left to right).\n\nSTAGE 1 (Left): 1D TIME SERIES\n- Horizontal waveform/signal\n- Continuous line with oscillations\n- IEEE blue color\n\nSTAGE 2 (Middle): FREQUENCY SPECTRUM\n- Vertical bar chart\n- 5-6 bars of varying heights\n- Tallest bars (dominant frequencies) in IEEE blue\n- Shorter bars in gray\n\nSTAGE 3 (Right): 2D MATRIX\n- Grid/matrix representation (8x8 or similar)\n- Cells colored as heatmap (blue to white gradient)\n- Shows periodic pattern after reshaping\n\nCONNECTIONS:\n- Arrow from Stage 1 to Stage 2 (FFT transform)\n- Arrow from Stage 2 to Stage 3 (Reshape)\n\n\nCRITICAL STYLE REQUIREMENTS for IEEE academic publication:\n1. Visual Style: Clean vector-like appearance, sharp edges, professional technical diagram\n2. Color Palette:\n   - Primary: IEEE blue (#0076A8)\n   - Secondary: Dark gray (#333333)\n   - Background: Pure white (#FFFFFF)\n   - Accent: Light gray (#E5E5E5)\n3. Design: Minimal shadows, flat design, no decorative elements\n4. Typography style: Sans-serif (but NO actual text on image)\n5. High contrast suitable for print reproduction\n6. IMPORTANT: Generate ONLY visual elements, NO text labels or annotations\n\nLayout: Horizontal flow, 3 distinct sections\n",
+  "generated_description": "# Technical Diagram Description: 1D to 2D Time Series Transformation\n\n## Overall Layout Specifications\n- **Canvas Size**: 800px × 400px\n- **Background**: Pure white (#FFFFFF)\n- **Horizontal Flow**: Three distinct stages with equal spacing\n- **Stage Width**: Each stage occupies approximately 200px width\n",
+  "timestamp": "2026-02-05T16:09:01.610674"
+}
