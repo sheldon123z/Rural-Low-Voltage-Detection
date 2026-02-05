@@ -35,12 +35,15 @@ if not OPENROUTER_API_KEY:
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
-# 图像生成模型优先级
+# Clash 代理配置
+PROXY_CONFIG = {
+    "http": "http://127.0.0.1:7890",
+    "https": "http://127.0.0.1:7890",
+}
+
+# 图像生成模型优先级（gemini-2.5-flash-image 可用）
 IMAGE_MODELS = [
-    "google/gemini-2.5-flash-image",
-    "google/gemini-3-pro-image-preview",
-    "openai/gpt-5-image",
-    "openai/gpt-5-image-mini",
+    "google/gemini-2.5-flash-image",  # 可用，返回 base64 图像
 ]
 
 # ============================================================
@@ -86,7 +89,7 @@ THESIS_STYLE_REQUIREMENTS = """
 """
 
 # ============================================================
-# 论文图表提示词（中文版，带标签）
+# 论文图表提示词（简化英文版，适合 Gemini 图像生成）
 # ============================================================
 THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
 
@@ -98,38 +101,7 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "数据采集分层架构图",
         "chapter": 2,
         "description": "农村低压配电网数据采集系统三层架构",
-        "prompt": """
-生成一张专业的三层架构示意图，用于学术论文。
-
-【图表结构】从上到下三层：
-
-第一层（顶层）- 平台层：
-- 中央绘制一个云服务器图标
-- 旁边绘制数据库圆柱图标
-- 标注"数据中心"
-- 标注"异常检测系统"
-
-第二层（中层）- 通信层：
-- 绘制3个数据集中器方框
-- 每个方框上有无线天线图标
-- 用水平线连接三个集中器
-- 标注"数据集中器"
-- 标注"4G/NB-IoT"
-
-第三层（底层）- 现场层：
-- 绘制一排6个简化房屋图标
-- 每个房屋旁有小圆圈代表智能电表
-- 用水平电力线连接所有房屋
-- 中间绘制变压器符号
-- 标注"智能电表"
-- 标注"配电变压器"
-- 标注"农户"
-
-【连接方式】
-- 各层之间用垂直箭头连接，箭头向上表示数据流
-- 箭头旁标注"电压数据"
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: Three-layer IoT architecture. Top layer: cloud server with database icon. Middle layer: 3 wireless gateways connected horizontally. Bottom layer: 6 houses with smart meters, power lines, transformer in center. Vertical arrows between layers showing data flow upward. Clean flat design, blue (#0076A8) color scheme, white background, no text labels, vector style, professional academic diagram.",
         "size": "1800x1400"
     },
 
@@ -137,40 +109,7 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "电压异常类型示意图",
         "chapter": 2,
         "description": "四种典型电压异常波形对比",
-        "prompt": """
-生成一张2x2网格的电压异常波形对比图，用于学术论文。
-
-【图表布局】四个子图，每个子图展示一种异常类型：
-
-左上角 - 电压骤降：
-- 绘制正弦波，中间部分幅值突然下降至70%
-- 异常区域用浅橙色阴影标记
-- 绘制水平虚线表示额定电压
-- 标注"电压骤降"
-
-右上角 - 电压骤升：
-- 绘制正弦波，中间部分幅值突然上升至120%
-- 异常区域用浅橙色阴影标记
-- 绘制水平虚线表示额定电压
-- 标注"电压骤升"
-
-左下角 - 电压闪变：
-- 绘制正弦波，幅值呈周期性波动
-- 外包络线显示幅值调制效果
-- 标注"电压闪变"
-
-右下角 - 电压中断：
-- 绘制正弦波，中间有一段幅值为零
-- 中断区域明显可见
-- 标注"电压中断"
-
-【每个子图包含】
-- X轴：时间（标注"时间/ms"）
-- Y轴：电压（标注"电压/V"）
-- 浅灰色网格线
-- 异常区域高亮
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: 2x2 grid showing 4 voltage waveform anomalies. Top-left: sine wave with voltage sag (70% dip). Top-right: sine wave with voltage swell (120% rise). Bottom-left: sine wave with amplitude modulation (flicker). Bottom-right: sine wave with interruption gap. Each panel has X-Y axes, blue waveform, orange highlight on anomaly region. Clean flat design, white background, no text, academic style.",
         "size": "1800x1400"
     },
 
@@ -182,39 +121,7 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "滑动窗口预测示意图",
         "chapter": 3,
         "description": "时间序列滑动窗口机制可视化",
-        "prompt": """
-生成一张滑动窗口机制示意图，用于学术论文。
-
-【图表元素】
-
-1. 时间序列信号：
-- 绘制一条横向的电压波形曲线，跨越整个图片宽度
-- 曲线呈现周期性波动特征
-- 颜色：学术蓝
-
-2. 滑动窗口（三个位置）：
-- 绘制三个矩形框，分别位于信号的左、中、右三个位置
-- 框线颜色：学术蓝
-- 框内填充：半透明浅蓝色
-- 三个框等距排列，显示窗口滑动过程
-- 左侧框标注"历史窗口"
-- 中间框标注"当前窗口"
-- 右侧框标注"预测窗口"
-
-3. 滑动方向指示：
-- 在窗口下方绘制一个大的水平箭头
-- 箭头从左指向右
-- 标注"滑动方向"
-
-4. 输入输出关系：
-- 在当前窗口下方画括号，标注"输入序列"
-- 箭头指向右侧的一个点，标注"预测输出"
-
-5. 窗口长度标注：
-- 用双向箭头标注窗口宽度
-- 标注"窗口长度 L"
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: Sliding window mechanism for time series. Horizontal wavy signal line spanning full width. Three blue rectangular window frames at left, center, right positions with semi-transparent fill. Horizontal arrow below showing sliding direction. Bracket under center window with arrow pointing to output dot. Clean flat design, blue (#0076A8), white background, no text, academic style.",
         "size": "1800x1000"
     },
 
@@ -222,37 +129,7 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "一维到二维时序转换示意图",
         "chapter": 3,
         "description": "时间序列从一维到二维的变换过程",
-        "prompt": """
-生成一张三阶段变换示意图，展示时间序列的维度转换过程。
-
-【图表布局】从左到右三个阶段：
-
-阶段一（左侧）- 一维时间序列：
-- 绘制一条水平的波动曲线
-- 曲线呈现周期性特征
-- 下方标注"一维时间序列"
-- 标注维度"(批次, 时间步, 通道)"
-
-阶段二（中间）- 频率分析：
-- 绘制垂直条形图（频谱图）
-- 5-6个不同高度的条形
-- 最高的2-3个条形用学术蓝色（主频率）
-- 其余条形用灰色
-- 下方标注"频域变换"
-- 标注"主周期: p₁, p₂"
-
-阶段三（右侧）- 二维矩阵：
-- 绘制8x8的网格矩阵
-- 网格填充颜色渐变（白色到蓝色）
-- 显示周期性模式
-- 下方标注"二维表示"
-- 标注维度"(批次, 周期, 时间/周期, 通道)"
-
-【连接箭头】
-- 阶段一到阶段二：大箭头，标注"快速傅里叶变换"
-- 阶段二到阶段三：大箭头，标注"按周期重塑"
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: 1D to 2D transformation in 3 stages. Left: horizontal wavy line (1D signal). Middle: vertical bar chart (frequency spectrum, 5-6 bars). Right: 8x8 grid matrix with blue gradient heatmap. Large arrows connecting stages. Clean flat design, blue (#0076A8), white background, horizontal layout, no text, academic style.",
         "size": "1800x1000"
     },
 
@@ -260,50 +137,7 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "异常检测框架流程图",
         "chapter": 3,
         "description": "端到端异常检测系统流程",
-        "prompt": """
-生成一张水平流程图，展示异常检测系统的完整流程。
-
-【图表布局】从左到右六个模块：
-
-模块1 - 数据输入：
-- 圆角矩形框
-- 内部绘制波形图标
-- 标注"原始电压数据"
-
-模块2 - 数据预处理：
-- 圆角矩形框
-- 内部绘制滤波器图标
-- 标注"预处理"
-- 下方小字"归一化、缺失值处理"
-
-模块3 - 特征提取：
-- 圆角矩形框
-- 内部绘制多层神经网络图标（三个堆叠的矩形）
-- 标注"特征提取"
-- 下方小字"VoltageTimesNet"
-
-模块4 - 序列重构：
-- 圆角矩形框
-- 内部绘制解码器图标（扩展的层次结构）
-- 标注"序列重构"
-
-模块5 - 异常评分：
-- 圆角矩形框
-- 内部绘制比较/减法符号
-- 标注"异常评分"
-- 下方小字"重构误差计算"
-
-模块6 - 检测输出：
-- 圆角矩形框
-- 内部绘制警报图标
-- 标注"异常检测结果"
-
-【连接方式】
-- 模块之间用水平箭头连接
-- 所有框使用学术蓝边框
-- 框内白色或浅蓝色填充
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical flowchart: Anomaly detection pipeline with 6 connected rounded rectangles. Left to right: waveform icon, filter icon, neural network layers icon, decoder icon, comparison symbol, alert icon. Horizontal arrows between blocks. Blue (#0076A8) borders, white/light blue fill, white background. Clean flat design, no text, professional academic style.",
         "size": "2000x800"
     },
 
@@ -311,43 +145,7 @@ THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
         "title": "TimesNet网络架构图",
         "chapter": 3,
         "description": "TimesNet神经网络结构详图",
-        "prompt": """
-生成一张垂直方向的神经网络架构图，展示TimesNet的结构。
-
-【图表布局】从上到下：
-
-输入层：
-- 顶部绘制一个矩形
-- 标注"输入张量"
-- 标注维度"(B, T, C)"
-
-TimesBlock模块（主体部分，详细展示）：
-- 用虚线框包围整个模块
-- 框顶部标注"TimesBlock × N层"
-
-模块内部（从上到下）：
-1. 小矩形，标注"快速傅里叶变换"
-2. 向下箭头
-3. 图标表示维度变换，标注"一维→二维重塑"
-4. 向下箭头
-5. Inception结构（四个并行路径）：
-   - 路径1：小方块，标注"1×1卷积"
-   - 路径2：小方块→中方块，标注"3×3卷积"
-   - 路径3：小方块→大方块，标注"5×5卷积"
-   - 路径4：网格图案→小方块，标注"池化"
-   - 四个路径在底部汇合
-6. 矩形，标注"特征聚合"
-7. 矩形，标注"层归一化"
-
-跳跃连接：
-- 从模块输入画曲线箭头到模块输出
-- 标注"残差连接"
-
-输出层：
-- 底部绘制一个矩形
-- 标注"输出张量"
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: Vertical neural network architecture. Top: input rectangle. Main module with dashed border containing: FFT block, reshape icon (1D to 2D), four parallel paths (Inception style with different sizes), merge point, normalization block. Curved skip connection arrow on side. Output rectangle at bottom. Blue (#0076A8) color scheme, white background, no text, academic style.",
         "size": "1400x2000"
     },
 
@@ -355,39 +153,7 @@ TimesBlock模块（主体部分，详细展示）：
         "title": "VoltageTimesNet网络架构图",
         "chapter": 3,
         "description": "VoltageTimesNet架构与增强模块",
-        "prompt": """
-生成一张对比架构图，展示VoltageTimesNet相对于TimesNet的改进。
-
-【图表布局】左右两列对比：
-
-左列 - 标准TimesNet：
-- 标题"TimesNet"
-- 垂直流程：
-  * 输入框
-  * 快速傅里叶变换框
-  * 二维卷积框
-  * 输出框
-- 所有框使用学术蓝色
-- 侧边有跳跃连接曲线
-
-右列 - VoltageTimesNet（本文模型）：
-- 标题"VoltageTimesNet（本文）"
-- 垂直流程与左侧相同
-- 额外的增强模块（用橙色高亮）：
-  * 在FFT后添加橙色框，标注"领域先验注入"
-  * 在输出前添加橙色框，标注"周期权重增强"
-- 侧边有跳跃连接曲线
-
-【视觉区分】
-- 左侧全部学术蓝
-- 右侧基础部分学术蓝，增强部分橙色
-- 中间用垂直虚线分隔
-- 右侧稍大，表示增强
-
-【标注说明】
-- 在橙色框旁边标注"本文贡献"
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: Side-by-side comparison of two architectures. Left column: TimesNet with input, FFT, 2D conv, output blocks in blue. Right column: VoltageTimesNet with same blocks plus two orange highlighted enhancement modules. Skip connections on both sides. Vertical dashed line separating columns. Blue (#0076A8) for base, orange for enhancements, white background, no text.",
         "size": "1800x1600"
     },
 
@@ -395,37 +161,7 @@ TimesBlock模块（主体部分，详细展示）：
         "title": "快速傅里叶变换周期发现示意图",
         "chapter": 3,
         "description": "FFT周期检测原理图",
-        "prompt": """
-生成一张上下两个面板的FFT分析示意图。
-
-【图表布局】上下两个子图：
-
-上方面板 - 时域信号：
-- 绘制连续的波形曲线
-- 波形显示明显的周期性特征（多个重复的波峰波谷）
-- X轴标注"时间/采样点"
-- Y轴标注"幅值/V"
-- 曲线颜色：学术蓝
-- 面板标题"时域波形"
-
-下方面板 - 频域频谱：
-- 绘制条形图形式的频谱
-- X轴标注"频率/Hz"
-- Y轴标注"幅度"
-- 2-3个最高的条形用学术蓝色，标注"主频率"
-- 其余条形用浅灰色
-- 在主频率条形上方标注"f₁"、"f₂"
-- 面板标题"频域频谱"
-
-【连接指示】
-- 两个面板之间绘制大的向下箭头
-- 箭头旁标注"快速傅里叶变换"
-
-【周期计算说明】
-- 在下方面板旁边添加文字框
-- 标注"检测周期: p = T/f"
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: Two-panel FFT analysis. Top panel: continuous wavy signal showing periodic pattern with X-Y axes. Bottom panel: bar chart showing frequency spectrum with 2-3 tall blue bars (dominant frequencies) and shorter gray bars. Large downward arrow between panels labeled FFT. Blue (#0076A8) waveform and bars, white background, no text labels, academic style.",
         "size": "1600x1400"
     },
 
@@ -433,51 +169,7 @@ TimesBlock模块（主体部分，详细展示）：
         "title": "二维卷积Inception模块示意图",
         "chapter": 3,
         "description": "Inception风格的多尺度卷积结构",
-        "prompt": """
-生成一张Inception模块的结构示意图。
-
-【图表布局】垂直方向，展示数据流：
-
-输入（顶部）：
-- 单个矩形框
-- 标注"输入特征"
-
-四个并行分支（中间）：
-从左到右排列四条并行路径：
-
-分支1（最左）：
-- 单个小方块
-- 标注"1×1卷积"
-
-分支2：
-- 小方块连接中方块
-- 上方小方块标注"1×1卷积"
-- 下方中方块标注"3×3卷积"
-
-分支3：
-- 小方块连接大方块
-- 上方小方块标注"1×1卷积"
-- 下方大方块标注"5×5卷积"
-
-分支4（最右）：
-- 网格图案连接小方块
-- 上方网格标注"最大池化"
-- 下方小方块标注"1×1卷积"
-
-特征拼接（汇合点）：
-- 四个分支在底部汇合成一个宽矩形
-- 标注"特征拼接"
-
-输出（底部）：
-- 单个矩形框
-- 标注"输出特征"
-
-【视觉效果】
-- 不同方块大小表示不同感受野
-- 用箭头显示数据流向
-- 所有模块使用学术蓝填充
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: Inception module structure. Top: input rectangle. Middle: 4 parallel vertical paths - path 1: small square; path 2: small then medium square; path 3: small then large square; path 4: grid pattern then small square. All paths merge into wide rectangle. Bottom: output rectangle. Arrows showing data flow, blue (#0076A8) fill, white background, no text, academic style.",
         "size": "1600x1800"
     },
 
@@ -485,45 +177,7 @@ TimesBlock模块（主体部分，详细展示）：
         "title": "VoltageTimesNet与TimesNet周期检测对比",
         "chapter": 3,
         "description": "两种模型周期检测机制的对比",
-        "prompt": """
-生成一张对比图，展示两种周期检测方法的差异。
-
-【图表布局】左右对比，上下两行：
-
-第一行 - 周期来源：
-
-左侧（TimesNet）：
-- 标题"TimesNet周期检测"
-- 绘制FFT频谱图
-- 箭头指向检测到的频率峰值
-- 标注"仅依赖FFT检测"
-- 显示可能遗漏的小峰值（用虚线圈出）
-
-右侧（VoltageTimesNet）：
-- 标题"VoltageTimesNet周期检测"
-- 绘制FFT频谱图
-- 额外添加预设的电网周期标记（50Hz等）
-- 标注"FFT检测 + 领域先验"
-- 用橙色标记预设周期
-
-第二行 - 周期权重：
-
-左侧（TimesNet）：
-- 绘制等高的权重条形图
-- 标注"均等权重"
-
-右侧（VoltageTimesNet）：
-- 绘制不等高的权重条形图
-- 通过可学习注意力分配权重
-- 标注"自适应权重"
-- 重要周期权重更高
-
-【视觉区分】
-- 左侧使用灰色/蓝色
-- 右侧使用蓝色/橙色（强调改进）
-- 中间垂直虚线分隔
-
-""" + THESIS_STYLE_REQUIREMENTS,
+        "prompt": "Technical diagram: 2x2 comparison grid. Top row shows frequency spectrums: left has FFT peaks only (blue/gray), right has FFT peaks plus preset period markers (blue/orange). Bottom row shows weight bars: left has equal height bars, right has varying height bars with attention weights. Vertical dashed line in center. Blue (#0076A8) and orange accents, white background, no text, academic style.",
         "size": "1800x1400"
     },
 }
@@ -543,6 +197,7 @@ def call_image_generation_api(prompt: str, model: str, size: str = "1792x1024") 
     # 解析尺寸
     width, height = map(int, size.split("x"))
 
+    # 使用简单的字符串消息格式（Gemini 图像生成需要）
     data = {
         "model": model,
         "messages": [
@@ -560,27 +215,80 @@ def call_image_generation_api(prompt: str, model: str, size: str = "1792x1024") 
             f"{OPENROUTER_BASE_URL}/chat/completions",
             headers=headers,
             json=data,
-            timeout=180
+            timeout=180,
+            proxies=PROXY_CONFIG
         )
 
         if response.status_code == 200:
             result = response.json()
+
+            # 检查是否有错误
+            if "error" in result:
+                print(f"    ✗ API 错误: {result['error']}")
+                return None
+
+            # 调试：打印完整响应结构
+            print(f"    [调试] 响应结构: {list(result.keys())}")
+
             message = result.get("choices", [{}])[0].get("message", {})
             content = message.get("content", "")
+
+            # 首先检查 message.images 数组（Gemini 返回格式）
+            images = message.get("images", [])
+            if images:
+                print(f"    [调试] 找到 {len(images)} 个图像")
+                for img in images:
+                    if isinstance(img, dict):
+                        img_type = img.get("type", "")
+                        if img_type == "image_url" or "image" in img_type:
+                            image_url = img.get("image_url", {}).get("url", "")
+                            if image_url and image_url.startswith("data:image"):
+                                base64_data = image_url.split(",")[1]
+                                print(f"    ✓ 成功提取 Gemini 图像 (长度: {len(base64_data)} 字符)")
+                                return base64.b64decode(base64_data)
+
+            # 调试：检查内容类型
+            print(f"    [调试] 内容类型: {type(content)}")
+            if isinstance(content, list):
+                print(f"    [调试] 内容列表长度: {len(content)}")
+                for i, item in enumerate(content):
+                    if isinstance(item, dict):
+                        print(f"    [调试] 项目{i}类型: {item.get('type', 'unknown')}")
 
             # 检查是否返回了图像（base64 格式）
             if isinstance(content, list):
                 for item in content:
                     if isinstance(item, dict):
-                        if item.get("type") == "image_url":
+                        item_type = item.get("type", "")
+
+                        # 处理 inline_data 格式（Gemini 常用）
+                        if "inline_data" in item:
+                            inline = item["inline_data"]
+                            if "data" in inline:
+                                print(f"    ✓ 找到 inline_data 图像")
+                                return base64.b64decode(inline["data"])
+
+                        # 处理 image_url 格式
+                        if item_type == "image_url" or "image" in item_type:
                             image_url = item.get("image_url", {}).get("url", "")
-                            if image_url.startswith("data:image"):
-                                # 提取 base64 数据
-                                base64_data = image_url.split(",")[1]
-                                return base64.b64decode(base64_data)
-                        elif "image" in item.get("type", ""):
-                            if "data" in item:
-                                return base64.b64decode(item["data"])
+                            if not image_url and "url" in item:
+                                image_url = item["url"]
+                            if image_url:
+                                if image_url.startswith("data:image"):
+                                    base64_data = image_url.split(",")[1]
+                                    print(f"    ✓ 找到 base64 图像 URL")
+                                    return base64.b64decode(base64_data)
+                                else:
+                                    # 下载图像
+                                    print(f"    ⬇ 下载图像: {image_url[:50]}...")
+                                    img_resp = requests.get(image_url, timeout=60, proxies=PROXY_CONFIG)
+                                    if img_resp.status_code == 200:
+                                        return img_resp.content
+
+                        # 处理 image 类型
+                        if item_type == "image" and "data" in item:
+                            print(f"    ✓ 找到 image 数据")
+                            return base64.b64decode(item["data"])
 
             # 检查是否在文本中返回了 base64 图像
             if isinstance(content, str):
@@ -588,9 +296,13 @@ def call_image_generation_api(prompt: str, model: str, size: str = "1792x1024") 
                 base64_pattern = r'data:image/[^;]+;base64,([A-Za-z0-9+/=]+)'
                 match = re.search(base64_pattern, content)
                 if match:
+                    print(f"    ✓ 从文本中提取到 base64 图像")
                     return base64.b64decode(match.group(1))
 
-            return content.encode() if content else None
+            # 如果只有文本响应，返回 None 而不是文本
+            if content:
+                print(f"    ℹ 模型仅返回文本响应，无图像")
+            return None
 
         elif response.status_code == 429:
             print(f"    ⏳ 速率限制，等待30秒后重试...")
