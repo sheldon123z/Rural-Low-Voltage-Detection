@@ -131,7 +131,7 @@ def main():
     ax.axhline(y=-220*np.sqrt(2), color=reference_color, linestyle='--', linewidth=0.8, alpha=0.7)
     ax.set_xlabel('时间 (ms)')
     ax.set_ylabel('电压 (V)')
-    ax.set_title('(a) 正常电压', fontweight='bold')
+    ax.set_title('正常电压')
     ax.set_xlim([0, 80])
     ax.set_ylim([-400, 400])
     ax.text(70, 340, 'Vp=311V\n(220V)', fontsize=8, ha='right', va='top',
@@ -147,7 +147,7 @@ def main():
     ax.axhline(y=-187*np.sqrt(2), color=anomaly_color, linestyle=':', linewidth=1, alpha=0.7)
     ax.set_xlabel('时间 (ms)')
     ax.set_ylabel('电压 (V)')
-    ax.set_title('(b) 欠压', fontweight='bold')
+    ax.set_title('欠压')
     ax.set_xlim([0, 80])
     ax.set_ylim([-400, 400])
     ax.annotate('', xy=(75, 187*np.sqrt(2)), xytext=(75, 220*np.sqrt(2)),
@@ -165,7 +165,7 @@ def main():
     ax.axhline(y=-246*np.sqrt(2), color=anomaly_color, linestyle=':', linewidth=1, alpha=0.7)
     ax.set_xlabel('时间 (ms)')
     ax.set_ylabel('电压 (V)')
-    ax.set_title('(c) 过压', fontweight='bold')
+    ax.set_title('过压')
     ax.set_xlim([0, 80])
     ax.set_ylim([-400, 400])
     ax.annotate('', xy=(75, 246*np.sqrt(2)), xytext=(75, 220*np.sqrt(2)),
@@ -183,7 +183,7 @@ def main():
     ax.add_patch(sag_region)
     ax.set_xlabel('时间 (ms)')
     ax.set_ylabel('电压 (V)')
-    ax.set_title('(d) 电压骤降', fontweight='bold')
+    ax.set_title('电压骤降')
     ax.set_xlim([0, 80])
     ax.set_ylim([-400, 400])
     ax.annotate('骤降30%', xy=(50, 154*np.sqrt(2)), xytext=(55, 280),
@@ -198,7 +198,7 @@ def main():
     ax.plot(t * 1000, voltage_harmonic, color=anomaly_color, linewidth=1.2, label='畸变波形')
     ax.set_xlabel('时间 (ms)')
     ax.set_ylabel('电压 (V)')
-    ax.set_title('(e) 谐波畸变', fontweight='bold')
+    ax.set_title('谐波畸变')
     ax.set_xlim([0, 80])
     ax.set_ylim([-400, 400])
     ax.legend(loc='upper right', framealpha=0.9)
@@ -212,7 +212,7 @@ def main():
     ax.plot(t * 1000, vc, color=phase_colors[2], linewidth=1.2, label='C相')
     ax.set_xlabel('时间 (ms)')
     ax.set_ylabel('电压 (V)')
-    ax.set_title('(f) 三相不平衡', fontweight='bold')
+    ax.set_title('三相不平衡')
     ax.set_xlim([0, 80])
     ax.set_ylim([-400, 400])
     ax.legend(loc='upper right', framealpha=0.9, ncol=1)
