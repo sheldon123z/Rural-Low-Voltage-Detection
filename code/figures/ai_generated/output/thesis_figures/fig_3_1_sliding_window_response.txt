@@ -1,0 +1,5 @@
+Model: google/gemini-2.5-flash-image
+
+好的，我来为您生成一张符合您要求的滑动窗口机制示意图，用于学术论文。
+
+`
