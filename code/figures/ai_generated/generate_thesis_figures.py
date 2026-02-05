@@ -45,10 +45,9 @@ PROXY_CONFIG = {
 # API 提供商选择: "google" 或 "openrouter"
 API_PROVIDER = "google"
 
-# Google AI Studio 图像生成模型
+# Google AI Studio 图像生成模型（Nano Banana Pro）
 GOOGLE_IMAGE_MODELS = [
-    "gemini-2.0-flash-exp-image-generation",  # Gemini 2.0 图像生成
-    "imagen-3.0-generate-002",  # Imagen 3
+    "gemini-3-pro-image-preview",  # Nano Banana Pro 官方模型
 ]
 
 # OpenRouter 图像生成模型
@@ -99,237 +98,663 @@ THESIS_STYLE_REQUIREMENTS = """
 """
 
 # ============================================================
-# 论文图表提示词（Nano Banana Pro 优化版）
-# 基于 Nano Banana Pro 库的模板风格，针对 IEEE 学术图表定制
+# 论文图表提示词（Nano Banana Pro 优化版 v2）
+# 基于 Nano Banana Pro 库的 "Infographic with Technical Annotation" 模板
+# 融入论文实际内容：农村低压配电网电压异常检测、VoltageTimesNet 模型
 # ============================================================
 
-# 统一风格参数（基于 Nano Banana Pro 模板优化）
-NANO_BANANA_STYLE = """
-Style: Flat UI, Vector, Modern Minimalist, IEEE academic diagram.
-Color Palette: Primary blue (#0076A8), accent orange (#E07020), dark gray (#333333), pure white background (#FFFFFF).
-Lines: Orthogonal/Elbow lines with right-angle corners, 2px thickness, solid arrowheads.
-Shapes: Rounded rectangles (corner radius 8-12px), clean borders.
-Layout: Balanced spacing, center aligned, generous negative space.
-Quality: High resolution, print-ready, 300 DPI equivalent.
-Constraints: NO text labels, NO annotations, pure visual diagram only.
+# 统一风格参数（基于 Nano Banana Pro 流程图样式指南优化）
+NANO_BANANA_STYLE_GUIDE = """
+【Style Core Parameters - Nano Banana Pro Infographic Style】
+
+Visual Style:
+- Style: Clean technical infographic, IEEE academic diagram, engineering manual aesthetic
+- Rendering: Photorealistic 3D elements with hand-drawn annotation overlays
+- Composition: Balanced spacing, center aligned, generous negative space
+
+Color Palette:
+- Background: Pure white (#FFFFFF)
+- Primary: Deep blue (#0076A8) for main elements
+- Accent: Orange (#E07020) for highlights and emphasis
+- Lines/Borders: Dark gray (#333333) or black (#000000)
+- Fill: White or semi-transparent blue for shapes
+
+Lines/Connectors:
+- Type: Orthogonal/Elbow lines with right-angle corners
+- Thickness: 2px for main lines, 1px for secondary
+- Arrow: Solid small triangle arrowhead, black or blue
+
+Shapes:
+- Normal Node: Rounded rectangle (corner radius 8-12px)
+- Decision Node: Diamond shape
+- Start/End: Capsule or pill shape
+
+Typography:
+- NO TEXT LABELS in the image
+- Pure visual diagram only
+- All meaning conveyed through icons and shapes
+
+Quality:
+- Resolution: 4K equivalent, 300 DPI print-ready
+- Ultra-crisp edges, no blur
+- High contrast for black/white printing
 """
 
 THESIS_FIGURES: Dict[str, Dict[str, Any]] = {
 
-    # --------------------------------------------------------
-    # 第2章：数据采集与预处理（架构图类型）
-    # --------------------------------------------------------
+    # ============================================================
+    # 第2章：数据采集与预处理
+    # ============================================================
 
     "fig_2_1_data_collection_architecture": {
         "title": "数据采集分层架构图",
         "chapter": 2,
-        "description": "农村低压配电网数据采集系统三层架构",
-        "prompt": f"""Generate a technical three-layer IoT architecture diagram.
+        "description": "农村低压配电网数据采集系统三层架构：平台层→通信层→现场层",
+        "prompt": """Create a professional three-tier IoT architecture infographic for rural power grid monitoring system.
 
-STRUCTURE (top to bottom):
-- Layer 1 (top): Single cloud icon with database cylinder, centered
-- Layer 2 (middle): Three gateway boxes with antenna symbols, connected horizontally
-- Layer 3 (bottom): Six house icons with small meter circles, power line connecting all, transformer symbol in center
+SCENE DESCRIPTION:
+A vertical three-layer technical architecture diagram showing data flow from field devices to cloud platform. The diagram uses a clean engineering manual aesthetic with realistic 3D icons and technical annotation style.
 
-CONNECTIONS: Vertical arrows pointing upward between layers (data flow direction)
+LAYER 1 - PLATFORM LAYER (Top):
+- Large cloud shape containing:
+  * Database cylinder icon (data storage)
+  * Server rack icon (computing)
+  * Brain/neural network icon (anomaly detection AI)
+- Blue gradient fill (#0076A8 to light blue)
+- Dashed border indicating cloud boundary
 
-{NANO_BANANA_STYLE}""",
-        "size": "1800x1400"
+LAYER 2 - COMMUNICATION LAYER (Middle):
+- Three data concentrator boxes arranged horizontally
+- Each box has antenna/wireless symbol on top
+- Connected by horizontal dashed lines
+- Icons showing: 4G/NB-IoT signal waves
+- Orange accent (#E07020) for wireless signals
+
+LAYER 3 - FIELD LAYER (Bottom):
+- Row of 6 traditional Chinese rural houses (simple pitched roof style)
+- Each house has small smart meter icon attached
+- Central transformer symbol (standard electrical transformer icon)
+- Power lines connecting all houses through transformer
+- Small monitoring sensor icons near power lines
+
+DATA FLOW:
+- Thick upward arrows between layers showing data flow direction
+- Arrow from field to communication: voltage data (16 features)
+- Arrow from communication to platform: aggregated time series
+
+VISUAL STYLE:
+- Clean white background
+- 3D isometric icons with subtle shadows
+- Black technical annotation lines connecting elements
+- Professional engineering diagram aesthetic
+- NO text labels - pure visual representation
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "1800x1600"
     },
 
     "fig_2_2_voltage_anomaly_types": {
         "title": "电压异常类型示意图",
         "chapter": 2,
-        "description": "四种典型电压异常波形对比",
-        "prompt": f"""Generate a 2x2 grid technical diagram showing four voltage waveform anomalies.
+        "description": "四种典型电压异常波形：骤降(<198V)、骤升(>242V)、闪变、中断",
+        "prompt": """Create a 2x2 grid technical diagram showing four types of voltage anomalies in power systems.
 
-LAYOUT (2x2 grid):
-- Top-left panel: Sine wave with middle section amplitude dropped to 70% (voltage sag)
-- Top-right panel: Sine wave with middle section amplitude raised to 120% (voltage swell)
-- Bottom-left panel: Sine wave with envelope modulation showing amplitude variation (flicker)
-- Bottom-right panel: Sine wave with gap of zero amplitude in middle (interruption)
+SCENE DESCRIPTION:
+A professional oscilloscope-style display showing four panels, each demonstrating a different voltage waveform anomaly. Uses realistic signal visualization with engineering annotation overlay.
 
-EACH PANEL: Simple X-Y coordinate axes, blue (#0076A8) waveform line, orange (#E07020) semi-transparent highlight on anomaly region, thin gray grid lines.
+PANEL LAYOUT (2x2 Grid with thin gray borders):
 
-{NANO_BANANA_STYLE}""",
+TOP-LEFT - VOLTAGE SAG (Undervoltage):
+- Clean sinusoidal waveform (blue #0076A8 line, 3px thick)
+- Normal amplitude at start and end
+- Middle section: amplitude drops to ~70% of normal
+- Semi-transparent orange (#E07020) rectangle highlighting the sag region
+- Horizontal dashed reference lines showing normal vs. reduced amplitude
+- X-axis: time progression, Y-axis: voltage amplitude
+
+TOP-RIGHT - VOLTAGE SWELL (Overvoltage):
+- Clean sinusoidal waveform (blue line)
+- Middle section: amplitude rises to ~120% of normal
+- Orange highlight on the swell region
+- Reference lines showing normal vs. elevated amplitude
+
+BOTTOM-LEFT - VOLTAGE FLICKER:
+- Sinusoidal waveform with modulated envelope
+- Amplitude gradually varies up and down (envelope modulation effect)
+- Shows 3-4 cycles of the modulation pattern
+- Orange shading on varying envelope region
+
+BOTTOM-RIGHT - VOLTAGE INTERRUPTION:
+- Sinusoidal waveform at start
+- Sudden drop to zero (flat line) in middle section
+- Waveform resumes at end
+- Orange highlight on the zero-voltage gap
+
+VISUAL ELEMENTS:
+- Each panel has coordinate axes (gray thin lines)
+- Light gray grid background in each panel
+- Waveforms are smooth, clean sine curves
+- Engineering graph paper aesthetic
+- NO text labels - patterns speak for themselves
+
+""" + NANO_BANANA_STYLE_GUIDE,
         "size": "1800x1400"
     },
 
-    # --------------------------------------------------------
+    # ============================================================
     # 第3章：模型方法
-    # --------------------------------------------------------
+    # ============================================================
 
     "fig_3_1_sliding_window": {
         "title": "滑动窗口预测示意图",
         "chapter": 3,
-        "description": "时间序列滑动窗口机制可视化",
-        "prompt": f"""Generate a sliding window mechanism diagram for time series analysis.
+        "description": "时间序列滑动窗口机制：50步输入窗口，逐步滑动进行预测",
+        "prompt": """Create a technical diagram illustrating the sliding window mechanism for time series anomaly detection.
 
-ELEMENTS:
-1. Horizontal wavy signal line spanning full width (periodic voltage waveform)
-2. Three rectangular window frames at left, center, right positions
-   - Blue (#0076A8) border, semi-transparent light blue fill
-   - Equal size, evenly spaced
-3. Large horizontal arrow below windows pointing right (sliding direction)
-4. Small bracket under center window with arrow pointing to a dot on the right (input→output)
+SCENE DESCRIPTION:
+A horizontal technical illustration showing how a fixed-size window slides across a continuous voltage time series signal. Engineering annotation style with clean vector graphics.
 
-{NANO_BANANA_STYLE}""",
-        "size": "1800x1000"
+MAIN ELEMENTS:
+
+TIME SERIES SIGNAL (spanning full width):
+- Continuous wavy line representing voltage readings over time
+- Blue (#0076A8) thick line (3px)
+- Shows clear periodic patterns (sine-like oscillations with some variation)
+- Approximately 200 time steps visible
+- Subtle gray grid background
+
+THREE WINDOW POSITIONS:
+- Window 1 (left): Semi-transparent blue rectangle with blue border
+- Window 2 (center): Same style, highlighted more prominently
+- Window 3 (right): Same style
+- Each window covers exactly 50 time steps (shown by bracket below)
+- Windows overlap slightly to show sliding motion
+
+SLIDING DIRECTION:
+- Large horizontal arrow below the signal pointing RIGHT
+- Shows the direction of window movement
+- Arrow has engineering style (clean triangular head)
+
+INPUT-OUTPUT RELATIONSHIP (for center window):
+- Bracket underneath center window indicating "Input Window"
+- Arrow pointing from window to a single point on the right
+- Small dot or marker indicating "Prediction Point"
+- Shows: window content → model → next value prediction
+
+VISUAL ANNOTATIONS:
+- Dashed vertical lines marking window boundaries
+- Step indicators showing window positions
+- Clean orthogonal connecting lines
+
+STYLE:
+- Pure white background
+- Minimal, technical illustration aesthetic
+- High contrast for printing
+- NO text - pure visual representation
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "2000x1000"
     },
 
     "fig_3_2_1d_to_2d_conversion": {
         "title": "一维到二维时序转换示意图",
         "chapter": 3,
-        "description": "时间序列从一维到二维的变换过程",
-        "prompt": f"""Generate a three-stage transformation diagram (horizontal layout, left to right).
+        "description": "TimesNet核心：1D时序→FFT周期发现→2D张量重塑",
+        "prompt": """Create a three-stage transformation diagram showing the core mechanism of TimesNet: converting 1D time series to 2D representation through FFT period discovery.
 
-STAGE 1 (left): Horizontal wavy line representing 1D time series signal
-STAGE 2 (middle): Vertical bar chart with 5-6 bars of different heights (frequency spectrum), tallest 2-3 bars in blue, others in gray
-STAGE 3 (right): 8x8 square grid matrix with blue gradient color fill showing 2D representation
+SCENE DESCRIPTION:
+A horizontal left-to-right transformation pipeline showing three distinct stages connected by large arrows. Technical infographic style with 3D elements and engineering annotations.
 
-CONNECTIONS: Large bold arrows between stages
+STAGE 1 - 1D TIME SERIES (Left):
+- Horizontal wavy line representing original voltage signal
+- Blue (#0076A8) colored line with periodic oscillations
+- Shows approximately 100 time steps
+- Small coordinate axes (X: time, Y: amplitude)
+- Enclosed in rounded rectangle frame
+- Label indicator: "T × C" shape notation
 
-{NANO_BANANA_STYLE}""",
-        "size": "1800x1000"
+STAGE 2 - FFT FREQUENCY SPECTRUM (Center):
+- Vertical bar chart style visualization
+- 6-8 bars of different heights
+- 2-3 TALL bars in blue (dominant frequencies/periods)
+- Remaining bars in light gray (minor frequencies)
+- The tall bars represent detected periods (e.g., 60, 300, 900 samples)
+- Small coordinate axes (X: frequency, Y: amplitude)
+- Enclosed in rounded rectangle frame
+
+STAGE 3 - 2D TENSOR REPRESENTATION (Right):
+- Square grid matrix (8×8 or similar)
+- Blue gradient color fill showing 2D pattern
+- Represents the reshaped time series based on detected period
+- Shows how 1D sequence becomes 2D matrix
+- Grid cells with varying blue intensity
+- Enclosed in rounded rectangle frame
+- Label indicator: "p × (T/p) × C" shape notation
+
+TRANSFORMATION ARROWS:
+- Large bold arrow from Stage 1 to Stage 2 (FFT transform)
+- Large bold arrow from Stage 2 to Stage 3 (Reshape by period)
+- Arrows are blue with black outline
+- Engineering style arrow heads
+
+VISUAL STYLE:
+- Clean white background
+- Stages are clearly separated with equal spacing
+- Professional technical diagram aesthetic
+- NO text labels in the image
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "2200x1000"
     },
 
     "fig_3_7_anomaly_detection_framework": {
         "title": "异常检测框架流程图",
         "chapter": 3,
-        "description": "端到端异常检测系统流程",
-        "prompt": f"""Generate a horizontal flowchart with 6 processing modules.
+        "description": "端到端异常检测流程：输入→预处理→编码→解码→评分→检测",
+        "prompt": """Create a horizontal flowchart showing the complete anomaly detection pipeline using reconstruction-based approach.
 
-MODULES (left to right, rounded rectangles):
-1. Waveform icon inside (input data)
-2. Filter/funnel icon inside (preprocessing)
-3. Three stacked rectangles icon (neural network encoder)
-4. Expanding layers icon (decoder)
-5. Minus/comparison symbol (anomaly scoring)
-6. Bell/alert icon (detection output)
+SCENE DESCRIPTION:
+A professional process flowchart with 6 distinct processing modules connected by arrows, showing data flow from raw input to anomaly detection output. Uses Nano Banana Pro's minimalist flowchart style.
 
-CONNECTIONS: Horizontal arrows between each module
-STYLE: Blue (#0076A8) borders, white or light blue fill
+FLOWCHART MODULES (Left to Right):
 
-{NANO_BANANA_STYLE}""",
-        "size": "2000x800"
+MODULE 1 - DATA INPUT:
+- Rounded rectangle shape
+- Inside: Waveform/signal icon (sine wave symbol)
+- Represents: Raw voltage time series (16 channels)
+- Blue (#0076A8) border, white fill
+
+MODULE 2 - PREPROCESSING:
+- Rounded rectangle shape
+- Inside: Filter/funnel icon with small gear
+- Represents: Normalization, windowing, feature extraction
+- Blue border, white fill
+
+MODULE 3 - ENCODER:
+- Rounded rectangle shape
+- Inside: Three stacked horizontal bars converging (compression)
+- Represents: VoltageTimesNet encoder (feature extraction)
+- Blue border, light blue fill (emphasized)
+
+MODULE 4 - DECODER:
+- Rounded rectangle shape
+- Inside: Three stacked horizontal bars diverging (expansion)
+- Represents: Reconstruction decoder
+- Blue border, light blue fill
+
+MODULE 5 - ANOMALY SCORING:
+- Rounded rectangle shape
+- Inside: Two overlapping waveforms with difference highlighted
+- Represents: Reconstruction error computation (MSE)
+- Blue border, white fill
+
+MODULE 6 - DETECTION OUTPUT:
+- Pill/capsule shape (end node)
+- Inside: Alert/bell icon or checkmark
+- Represents: Binary anomaly classification
+- Orange (#E07020) border (output highlight), white fill
+
+CONNECTIONS:
+- Horizontal arrows between each consecutive module
+- Arrows are blue with solid triangle heads
+- Equal spacing between modules
+- Single straight flow line
+
+ADDITIONAL ELEMENTS:
+- Thin dashed line below showing data transformation stages
+- Small icons representing data shape at each stage
+- Clean orthogonal alignment
+
+STYLE:
+- Pure white background
+- Minimalist flowchart aesthetic
+- High contrast, print-ready
+- NO text labels
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "2400x800"
     },
 
     "fig_timesnet_architecture": {
         "title": "TimesNet网络架构图",
         "chapter": 3,
-        "description": "TimesNet神经网络结构详图",
-        "prompt": f"""Generate a vertical neural network architecture diagram.
+        "description": "TimesNet基线模型：FFT周期发现+2D卷积+多周期聚合",
+        "prompt": """Create a vertical neural network architecture diagram showing the complete TimesNet model structure.
 
-STRUCTURE (top to bottom):
-1. INPUT: Rectangle at top
-2. MAIN MODULE (dashed border box containing):
-   - FFT block (small rectangle)
-   - Arrow down
-   - Reshape icon (1D→2D transformation symbol)
-   - Arrow down
-   - INCEPTION: Four parallel vertical paths side by side
-     * Path 1: Single small square
-     * Path 2: Small square → medium square
-     * Path 3: Small square → large square
-     * Path 4: Grid pattern → small square
-   - All paths merge into one wide rectangle
-   - Normalization block
-3. OUTPUT: Rectangle at bottom
-4. SKIP CONNECTION: Curved arrow on the side from input to output of main module
+SCENE DESCRIPTION:
+A detailed vertical flowchart showing TimesNet's architecture from input to output, including the core TimesBlock with FFT, 2D convolution, and multi-period aggregation. Professional deep learning diagram style.
 
-{NANO_BANANA_STYLE}""",
-        "size": "1400x2000"
+ARCHITECTURE (Top to Bottom):
+
+INPUT LAYER:
+- Rectangle at top
+- Shows input tensor shape icon (horizontal bars)
+- Blue (#0076A8) fill
+
+EMBEDDING LAYER:
+- Small rectangle below input
+- Represents: Linear projection to d_model dimensions
+- Light blue fill
+
+MAIN TIMESBLOCK (Enclosed in dashed border - repeated L times):
+
+  A. FFT PERIOD DISCOVERY:
+  - Small rectangle with wave→bars transformation icon
+  - Shows: Time domain → Frequency domain
+
+  B. TOP-K PERIOD SELECTION:
+  - Small rectangle with selection/filter icon
+  - Represents: Selecting top-k dominant periods
+
+  C. 2D RESHAPE:
+  - Icon showing 1D line transforming to 2D grid
+  - Represents: Reshape by each detected period
+
+  D. INCEPTION 2D CONVOLUTION (4 parallel paths):
+  - Path 1: Small square (1×1 conv)
+  - Path 2: Small→Medium squares (1×1→3×3)
+  - Path 3: Small→Large squares (1×1→5×5)
+  - Path 4: Grid→Small (MaxPool→1×1)
+  - All paths merge into concatenation bar
+
+  E. 2D TO 1D RESHAPE:
+  - Icon showing 2D grid transforming back to 1D
+
+  F. ADAPTIVE AGGREGATION:
+  - Weighted sum icon (multiple inputs with weights)
+  - Represents: Softmax-weighted combination of periods
+
+RESIDUAL CONNECTION:
+- Curved arrow on the LEFT side
+- Connects from before TimesBlock to after
+- Dashed blue line
+
+LAYER NORMALIZATION:
+- Thin rectangle after residual addition
+- Represents: Post-block normalization
+
+REPETITION INDICATOR:
+- Dotted vertical line on right side
+- Shows "×L" (L layers stacked)
+
+OUTPUT LAYER:
+- Rectangle at bottom
+- Represents: Final projection layer
+- Blue fill
+
+STYLE:
+- White background
+- Clean vector graphics
+- Professional ML architecture diagram style
+- NO text labels
+- Clear visual hierarchy
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "1400x2200"
     },
 
     "fig_voltagetimesnet_architecture": {
         "title": "VoltageTimesNet网络架构图",
         "chapter": 3,
-        "description": "VoltageTimesNet架构与增强模块",
-        "prompt": f"""Generate a side-by-side architecture comparison diagram.
+        "description": "VoltageTimesNet改进：混合周期发现(70%FFT+30%电网先验)+自适应周期加权",
+        "prompt": """Create a side-by-side architecture comparison diagram showing TimesNet (baseline) vs VoltageTimesNet (proposed improvement).
 
-LEFT COLUMN (TimesNet baseline):
-- Vertical flow: Input → FFT → 2D Conv → Output
-- All blocks in blue (#0076A8)
-- Skip connection curve on left side
+SCENE DESCRIPTION:
+Two vertical neural network architectures placed side by side, with the left showing baseline TimesNet and the right showing enhanced VoltageTimesNet with two key improvements highlighted in orange.
 
-RIGHT COLUMN (VoltageTimesNet - enhanced):
-- Same vertical flow as left
-- Two additional orange (#E07020) highlighted blocks:
-  * After FFT: "Domain Prior" enhancement block
-  * Before Output: "Period Weighting" enhancement block
-- Skip connection curve on right side
+LEFT COLUMN - TIMESNET BASELINE:
 
-SEPARATOR: Vertical dashed line between columns
+Vertical flow from top to bottom:
+1. INPUT rectangle (blue)
+2. EMBEDDING rectangle (light blue)
+3. TIMESBLOCK (dashed border):
+   - FFT block
+   - Period selection
+   - 2D Conv (Inception style)
+   - Aggregation
+4. OUTPUT rectangle (blue)
+5. Skip connection curve on left side
 
-{NANO_BANANA_STYLE}""",
-        "size": "1800x1600"
+All blocks in blue (#0076A8) color scheme
+
+RIGHT COLUMN - VOLTAGETIMESNET (Enhanced):
+
+Same vertical flow with TWO HIGHLIGHTED IMPROVEMENTS:
+
+IMPROVEMENT 1 - HYBRID PERIOD DISCOVERY (after FFT):
+- Orange (#E07020) bordered rectangle
+- Shows: FFT periods + Grid preset periods merging
+- Icon: Wave bars + fixed period markers combining
+- Represents: 70% data-driven + 30% domain knowledge
+- Preset periods: 60 (1min), 300 (5min), 900 (15min), 3600 (1hr)
+
+IMPROVEMENT 2 - ADAPTIVE PERIOD WEIGHTING (before aggregation):
+- Orange (#E07020) bordered rectangle
+- Shows: Attention mechanism icon (multiple inputs with varying weights)
+- Represents: Learnable importance weighting for different periods
+- Icon: Bars with gradient heights showing attention weights
+
+Rest of the architecture same as baseline:
+- 2D Conv blocks in blue
+- Skip connection on right side
+- Output in blue
+
+VISUAL SEPARATION:
+- Vertical dashed line between left and right columns
+- Clear visual distinction between baseline (all blue) and enhanced (blue + orange highlights)
+
+CONNECTING ELEMENTS:
+- Horizontal double-headed arrow between corresponding blocks
+- Shows: "Same structure" vs "Enhanced module"
+
+STYLE:
+- White background
+- Professional neural network diagram
+- Orange highlights draw attention to innovations
+- NO text labels
+- High contrast for printing
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "2000x1800"
     },
 
     "fig_fft_period_discovery": {
         "title": "快速傅里叶变换周期发现示意图",
         "chapter": 3,
-        "description": "FFT周期检测原理图",
-        "prompt": f"""Generate a two-panel FFT analysis diagram (vertical stack).
+        "description": "FFT变换：时域电压信号→频域→发现主导周期(如60采样点=1分钟周期)",
+        "prompt": """Create a two-panel FFT analysis diagram showing the transformation from time domain to frequency domain for period discovery.
 
-TOP PANEL (Time Domain):
-- Continuous wavy signal line showing clear periodic pattern
-- Multiple peaks and valleys visible
-- Simple X-Y coordinate axes
-- Blue (#0076A8) waveform
+SCENE DESCRIPTION:
+A vertical two-panel technical illustration showing how FFT reveals hidden periodic patterns in voltage time series data. Top panel shows the original signal, bottom panel shows the frequency spectrum with detected periods.
 
-BOTTOM PANEL (Frequency Domain):
-- Bar chart style frequency spectrum
-- 2-3 tall prominent bars in blue (#0076A8) representing dominant frequencies
-- Remaining shorter bars in light gray
-- Simple X-Y coordinate axes
+TOP PANEL - TIME DOMAIN SIGNAL:
 
-BETWEEN PANELS: Large downward arrow
+- Large rectangular plot area with light gray grid
+- X-axis: Time (showing ~200 time steps)
+- Y-axis: Voltage amplitude
+- SIGNAL: Blue (#0076A8) continuous wavy line
+  * Shows clear but complex periodic pattern
+  * Multiple overlapping periodicities visible
+  * Resembles real voltage data with daily/hourly cycles
+- Coordinate axes in dark gray
+- Clean engineering graph aesthetic
 
-{NANO_BANANA_STYLE}""",
-        "size": "1600x1400"
+TRANSFORMATION ARROW:
+
+- Large bold downward arrow between panels
+- Blue with black outline
+- Shows FFT transformation direction
+- Arrow contains small wave→bar icon
+
+BOTTOM PANEL - FREQUENCY SPECTRUM:
+
+- Large rectangular plot area with light gray grid
+- X-axis: Frequency (or Period in samples)
+- Y-axis: Amplitude/Power
+- SPECTRUM as vertical bar chart:
+  * 2-3 TALL prominent bars in blue (#0076A8) - dominant periods
+    - These represent: 60 samples (1-minute cycle)
+    - 300 samples (5-minute cycle)
+    - 900 samples (15-minute cycle)
+  * Orange (#E07020) circles/markers on top of dominant bars
+  * Remaining ~10 shorter bars in light gray - minor frequencies
+- Clear visual hierarchy: dominant peaks stand out
+
+VISUAL ANNOTATIONS:
+- Dashed horizontal reference lines on frequency panel
+- Small arrows pointing to dominant peaks
+- Bracket showing "Top-K selected" range
+
+STYLE:
+- White background
+- Scientific visualization aesthetic
+- Print-ready high contrast
+- NO text labels
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "1600x1600"
     },
 
     "fig_2d_conv_inception": {
         "title": "二维卷积Inception模块示意图",
         "chapter": 3,
-        "description": "Inception风格的多尺度卷积结构",
-        "prompt": f"""Generate an Inception module structure diagram (vertical layout).
+        "description": "Inception Block：多尺度2D卷积(1×1, 3×3, 5×5)+MaxPool并行处理",
+        "prompt": """Create a detailed Inception module structure diagram showing multi-scale 2D convolution paths.
 
-STRUCTURE:
-1. TOP: Single input rectangle
-2. MIDDLE: Four parallel vertical paths arranged horizontally:
-   - Path 1: Single small square (1x1 conv)
-   - Path 2: Small square → Medium square (1x1 → 3x3 conv)
-   - Path 3: Small square → Large square (1x1 → 5x5 conv)
-   - Path 4: Grid pattern → Small square (pooling → 1x1 conv)
-3. MERGE: All four paths connect to one wide rectangle (concatenation)
-4. BOTTOM: Single output rectangle
+SCENE DESCRIPTION:
+A vertical neural network module diagram showing the Inception-style architecture used in TimesNet for multi-scale temporal pattern extraction. Shows four parallel processing paths with different receptive field sizes.
 
-VISUAL: Different square sizes represent different receptive fields
-ARROWS: Show data flow direction downward
+STRUCTURE (Top to Bottom):
 
-{NANO_BANANA_STYLE}""",
-        "size": "1600x1800"
+INPUT (Top):
+- Wide rectangle representing input 2D feature map
+- Blue (#0076A8) fill
+- Shows: H × W × C tensor shape icon
+
+FOUR PARALLEL PATHS (arranged horizontally):
+
+PATH 1 - 1×1 Convolution:
+- Single small blue square
+- Represents: Point-wise convolution (channel mixing)
+- Smallest receptive field
+
+PATH 2 - 1×1 → 3×3 Convolution:
+- Small square (1×1) connected to medium square (3×3)
+- Two-stage processing
+- Vertical arrow between them
+- Medium receptive field
+
+PATH 3 - 1×1 → 5×5 Convolution:
+- Small square (1×1) connected to large square (5×5)
+- Two-stage processing
+- Vertical arrow between them
+- Large receptive field
+
+PATH 4 - MaxPool → 1×1:
+- Grid pattern icon (3×3 max pooling) connected to small square (1×1)
+- Two-stage processing
+- Captures local max features
+
+VISUAL REPRESENTATION:
+- Square sizes literally represent kernel sizes
+- Path 1 square is smallest
+- Path 3 square is largest
+- Path 4 grid pattern distinct from convolutions
+
+CONCATENATION (Merge point):
+- All four paths converge via arrows pointing down
+- Wide horizontal rectangle showing concatenated features
+- Different colored sections showing contribution from each path
+- Orange (#E07020) border highlighting the fusion
+
+OUTPUT (Bottom):
+- Rectangle representing output feature map
+- Blue fill
+- Shows: H × W × (C1+C2+C3+C4) combined channels
+
+CONNECTING ARROWS:
+- Vertical arrows showing data flow
+- From input splitting to 4 paths
+- From 4 paths merging to concatenation
+- From concatenation to output
+
+STYLE:
+- White background
+- Clean vector graphics
+- Professional deep learning diagram
+- Different visual weights for different kernel sizes
+- NO text labels
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "1600x2000"
     },
 
     "fig_3_3_voltage_timesnet_comparison": {
         "title": "VoltageTimesNet与TimesNet周期检测对比",
         "chapter": 3,
-        "description": "两种模型周期检测机制的对比",
-        "prompt": f"""Generate a 2x2 comparison grid diagram.
+        "description": "对比：纯FFT周期 vs 混合周期(FFT+电网先验)；均匀权重 vs 自适应注意力权重",
+        "prompt": """Create a 2×2 comparison grid showing the key differences between TimesNet and VoltageTimesNet in period detection and weighting.
 
-TOP ROW (Period Detection):
-- Left cell: FFT spectrum with only detected peaks (blue/gray bars)
-- Right cell: FFT spectrum with detected peaks PLUS preset period markers in orange (#E07020)
+SCENE DESCRIPTION:
+A four-panel comparison diagram illustrating two key improvements: (1) hybrid period discovery vs pure FFT, and (2) adaptive weighting vs uniform weighting. Left column shows TimesNet baseline, right column shows VoltageTimesNet improvements.
 
-BOTTOM ROW (Period Weighting):
-- Left cell: Bar chart with all bars equal height (uniform weights)
-- Right cell: Bar chart with varying bar heights (adaptive attention weights), important periods taller
+PANEL LAYOUT:
 
-SEPARATOR: Vertical dashed line in center dividing left/right
+TOP-LEFT - TimesNet Period Detection:
+- Frequency spectrum bar chart
+- 6-8 bars of varying heights
+- Only 2-3 BLUE bars selected (pure FFT top-k)
+- Remaining bars in light gray (not selected)
+- Shows: Only data-driven period selection
+- Simple selection based on amplitude
 
-{NANO_BANANA_STYLE}""",
-        "size": "1800x1400"
+TOP-RIGHT - VoltageTimesNet Hybrid Period Detection:
+- Same frequency spectrum base
+- BLUE bars from FFT (data-driven)
+- PLUS additional ORANGE bars at fixed positions
+  * These represent grid-specific periods:
+  * 60 samples (1-minute)
+  * 300 samples (5-minute)
+  * 900 samples (15-minute)
+  * 3600 samples (1-hour)
+- Orange (#E07020) markers/circles on preset periods
+- Shows: 70% FFT + 30% domain knowledge
+
+BOTTOM-LEFT - TimesNet Uniform Weighting:
+- Bar chart showing period weights
+- ALL bars have EQUAL height
+- Uniform blue color
+- Shows: Equal importance for all periods
+- No adaptation based on data
+
+BOTTOM-RIGHT - VoltageTimesNet Adaptive Weighting:
+- Bar chart showing period weights
+- Bars have VARYING heights (attention weights)
+- Important periods (e.g., daily cycle) have taller bars
+- Less important periods have shorter bars
+- Gradient colors from blue to light blue based on weight
+- Small attention icon above (softmax symbol)
+- Shows: Learnable, data-dependent weighting
+
+VISUAL SEPARATORS:
+- Vertical dashed line between left and right columns
+- Horizontal dashed line between top and bottom rows
+- Clear grid structure
+
+COMPARISON INDICATORS:
+- Left column: Gray/blue scheme (baseline)
+- Right column: Blue + Orange scheme (improved)
+- Visual emphasis on the differences
+
+STYLE:
+- White background
+- Clean chart aesthetic
+- High contrast for printing
+- NO text labels
+- Clear visual distinction between baseline and improved
+
+""" + NANO_BANANA_STYLE_GUIDE,
+        "size": "2000x1600"
     },
 }
 
