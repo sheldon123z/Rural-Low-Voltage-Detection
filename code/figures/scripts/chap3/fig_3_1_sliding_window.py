@@ -8,22 +8,27 @@ Fig 3-1: Sliding Window Prediction Schematic
 - (b) 模型处理流程
 - (c) 重构误差与异常检测
 
-输出文件: ../chapter3_method/fig_3_1_sliding_window.png
+优化版本：修复标号重叠、改用 VoltageTimesNet、增大字体
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch
-import matplotlib
 import os
 import sys
 
 # 导入论文统一样式
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from thesis_style import setup_thesis_style, save_thesis_figure, remove_spines, get_output_dir
+from thesis_style import get_output_dir
 
-setup_thesis_style()
+# 设置中文字体
+plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['font.size'] = 11
+plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['savefig.facecolor'] = 'white'
+plt.rcParams['savefig.dpi'] = 300
 
 # 柔和科研配色
 COLORS = {
@@ -59,13 +64,15 @@ def generate_voltage_signal(n_points=500):
 
 def main():
     """主函数"""
-    # 创建图形
-    fig = plt.figure(figsize=(8, 6.5), constrained_layout=True)
-    gs = fig.add_gridspec(3, 1, height_ratios=[1.4, 0.7, 1.2], hspace=0.15)
+    # 创建图形 - 使用 add_axes 精确控制位置
+    fig = plt.figure(figsize=(9, 7.5), dpi=300)
+
+    # 手动布局三个子图区域（留出足够间距）
+    ax1 = fig.add_axes([0.10, 0.62, 0.85, 0.33])   # (a) 原始信号
+    ax2 = fig.add_axes([0.10, 0.38, 0.85, 0.18])   # (b) 模型流程
+    ax3 = fig.add_axes([0.10, 0.08, 0.85, 0.25])   # (c) 重构误差
 
     # ========== (a) 原始时序数据与滑动窗口 ==========
-    ax1 = fig.add_subplot(gs[0])
-
     t, signal, (anomaly_start, anomaly_end) = generate_voltage_signal(500)
     ax1.plot(t, signal, color=COLORS['signal'], linewidth=1.2, label='原始电压信号')
 
@@ -91,11 +98,11 @@ def main():
         ax1.add_patch(rect)
 
         if i == len(window_positions) - 1:
-            ax1.text(start + seq_len/2, y_max + 4, '窗口 $t$',
-                    ha='center', va='bottom', fontsize=9, fontweight='bold')
+            ax1.text(start + seq_len/2, y_max + 3.5, '窗口 $t$',
+                    ha='center', va='bottom', fontsize=10, fontweight='bold')
         elif i == 0:
-            ax1.text(start + seq_len/2, y_max + 4, '窗口 $t-3$',
-                    ha='center', va='bottom', fontsize=9, color='gray')
+            ax1.text(start + seq_len/2, y_max + 3.5, '窗口 $t-3$',
+                    ha='center', va='bottom', fontsize=10, color='gray')
 
     # 滑动方向箭头
     arrow_y = 233
@@ -103,15 +110,15 @@ def main():
                 xytext=(window_positions[0], arrow_y),
                 arrowprops=dict(arrowstyle='->', color='gray', lw=1.5))
     ax1.text((window_positions[0] + window_positions[-1] + seq_len + 20) / 2, arrow_y + 2,
-            '滑动方向', ha='center', va='bottom', fontsize=8, color='gray')
+            '滑动方向', ha='center', va='bottom', fontsize=9, color='gray')
 
     # seq_len 参数标注
     param_y = 198
     ax1.annotate('', xy=(window_positions[-1] + seq_len, param_y),
                 xytext=(window_positions[-1], param_y),
                 arrowprops=dict(arrowstyle='<->', color='black', lw=1))
-    ax1.text(window_positions[-1] + seq_len/2, param_y - 3, f'$L_{{seq}}={seq_len}$',
-            ha='center', va='top', fontsize=9)
+    ax1.text(window_positions[-1] + seq_len/2, param_y - 2.5, f'$L_{{seq}}={seq_len}$',
+            ha='center', va='top', fontsize=10)
 
     # stride 参数标注
     stride_y = 193
@@ -119,71 +126,71 @@ def main():
                 xytext=(window_positions[0], stride_y),
                 arrowprops=dict(arrowstyle='<->', color='#666666', lw=0.8))
     ax1.text((window_positions[0] + window_positions[1]) / 2, stride_y - 2,
-            f'stride={stride}', ha='center', va='top', fontsize=8, color='#666666')
+            f'stride={stride}', ha='center', va='top', fontsize=9, color='#666666')
 
     ax1.set_xlim(0, 480)
     ax1.set_ylim(188, 240)
-    ax1.set_xlabel('时间步/Step', fontsize=10.5)
-    ax1.set_ylabel('电压/V', fontsize=10.5)
-    ax1.text(-0.02, 1.05, '(a)', transform=ax1.transAxes, fontsize=11, fontweight='bold')
+    ax1.set_xlabel('时间步', fontsize=11)
+    ax1.set_ylabel('电压/V', fontsize=11)
+    ax1.text(-0.08, 0.95, '(a)', transform=ax1.transAxes, fontsize=12, fontweight='bold')
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
-    ax1.legend(loc='upper right', frameon=False, fontsize=9)
+    ax1.legend(loc='upper right', frameon=False, fontsize=10)
 
     # ========== (b) 模型处理流程 ==========
-    ax2 = fig.add_subplot(gs[1])
     ax2.set_xlim(0, 10)
     ax2.set_ylim(0, 2)
     ax2.axis('off')
 
     box_y = 1.0
-    box_height = 0.9
+    box_height = 1.0
     box_width_small = 2.0
     box_width_large = 2.8
 
     # 输入框
-    input_x = 0.8
+    input_x = 0.5
     input_box = FancyBboxPatch((input_x, box_y - box_height/2), box_width_small, box_height,
                                boxstyle="round,pad=0.05,rounding_size=0.15",
                                facecolor=COLORS['input_box'], edgecolor='#666666', linewidth=1.2)
     ax2.add_patch(input_box)
-    ax2.text(input_x + box_width_small/2, box_y + 0.12, '输入窗口', ha='center', va='center', fontsize=9, fontweight='bold')
-    ax2.text(input_x + box_width_small/2, box_y - 0.22, r'$\mathbf{X} \in \mathbb{R}^{B \times L \times C}$',
-            ha='center', va='center', fontsize=9)
+    ax2.text(input_x + box_width_small/2, box_y + 0.15, '输入窗口', ha='center', va='center',
+             fontsize=10, fontweight='bold')
+    ax2.text(input_x + box_width_small/2, box_y - 0.25, r'$\mathbf{X} \in \mathbb{R}^{B \times L \times C}$',
+            ha='center', va='center', fontsize=10)
 
-    # TimesNet 编码器框
-    model_x = 3.6
-    model_box = FancyBboxPatch((model_x, box_y - box_height/2), box_width_large, box_height,
+    # VoltageTimesNet 编码器框（改为 VoltageTimesNet）
+    model_x = 3.5
+    model_box = FancyBboxPatch((model_x, box_y - box_height/2), box_width_large + 0.2, box_height,
                                boxstyle="round,pad=0.05,rounding_size=0.15",
                                facecolor=COLORS['model_box'], edgecolor='#0066AA', linewidth=1.8)
     ax2.add_patch(model_box)
-    ax2.text(model_x + box_width_large/2, box_y + 0.15, 'TimesNet', ha='center', va='center',
-            fontsize=11, fontweight='bold', color='#003366')
-    ax2.text(model_x + box_width_large/2, box_y - 0.22, '编码器-解码器', ha='center', va='center',
-            fontsize=9, color='#444444')
+    ax2.text(model_x + (box_width_large + 0.2)/2, box_y + 0.18, 'VoltageTimesNet',
+             ha='center', va='center', fontsize=11, fontweight='bold', color='#003366')
+    ax2.text(model_x + (box_width_large + 0.2)/2, box_y - 0.25, '编码器-解码器',
+             ha='center', va='center', fontsize=10, color='#444444')
 
     # 输出框
-    output_x = 7.2
+    output_x = 7.0
     output_box = FancyBboxPatch((output_x, box_y - box_height/2), box_width_small, box_height,
                                 boxstyle="round,pad=0.05,rounding_size=0.15",
                                 facecolor=COLORS['output_box'], edgecolor='#666666', linewidth=1.2)
     ax2.add_patch(output_box)
-    ax2.text(output_x + box_width_small/2, box_y + 0.12, '重构输出', ha='center', va='center', fontsize=9, fontweight='bold')
-    ax2.text(output_x + box_width_small/2, box_y - 0.22, r'$\hat{\mathbf{X}} \in \mathbb{R}^{B \times L \times C}$',
-            ha='center', va='center', fontsize=9)
+    ax2.text(output_x + box_width_small/2, box_y + 0.15, '重构输出', ha='center', va='center',
+             fontsize=10, fontweight='bold')
+    ax2.text(output_x + box_width_small/2, box_y - 0.25, r'$\hat{\mathbf{X}} \in \mathbb{R}^{B \times L \times C}$',
+            ha='center', va='center', fontsize=10)
 
     # 箭头
-    arrow_style = dict(arrowstyle='->', color=COLORS['arrow'], lw=1.8)
+    arrow_style = dict(arrowstyle='->', color=COLORS['arrow'], lw=2)
     ax2.annotate('', xy=(model_x - 0.15, box_y), xytext=(input_x + box_width_small + 0.15, box_y),
                 arrowprops=arrow_style)
-    ax2.annotate('', xy=(output_x - 0.15, box_y), xytext=(model_x + box_width_large + 0.15, box_y),
+    ax2.annotate('', xy=(output_x - 0.15, box_y), xytext=(model_x + box_width_large + 0.2 + 0.15, box_y),
                 arrowprops=arrow_style)
 
-    ax2.text(-0.02, 1.3, '(b)', transform=ax2.transAxes, fontsize=11, fontweight='bold')
+    # (b) 标号放在子图左侧
+    ax2.text(-0.08, 0.5, '(b)', transform=ax2.transAxes, fontsize=12, fontweight='bold')
 
     # ========== (c) 重构误差与异常检测 ==========
-    ax3 = fig.add_subplot(gs[2])
-
     np.random.seed(42)
     recon_error = np.abs(np.random.normal(0, 1, 500)) * 2
     recon_error[anomaly_start:anomaly_end] = np.abs(np.random.normal(8, 2, anomaly_end - anomaly_start))
@@ -194,37 +201,42 @@ def main():
     ax3.plot(t, recon_error, color=COLORS['recon_error'], linewidth=1.2, label='重构误差')
 
     threshold = 5.0
-    ax3.axhline(y=threshold, color=COLORS['threshold'], linestyle='--', linewidth=1.5, label=f'阈值 $\\tau$')
+    ax3.axhline(y=threshold, color=COLORS['threshold'], linestyle='--', linewidth=1.5,
+                label=f'阈值 $\\tau$')
 
     anomaly_mask = recon_error > threshold
     ax3.fill_between(t, 0, recon_error, where=anomaly_mask,
                     color=COLORS['anomaly'], alpha=0.35, label='检测到的异常')
 
     ax3.annotate(f'$\\tau = {threshold}$', xy=(460, threshold),
-                xytext=(460, threshold + 2.5),
-                fontsize=9, ha='center',
+                xytext=(460, threshold + 3),
+                fontsize=10, ha='center',
                 arrowprops=dict(arrowstyle='->', color=COLORS['threshold'], lw=1))
 
     max_error_idx = np.argmax(recon_error)
     max_error = recon_error[max_error_idx]
     ax3.annotate('异常区域', xy=(max_error_idx, max_error),
-                xytext=(max_error_idx - 80, max_error + 1.5),
-                fontsize=9, ha='center',
+                xytext=(max_error_idx - 80, max_error + 2),
+                fontsize=10, ha='center',
                 arrowprops=dict(arrowstyle='->', color=COLORS['anomaly'], lw=1))
 
     ax3.set_xlim(0, 480)
     ax3.set_ylim(0, 16)
-    ax3.set_xlabel('时间步/Step', fontsize=10.5)
-    ax3.set_ylabel('重构误差/Error', fontsize=10.5)
-    ax3.text(-0.02, 1.05, '(c)', transform=ax3.transAxes, fontsize=11, fontweight='bold')
+    ax3.set_xlabel('时间步', fontsize=11)
+    ax3.set_ylabel('重构误差', fontsize=11)
+    ax3.text(-0.08, 0.95, '(c)', transform=ax3.transAxes, fontsize=12, fontweight='bold')
     ax3.spines['top'].set_visible(False)
     ax3.spines['right'].set_visible(False)
-    ax3.legend(loc='upper right', frameon=False, fontsize=9, ncol=1)
+    ax3.legend(loc='upper right', frameon=False, fontsize=10, ncol=1)
 
-    # 保存到 output/chap3 目录
+    # 保存
     output_dir = get_output_dir(3)
     output_path = os.path.join(output_dir, 'fig_3_1_sliding_window.png')
-    save_thesis_figure(fig, output_path)
+    plt.savefig(output_path, dpi=300, bbox_inches='tight',
+                facecolor='white', edgecolor='none', pad_inches=0.1)
+    plt.close()
+
+    print(f"已生成: {output_path}")
 
 
 if __name__ == '__main__':
