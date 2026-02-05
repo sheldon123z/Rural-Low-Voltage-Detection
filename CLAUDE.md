@@ -180,16 +180,24 @@ python scripts/analyze_comparison_results.py --result_dir ./results/PSM_comparis
 #### 目录结构
 ```
 code/figures/
-├── scripts/              # 所有图表生成脚本
-│   ├── thesis_style.py   # 统一样式配置
-│   ├── fig_X_X_*.py      # 各章节图表脚本
-│   ├── generate_all_figures.py  # 批量生成
-│   └── sync_to_thesis.py # 同步到论文项目
-├── output/               # 生成的图片
-│   ├── chap2/           # 第2章：数据采集
-│   ├── chap3/           # 第3章：模型方法
-│   └── chap4/           # 第4章：实验结果
-└── architecture/         # draw.io 架构图源文件
+├── scripts/                      # 图表生成脚本
+│   ├── thesis_style.py           # 统一样式配置
+│   ├── generate_all_figures.py   # 批量生成
+│   ├── sync_to_thesis.py         # 同步到论文项目
+│   ├── chap2/                    # 第2章脚本
+│   │   ├── fig_2_1_*.py
+│   │   └── fig_2_2_*.py
+│   ├── chap3/                    # 第3章脚本
+│   │   ├── fig_3_1_*.py
+│   │   └── ...
+│   └── chap4/                    # 第4章脚本 (15个)
+│       ├── fig_4_1_*.py
+│       └── ...
+├── output/                       # 生成的图片
+│   ├── chap2/                    # 第2章：数据采集
+│   ├── chap3/                    # 第3章：模型方法
+│   └── chap4/                    # 第4章：实验结果
+└── architecture/                 # draw.io 架构图源文件
 ```
 
 #### 图表清单

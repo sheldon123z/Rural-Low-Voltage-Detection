@@ -19,34 +19,34 @@ import time
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 按章节组织的脚本列表
+# 按章节组织的脚本列表 (脚本位于 chapX/ 子目录)
 SCRIPTS = {
     2: [
-        'fig_2_1_data_collection_architecture.py',
-        'fig_2_2_voltage_anomaly_types.py',
+        'chap2/fig_2_1_data_collection_architecture.py',
+        'chap2/fig_2_2_voltage_anomaly_types.py',
     ],
     3: [
-        'fig_3_1_sliding_window.py',
-        'fig_3_2_1d_to_2d_conversion.py',
-        'fig_3_3_voltage_timesnet_comparison.py',
-        'fig_3_7_anomaly_detection_framework.py',
+        'chap3/fig_3_1_sliding_window.py',
+        'chap3/fig_3_2_1d_to_2d_conversion.py',
+        'chap3/fig_3_3_voltage_timesnet_comparison.py',
+        'chap3/fig_3_7_anomaly_detection_framework.py',
     ],
     4: [
-        'fig_4_1_f1_comparison.py',
-        'fig_4_2_roc_pr_curves.py',
-        'fig_4_3_confusion_matrices.py',
-        'fig_4_4_precision_recall_tradeoff.py',
-        'fig_4_5_radar_comparison.py',
-        'fig_4_6_score_distribution.py',
-        'fig_4_7_threshold_sensitivity.py',
-        'fig_4_8_detection_visualization.py',
-        'fig_4_9_training_loss.py',
-        'fig_4_10_seq_len_ablation.py',
-        'fig_4_11_alpha_ablation.py',
-        'fig_4_12_variant_bar_comparison.py',
-        'fig_4_13_variant_training_loss.py',
-        'fig_4_14_phase_attention_heatmap.py',
-        'fig_4_15_multiscale_contribution.py',
+        'chap4/fig_4_1_f1_comparison.py',
+        'chap4/fig_4_2_roc_pr_curves.py',
+        'chap4/fig_4_3_confusion_matrices.py',
+        'chap4/fig_4_4_precision_recall_tradeoff.py',
+        'chap4/fig_4_5_radar_comparison.py',
+        'chap4/fig_4_6_score_distribution.py',
+        'chap4/fig_4_7_threshold_sensitivity.py',
+        'chap4/fig_4_8_detection_visualization.py',
+        'chap4/fig_4_9_training_loss.py',
+        'chap4/fig_4_10_seq_len_ablation.py',
+        'chap4/fig_4_11_alpha_ablation.py',
+        'chap4/fig_4_12_variant_bar_comparison.py',
+        'chap4/fig_4_13_variant_training_loss.py',
+        'chap4/fig_4_14_phase_attention_heatmap.py',
+        'chap4/fig_4_15_multiscale_contribution.py',
     ],
 }
 
