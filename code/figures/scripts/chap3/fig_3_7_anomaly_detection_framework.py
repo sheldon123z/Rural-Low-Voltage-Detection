@@ -207,13 +207,19 @@ def draw_anomaly_detection_framework():
 
     plt.tight_layout()
 
-    # 保存
+    # 保存到代码项目输出目录
     output_path = os.path.join(OUTPUT_DIR, 'fig_3_7_anomaly_detection_framework.png')
     plt.savefig(output_path, dpi=300, bbox_inches='tight',
                 facecolor='white', edgecolor='none', pad_inches=0.1)
     plt.close()
-
     print(f"已保存: {output_path}")
+
+    # 同步到论文目录
+    import shutil
+    thesis_path = '/home/zhengxiaodong/exps/Rural-Voltage-Thesis/figures/chap3/fig_3_7_anomaly_detection_framework.png'
+    shutil.copy2(output_path, thesis_path)
+    print(f"已复制: {thesis_path}")
+
     return output_path
 
 
