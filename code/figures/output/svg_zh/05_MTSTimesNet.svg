@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 950" width="900" height="950">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1000" width="900" height="1000">
   <defs>
     <style>
       .title { font: bold 24px Arial, SimHei, sans-serif; fill: #1a1a2e; }
@@ -51,7 +51,7 @@
     </linearGradient>
   </defs>
 
-  <rect width="900" height="950" fill="#fafafa"/>
+  <rect width="900" height="1000" fill="#fafafa"/>
 
   <!-- 标题 -->
   <text x="450" y="40" text-anchor="middle" class="title">MTSTimesNet</text>

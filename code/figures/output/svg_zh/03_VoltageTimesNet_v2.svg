@@ -50,8 +50,8 @@
   <rect width="900" height="1100" fill="#fafafa"/>
 
   <!-- 标题 -->
-  <text x="450" y="40" text-anchor="middle" class="title">VoltageTimesNet_v2</text>
-  <text x="450" y="65" text-anchor="middle" class="subtitle">可学习权重 + 敏感度放大器 + 召回率优化 | 约950万参数</text>
+  <text x="450" y="40" text-anchor="middle" class="title">VoltageTimesNet</text>
+  <text x="450" y="65" text-anchor="middle" class="subtitle">可学习权重 + 敏感度放大器 + 召回率优化 + 约950万参数</text>
 
   <!-- 输入层 -->
   <rect x="300" y="90" width="300" height="45" rx="8" fill="url(#inputGrad)"/>
@@ -135,7 +135,7 @@
 
   <!-- ★ Anomaly Sensitivity Amplifier -->
   <rect x="150" y="700" width="600" height="80" rx="8" fill="#FFEBEE" stroke="#F44336" stroke-width="2"/>
-  <text x="170" y="723" class="innovation-label">★ 异常敏感度放大器 (召回率提升)</text>
+  <text x="170" y="723" class="innovation-label">★ 异常敏感度放大器</text>
 
   <rect x="190" y="738" width="140" height="32" rx="4" fill="url(#amplifierGrad)"/>
   <text x="260" y="759" text-anchor="middle" class="module-text" font-size="10">线性层(d→2d)</text>
@@ -193,5 +193,4 @@
   <text x="755" y="192" class="detail-text">电能质量编码器</text>
   <rect x="730" y="202" width="16" height="12" rx="3" fill="#E3F2FD" stroke="#2196F3"/>
   <text x="755" y="212" class="detail-text">多尺度</text>
-  <text x="800" y="232" text-anchor="middle" class="param-text">召回率: 71%+</text>
 </svg>
