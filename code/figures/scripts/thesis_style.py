@@ -18,7 +18,8 @@ import matplotlib as mpl
 # ============================================================
 def setup_thesis_style():
     """设置论文格式的 matplotlib 样式"""
-    plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Times New Roman']
+    # 字体回退链: Linux (Noto) -> macOS (Songti) -> Windows (SimSun) -> 通用
+    plt.rcParams['font.family'] = ['Noto Serif CJK JP', 'Songti SC', 'SimSun', 'STSong', 'Times New Roman']
     plt.rcParams['font.size'] = 10.5
     plt.rcParams['axes.unicode_minus'] = False
     plt.rcParams['axes.linewidth'] = 0.8
