@@ -58,6 +58,9 @@ def main():
             rename_map[col] = feature_names_zh[col]
     df = df.rename(columns=rename_map)
 
+    # 去除常数列和全NaN列（nunique=0 或 1，corr() 对这类列返回 NaN）
+    df = df.loc[:, df.nunique() > 1]
+
     # 计算相关系数矩阵
     corr = df.corr()
 

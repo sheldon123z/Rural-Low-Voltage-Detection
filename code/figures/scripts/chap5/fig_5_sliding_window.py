@@ -109,15 +109,23 @@ for i, (ws, we) in enumerate(windows[:5]):   # 只展示前5个窗口
 ax2.set_yticks([])
 ax2.set_xticks([])
 ax2.set_ylabel('窗口/Window', fontsize=10.5)
-# 标注步幅
-ax2.annotate('', xy=(windows[1][0], -0.25), xytext=(windows[0][0], -0.25),
-             arrowprops=dict(arrowstyle='<->', color='#555555', lw=1.0))
-ax2.text((windows[0][0] + windows[1][0]) / 2, -0.42,
-         f'步幅={stride}', ha='center', fontsize=8.5, color='#555555')
-ax2.annotate('', xy=(windows[0][1], -0.25), xytext=(windows[0][0], -0.25),
+# 标注步幅（上方）和序列长（下方），错开避免重叠
+y_arrow_stride = -0.15
+y_text_stride = -0.35
+y_arrow_seqlen = -0.55
+y_text_seqlen = -0.75
+# 序列长标注（放在下方）
+ax2.annotate('', xy=(windows[0][1], y_arrow_seqlen), xytext=(windows[0][0], y_arrow_seqlen),
              arrowprops=dict(arrowstyle='<->', color='#333333', lw=1.0))
-ax2.text((windows[0][0] + windows[0][1]) / 2, -0.42,
+ax2.text((windows[0][0] + windows[0][1]) / 2, y_text_seqlen,
          f'序列长={seq_len}', ha='center', fontsize=8.5, color='#333333')
+# 步幅标注（放在上方，较短）
+ax2.annotate('', xy=(windows[1][0], y_arrow_stride), xytext=(windows[0][0], y_arrow_stride),
+             arrowprops=dict(arrowstyle='<->', color='#555555', lw=1.0))
+ax2.text((windows[0][0] + windows[1][0]) / 2, y_text_stride,
+         f'步幅={stride}', ha='center', fontsize=8.5, color='#555555')
+# 扩展y轴范围以容纳标注
+ax2.set_ylim(-1.0, min(n_windows, 5) + 0.5)
 remove_spines(ax2)
 
 # ──────────────────────────────────────────────────────────────────
